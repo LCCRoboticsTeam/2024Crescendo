@@ -11,21 +11,15 @@ public class ShooterSubsystem extends SubsystemBase {
     //private final Encoder throughBoreEncoderLeft;
     //private final Encoder throughBoreEncoderRight;
     private double speed;
-    private boolean printDebug;
   
-    public ShooterSubsystem (int motorIDInputLeft, int motorIDInputRight, double speed, boolean printDebugInput) {
+    public ShooterSubsystem (int motorIDInputLeft, int motorIDInputRight, double speed) {
     
         this.speed = speed;
-        printDebug = printDebugInput;
 
         talonMotorLeft = new WPI_TalonSRX(motorIDInputLeft);
         talonMotorLeft.setInverted(false);        
         talonMotorRight = new WPI_TalonSRX(motorIDInputRight);
-        talonMotorRight.setInverted(false);  
-
-        if (printDebug) {
-            System.out.println("ShooterSubsystem: MotorID constructor ");
-        }
+        talonMotorRight.setInverted(false);
     }
 
     /* Sets Shooter to take in game piece */
@@ -69,16 +63,6 @@ public class ShooterSubsystem extends SubsystemBase {
         talonMotorLeft.set(0.0);
         talonMotorRight.set(0.0);
 
-    }
-
-    // Put methods for controlling this subsystem
-    // here. Call these from Commands.
-    public boolean isPrintDebug() {
-        return printDebug;
-    }
-
-    public void setPrintDebug(boolean printDebug) {
-        this.printDebug = printDebug;
     }
 
 }

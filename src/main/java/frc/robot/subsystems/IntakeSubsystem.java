@@ -12,59 +12,32 @@ public class IntakeSubsystem extends SubsystemBase {
     //private final Encoder throughBoreEncoder;
     DigitalInput BeamBreak; 
     private double speed;
-    private boolean printDebug;
   
-    public IntakeSubsystem (int motorIDInput, double speed, boolean printDebugInput) {
+    public IntakeSubsystem (int motorIDInput, double speed) {
 
         this.speed = speed;
-        printDebug = printDebugInput;
 
         talonMotor = new WPI_TalonSRX(motorIDInput);
         BeamBreak = new DigitalInput(IntakeConstants.INTAKE_BEAM_BREAK_DIO); 
 
         // Positive speed value is for intakeIn
-        talonMotor.setInverted(false);        
-
-        if (printDebug) {
-            System.out.println("intakesubsystem: MotorID constructor ");
-        }
+        talonMotor.setInverted(false);
     }
 
     /* Sets intake to take in game piece */
     public void intakeIn() {
-        // int BoreEncoderVal;
-
-        //talonMotor.setInverted(false);
         talonMotor.set(-speed);
-
-        //BoreEncoderVal=throughBoreEncoder.getRate();
-        //if (printDebug) {
-        //    System.out.println("intakeIn BoreEncoderVal = "+BoreEncoderVal);
-        //}
-
     }
 
     /* Sets intake to spit out game piece */
     public void intakeOut() {
-        //talonMotor.setInverted(true);
         talonMotor.set(speed);
-
     }
 
     /* Turn intake off */
     public void intakeOff() {
         talonMotor.set(0.0);
 
-    }
-
-    // Put methods for controlling this subsystem
-    // here. Call these from Commands.
-    public boolean isPrintDebug() {
-        return printDebug;
-    }
-
-    public void setPrintDebug(boolean printDebug) {
-        this.printDebug = printDebug;
     }
 
 }

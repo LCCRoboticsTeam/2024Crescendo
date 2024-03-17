@@ -6,21 +6,29 @@ package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.ShooterConstants;
-import frc.robot.commands.ArmSubsystemCommand;
+import frc.robot.commands.ArmMoveCommand;
+import frc.robot.commands.ArmToPositionCommand;
 import frc.robot.commands.Autos;
+import frc.robot.commands.HookMoveCommand;
+import frc.robot.commands.IntakeMoveInCommand;
 import frc.robot.commands.SwerveGamepadDriveCommand;
-import frc.robot.commands.IntakeSubsystemCommand;
-import frc.robot.commands.ShooterSubsystemCommand;
+import frc.robot.commands.HookMoveCommand.Direction;
+import frc.robot.commands.ShooterMoveOutCommand;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.DriveTrainSubsystem;
+import frc.robot.subsystems.HookSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
-import edu.wpi.first.wpilibj.XboxController;
+
+import static frc.robot.Constants.HookConstants.HOOK_MOTOR_CAN_ID;
+import static frc.robot.Constants.HookConstants.HOOK_SOLENOID_CAN_ID;
+
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.ArmConstants;
+import frc.robot.Constants.ArmPosition;
 import frc.robot.Constants.IntakeConstants;
 
 /**
@@ -36,17 +44,17 @@ public class RobotContainer {
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController commandXboxController = new CommandXboxController(OperatorConstants.XBOX_CONTROLLER_PORT);
-  private final XboxController xboxController = new XboxController(OperatorConstants.ARM_AND_SHOOTAKE_XBOX_CONTROLLER_PORT);
-  private final LaunchpadController launchpad = new LaunchpadController(OperatorConstants.LAUNCHPAD_PORT);
+  private final CommandLaunchpadController commandLaunchpad = new CommandLaunchpadController(OperatorConstants.LAUNCHPAD_PORT);
 
   // The robot's subsystems and commands are defined here...
   private final DriveTrainSubsystem driveTrain = new DriveTrainSubsystem();
   private final IntakeSubsystem inTake = new IntakeSubsystem(IntakeConstants.INTAKE_CAN_ID,
-      IntakeConstants.INTAKE_MOTOR_SPEED, false);
+      IntakeConstants.INTAKE_MOTOR_SPEED);
   private final ArmSubsystem Arm = new ArmSubsystem(ArmConstants.ARM_MOTOR_LEFT_CAN_ID,
-      ArmConstants.ARM_MOTOR_RIGHT_CAN_ID, ArmConstants.ARM_MOTOR_SPEED, false);
+      ArmConstants.ARM_MOTOR_RIGHT_CAN_ID, ArmConstants.ARM_MOTOR_SPEED);
   private final ShooterSubsystem Shooter = new ShooterSubsystem(ShooterConstants.SHOOTER_MOTOR_LEFT_CAN_ID,
-      ShooterConstants.SHOOTER_MOTOR_RIGHT_CAN_ID, ShooterConstants.SHOOTER_MOTOR_SPEED, false);
+      ShooterConstants.SHOOTER_MOTOR_RIGHT_CAN_ID, ShooterConstants.SHOOTER_MOTOR_SPEED);
+  private final HookSubsystem hookSubsystem = new HookSubsystem(HOOK_MOTOR_CAN_ID, HOOK_SOLENOID_CAN_ID);
 
   private final SendableChooser<Boolean> fieldRelativeChooser = new SendableChooser<>();
 
@@ -61,16 +69,8 @@ public class RobotContainer {
     fieldRelativeChooser.addOption("Robot Relative", false);
     // SmartDashboard.putData(fieldRelativeChooser);
 
-    
-
     driveTrain.setDefaultCommand(new SwerveGamepadDriveCommand(driveTrain, commandXboxController::getLeftX,
         commandXboxController::getLeftY, commandXboxController::getRightX, fieldRelativeChooser::getSelected));
-    inTake.setDefaultCommand(
-        new IntakeSubsystemCommand(inTake, launchpad::getIntakeIn, () -> false, true));
-    Shooter.setDefaultCommand(new ShooterSubsystemCommand(Shooter, Arm.armPosition, launchpad::getShooterOut,
-        () -> false, true));
-    Arm.setDefaultCommand(new ArmSubsystemCommand(Arm, xboxController::getBackButton, xboxController::getStartButton,
-        xboxController::getXButton, xboxController::getYButton, false));
   }
 
   /**
@@ -89,6 +89,26 @@ public class RobotContainer {
    */
   private void configureBindings() {
     commandXboxController.rightBumper().whileTrue(driveTrain.run(driveTrain::setX));
+
+    commandLaunchpad.safety().negate().and(commandLaunchpad.armUp().and(commandLaunchpad.miscBlue().negate())).onTrue(new ArmToPositionCommand(Arm, ArmPosition.AMP_SHOOTER));
+    commandLaunchpad.safety().negate().and(commandLaunchpad.armUp().and(commandLaunchpad.miscBlue())).onTrue(new ArmToPositionCommand(Arm, ArmPosition.SPEAKER_SHOOTER));
+
+    commandLaunchpad.safety().negate().and(commandLaunchpad.armDown()).onTrue(new ArmToPositionCommand(Arm, ArmPosition.INTAKE));
+
+    commandLaunchpad.safety().and(commandLaunchpad.armUp()).whileTrue(new ArmMoveCommand(Arm, true));
+
+    commandLaunchpad.safety().and(commandLaunchpad.armDown()).whileTrue(new ArmMoveCommand(Arm, false));
+
+    commandLaunchpad.intakeIn().whileTrue(new IntakeMoveInCommand(inTake));
+    commandLaunchpad.shooterOut().whileTrue(new ShooterMoveOutCommand(Shooter, Arm::getArmPosition));
+
+    commandLaunchpad.safety().onTrue(new ArmToPositionCommand(Arm, ArmPosition.HANG));
+
+    commandLaunchpad.safety().and(commandLaunchpad.climbUp())
+      .whileTrue(new HookMoveCommand(hookSubsystem, Direction.UP));
+    commandLaunchpad.safety().and(commandLaunchpad.climbDown())
+      .whileTrue(new HookMoveCommand(hookSubsystem, Direction.DOWN))
+      .whileTrue(new ArmMoveCommand(Arm, false));
 
   }
 
