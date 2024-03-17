@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.IntakeConstants;
+
 /**
  * This class is where the bulk of the robot should be declared. Since
  * Command-based is a
@@ -34,16 +35,18 @@ import frc.robot.Constants.IntakeConstants;
 public class RobotContainer {
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
-  private final CommandXboxController commandXboxController = new CommandXboxController(
-      OperatorConstants.DRIVE_TRAIN_XBOX_CONTROLLER_PORT);
-   private final XboxController xboxController = new XboxController(
-    OperatorConstants.ARM_AND_SHOOTAKE_XBOX_CONTROLLER_PORT);
+  private final CommandXboxController commandXboxController = new CommandXboxController(OperatorConstants.XBOX_CONTROLLER_PORT);
+  private final XboxController xboxController = new XboxController(OperatorConstants.ARM_AND_SHOOTAKE_XBOX_CONTROLLER_PORT);
+  private final LaunchpadController launchpad = new LaunchpadController(OperatorConstants.LAUNCHPAD_PORT);
 
   // The robot's subsystems and commands are defined here...
   private final DriveTrainSubsystem driveTrain = new DriveTrainSubsystem();
-  private final IntakeSubsystem inTake = new IntakeSubsystem(IntakeConstants.INTAKE_CAN_ID, IntakeConstants.INTAKE_MOTOR_SPEED,false);
-  private final ArmSubsystem Arm = new ArmSubsystem(ArmConstants.ARM_MOTOR_LEFT_CAN_ID, ArmConstants.ARM_MOTOR_RIGHT_CAN_ID, ArmConstants.ARM_MOTOR_SPEED, false);
-  private final ShooterSubsystem Shooter = new ShooterSubsystem(ShooterConstants.SHOOTER_MOTOR_LEFT_CAN_ID, ShooterConstants.SHOOTER_MOTOR_RIGHT_CAN_ID, ShooterConstants.SHOOTER_MOTOR_SPEED, false);
+  private final IntakeSubsystem inTake = new IntakeSubsystem(IntakeConstants.INTAKE_CAN_ID,
+      IntakeConstants.INTAKE_MOTOR_SPEED, false);
+  private final ArmSubsystem Arm = new ArmSubsystem(ArmConstants.ARM_MOTOR_LEFT_CAN_ID,
+      ArmConstants.ARM_MOTOR_RIGHT_CAN_ID, ArmConstants.ARM_MOTOR_SPEED, false);
+  private final ShooterSubsystem Shooter = new ShooterSubsystem(ShooterConstants.SHOOTER_MOTOR_LEFT_CAN_ID,
+      ShooterConstants.SHOOTER_MOTOR_RIGHT_CAN_ID, ShooterConstants.SHOOTER_MOTOR_SPEED, false);
 
   private final SendableChooser<Boolean> fieldRelativeChooser = new SendableChooser<>();
 
@@ -54,14 +57,20 @@ public class RobotContainer {
     // Configure the trigger bindings
     configureBindings();
 
-    fieldRelativeChooser.setDefaultOption("Field Relative",  true);
+    fieldRelativeChooser.setDefaultOption("Field Relative", true);
     fieldRelativeChooser.addOption("Robot Relative", false);
-    //SmartDashboard.putData(fieldRelativeChooser);
-  
-    driveTrain.setDefaultCommand(new SwerveGamepadDriveCommand(driveTrain,commandXboxController::getLeftX, commandXboxController::getLeftY, commandXboxController::getRightX, fieldRelativeChooser::getSelected));
-    inTake.setDefaultCommand(new IntakeSubsystemCommand(inTake, xboxController::getAButton, xboxController::getLeftBumper, true));
-    Shooter.setDefaultCommand(new ShooterSubsystemCommand(Shooter, Arm.armPosition, xboxController::getBButton, xboxController::getRightBumper, true));
-    Arm.setDefaultCommand(new ArmSubsystemCommand(Arm, xboxController::getBackButton, xboxController::getStartButton, xboxController::getXButton, xboxController::getYButton, false));
+    // SmartDashboard.putData(fieldRelativeChooser);
+
+    
+
+    driveTrain.setDefaultCommand(new SwerveGamepadDriveCommand(driveTrain, commandXboxController::getLeftX,
+        commandXboxController::getLeftY, commandXboxController::getRightX, fieldRelativeChooser::getSelected));
+    inTake.setDefaultCommand(
+        new IntakeSubsystemCommand(inTake, launchpad::getIntakeIn, () -> false, true));
+    Shooter.setDefaultCommand(new ShooterSubsystemCommand(Shooter, Arm.armPosition, launchpad::getShooterOut,
+        () -> false, true));
+    Arm.setDefaultCommand(new ArmSubsystemCommand(Arm, xboxController::getBackButton, xboxController::getStartButton,
+        xboxController::getXButton, xboxController::getYButton, false));
   }
 
   /**
@@ -81,7 +90,6 @@ public class RobotContainer {
   private void configureBindings() {
     commandXboxController.rightBumper().whileTrue(driveTrain.run(driveTrain::setX));
 
-    
   }
 
   /**
@@ -90,6 +98,6 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return Autos.templateAuto(driveTrain);   
+    return Autos.templateAuto(driveTrain);
   }
 }

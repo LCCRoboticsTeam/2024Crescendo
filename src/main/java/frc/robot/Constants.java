@@ -29,6 +29,8 @@ public final class Constants {
     public static final int DRIVE_TRAIN_XBOX_CONTROLLER_PORT = 0;
     public static final int ARM_AND_SHOOTAKE_XBOX_CONTROLLER_PORT = 0;
     public static final double XBOX_DEADBAND = 0.05;
+
+    public static final int LAUNCHPAD_PORT = 1;
   }
 
   public static final class AutoConstants {
