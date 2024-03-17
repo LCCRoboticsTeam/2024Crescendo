@@ -50,7 +50,7 @@ public final class Constants {
 
   public static final class HookConstants {
     public static final int HOOK_MOTOR_CAN_ID = 3;
-    public static final int HOOK_SOLENOID_CAN_ID = 4;
+    public static final int HOOK_SOLENOID_CAN_ID = 2;
     public static final double SPEED = 0.4;
   }
 

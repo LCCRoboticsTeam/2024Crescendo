@@ -7,6 +7,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.ArmPosition;
+import frc.robot.commands.ArmToForwardLimitCommand;
 
 public class ArmSubsystem extends SubsystemBase {
 
@@ -39,6 +40,8 @@ public class ArmSubsystem extends SubsystemBase {
         throughBoreEncoder = new Encoder(ArmConstants.ARM_BORE_ENCODER_CHANNEL_A_DIO,
                 ArmConstants.ARM_BORE_ENCODER_CHANNEL_B_DIO, true, Encoder.EncodingType.k2X);
         throughBoreEncoder.setDistancePerPulse((double) 360 / 8192 / 2);
+
+        new ArmToForwardLimitCommand(this).schedule();
     }
 
     public ArmPosition getArmPosition() {
