@@ -81,11 +81,11 @@ public class ArmSubsystem extends SubsystemBase {
     }
 
     public boolean isReverseLimitSwitchClosed() {
-        return talonMotorRight.isFwdLimitSwitchClosed() == 1;
+        return (talonMotorRight.isRevLimitSwitchClosed() == 1) || (talonMotorLeft.isRevLimitSwitchClosed() == 1);
     }
 
     public boolean isForwardLimitSwitchClosed() {
-        return talonMotorLeft.isFwdLimitSwitchClosed() == 1;
+        return (talonMotorRight.isFwdLimitSwitchClosed() == 1) || (talonMotorLeft.isFwdLimitSwitchClosed() == 1);
     }
 
 }
