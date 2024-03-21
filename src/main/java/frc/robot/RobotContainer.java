@@ -13,9 +13,11 @@ import frc.robot.commands.ArmToReverseLimitCommand;
 import frc.robot.commands.Autos;
 import frc.robot.commands.HookMoveCommand;
 import frc.robot.commands.IntakeMoveInCommand;
+import frc.robot.commands.IntakeMoveOutCommand;
 import frc.robot.commands.SwerveGamepadDriveCommand;
 import frc.robot.commands.HookMoveCommand.Direction;
 import frc.robot.commands.ShooterMoveOutCommand;
+import frc.robot.commands.ShooterMoveInCommand;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.robot.subsystems.HookSubsystem;
@@ -95,19 +97,40 @@ public class RobotContainer {
     commandXboxController.rightBumper().whileTrue(driveTrain.run(driveTrain::setX));
     //SmartDashboard.putBoolean("Reverse Limit Switch Closed", ArmSubsystem.revLimSwitchClosed);
 
+    //  ARM
+    ////////////////////////////////////////////////
+    //    ACTIVE default (Safety=OFF, Alternate=OFF)
+    //     ^ ARM AMP Position
+    //     v ARM INTAKE Position
     commandLaunchpad.safety().negate().and(commandLaunchpad.armUp().and(commandLaunchpad.miscBlue().negate())).onTrue(new ArmToPositionCommand(Arm, ArmPosition.AMP_SHOOTER));
-    commandLaunchpad.safety().negate().and(commandLaunchpad.armUp().and(commandLaunchpad.miscBlue())).onTrue(new ArmToPositionCommand(Arm, ArmPosition.SPEAKER_SHOOTER));
-
     commandLaunchpad.safety().negate().and(commandLaunchpad.armDown().and(commandLaunchpad.miscBlue().negate())).onTrue(new ArmToPositionCommand(Arm, ArmPosition.INTAKE));
+    //   ACTIVE Alternate (Safety=OFF, Alternate=ON)
+    //     ^ ARM SHOOTER Position
+    //     v ARM Reverse Limit Position (Note already happens by default at Teleopt start)
+    commandLaunchpad.safety().negate().and(commandLaunchpad.armUp().and(commandLaunchpad.miscBlue())).onTrue(new ArmToPositionCommand(Arm, ArmPosition.SPEAKER_SHOOTER));
     commandLaunchpad.safety().negate().and(commandLaunchpad.armDown().and(commandLaunchpad.miscBlue())).onTrue(new ArmToReverseLimitCommand(Arm));
-
+    //   ACTIVE Safety ON (Safety=OFF, Alternate=N/A)
+    //     ^ ARM Manual UP
+    //     v ARM Manual DOWN
     commandLaunchpad.safety().and(commandLaunchpad.armUp()).whileTrue(new ArmMoveCommand(Arm, true));
-
     commandLaunchpad.safety().and(commandLaunchpad.armDown()).whileTrue(new ArmMoveCommand(Arm, false));
+    ////////////////////////////////////////////////
 
-    commandLaunchpad.intakeIn().whileTrue(new IntakeMoveInCommand(inTake));
-    commandLaunchpad.shooterOut().whileTrue(new ShooterMoveOutCommand(Shooter, Arm::getArmPosition));
+    //  SHOOTAKE
+    ////////////////////////////////////////////////
+    //    ACTIVE default (Safety=N/A, Alternate=OFF)
+    //      ^ INTAKE IN
+    //      v SHOOTER OUT
+    commandLaunchpad.intakeIn().and(commandLaunchpad.miscBlue().negate()).whileTrue(new IntakeMoveInCommand(inTake));
+    commandLaunchpad.shooterOut().and(commandLaunchpad.miscBlue().negate()).whileTrue(new ShooterMoveOutCommand(Shooter, Arm::getArmPosition));
+    ////////////////////////////////////////////////
+    //    ACTIVE default (Safety=N/A, Alternate=ON)
+    //      ^ INTAKE OUT (Normally never needed)
+    //      v SHOOTER IN (Normally never needed)
+    commandLaunchpad.intakeIn().and(commandLaunchpad.miscBlue()).whileTrue(new IntakeMoveOutCommand(inTake));
+    commandLaunchpad.shooterOut().and(commandLaunchpad.miscBlue()).whileTrue(new ShooterMoveInCommand(Shooter));
 
+    // FIXME: Put back once basic hook motor tested
     //commandLaunchpad.safety().onTrue(new ArmToPositionCommand(Arm, ArmPosition.HANG));
 
     commandLaunchpad.safety().and(commandLaunchpad.climbUp())
@@ -124,7 +147,8 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return Autos.templateAuto(driveTrain);
+    //return Autos.templateAuto(driveTrain);
+    return null;  
   }
 
   public Command getTeleopInitCommand() {
