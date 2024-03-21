@@ -20,6 +20,7 @@ import edu.wpi.first.cameraserver.CameraServer;
  */
 public class Robot extends TimedRobot {
   private Command autonomousCommand;
+  private Command teleopCommand;
 
   private RobotContainer robotContainer;
 
@@ -83,6 +84,12 @@ public class Robot extends TimedRobot {
     if (autonomousCommand != null) {
       autonomousCommand.cancel();
     }
+
+    teleopCommand = robotContainer.getTeleopInitCommand();
+    if (teleopCommand != null) {
+      teleopCommand.schedule();
+    }  
+
   }
 
   /** This function is called periodically during operator control. */

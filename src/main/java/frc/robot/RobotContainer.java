@@ -9,6 +9,7 @@ import frc.robot.Constants.ShooterConstants;
 import frc.robot.commands.ArmMoveCommand;
 import frc.robot.commands.ArmToForwardLimitCommand;
 import frc.robot.commands.ArmToPositionCommand;
+import frc.robot.commands.ArmToReverseLimitCommand;
 import frc.robot.commands.Autos;
 import frc.robot.commands.HookMoveCommand;
 import frc.robot.commands.IntakeMoveInCommand;
@@ -53,7 +54,7 @@ public class RobotContainer {
   private final IntakeSubsystem inTake = new IntakeSubsystem(IntakeConstants.INTAKE_CAN_ID,
       IntakeConstants.INTAKE_MOTOR_SPEED);
   private final ArmSubsystem Arm = new ArmSubsystem(ArmConstants.ARM_MOTOR_LEFT_CAN_ID,
-      ArmConstants.ARM_MOTOR_RIGHT_CAN_ID, ArmConstants.ARM_MOTOR_SPEED);
+      ArmConstants.ARM_MOTOR_RIGHT_CAN_ID, ArmConstants.ARM_MOTOR_SPEED_UP, ArmConstants.ARM_MOTOR_SPEED_DOWN);
   private final ShooterSubsystem Shooter = new ShooterSubsystem(ShooterConstants.SHOOTER_MOTOR_LEFT_CAN_ID,
       ShooterConstants.SHOOTER_MOTOR_RIGHT_CAN_ID, ShooterConstants.SHOOTER_MOTOR_SPEED);
   private final HookSubsystem hookSubsystem = new HookSubsystem(HOOK_MOTOR_CAN_ID, HOOK_SOLENOID_CAN_ID);
@@ -69,7 +70,7 @@ public class RobotContainer {
 
     fieldRelativeChooser.setDefaultOption("Field Relative", true);
     fieldRelativeChooser.addOption("Robot Relative", false);
-    SmartDashboard.
+    
     // SmartDashboard.putData(fieldRelativeChooser);
 
     driveTrain.setDefaultCommand(new SwerveGamepadDriveCommand(driveTrain, commandXboxController::getLeftX,
@@ -92,11 +93,13 @@ public class RobotContainer {
    */
   private void configureBindings() {
     commandXboxController.rightBumper().whileTrue(driveTrain.run(driveTrain::setX));
+    //SmartDashboard.putBoolean("Reverse Limit Switch Closed", ArmSubsystem.revLimSwitchClosed);
 
     commandLaunchpad.safety().negate().and(commandLaunchpad.armUp().and(commandLaunchpad.miscBlue().negate())).onTrue(new ArmToPositionCommand(Arm, ArmPosition.AMP_SHOOTER));
     commandLaunchpad.safety().negate().and(commandLaunchpad.armUp().and(commandLaunchpad.miscBlue())).onTrue(new ArmToPositionCommand(Arm, ArmPosition.SPEAKER_SHOOTER));
 
-    commandLaunchpad.safety().negate().and(commandLaunchpad.armDown()).onTrue(new ArmToPositionCommand(Arm, ArmPosition.INTAKE));
+    commandLaunchpad.safety().negate().and(commandLaunchpad.armDown().and(commandLaunchpad.miscBlue().negate())).onTrue(new ArmToPositionCommand(Arm, ArmPosition.INTAKE));
+    commandLaunchpad.safety().negate().and(commandLaunchpad.armDown().and(commandLaunchpad.miscBlue())).onTrue(new ArmToReverseLimitCommand(Arm));
 
     commandLaunchpad.safety().and(commandLaunchpad.armUp()).whileTrue(new ArmMoveCommand(Arm, true));
 
@@ -105,7 +108,7 @@ public class RobotContainer {
     commandLaunchpad.intakeIn().whileTrue(new IntakeMoveInCommand(inTake));
     commandLaunchpad.shooterOut().whileTrue(new ShooterMoveOutCommand(Shooter, Arm::getArmPosition));
 
-    commandLaunchpad.safety().onTrue(new ArmToPositionCommand(Arm, ArmPosition.HANG));
+    //commandLaunchpad.safety().onTrue(new ArmToPositionCommand(Arm, ArmPosition.HANG));
 
     commandLaunchpad.safety().and(commandLaunchpad.climbUp())
       .whileTrue(new HookMoveCommand(hookSubsystem, Direction.UP));
@@ -123,4 +126,10 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     return Autos.templateAuto(driveTrain);
   }
+
+  public Command getTeleopInitCommand() {
+    return new ArmToReverseLimitCommand(Arm);
+    //return null;  
+  }
+
 }

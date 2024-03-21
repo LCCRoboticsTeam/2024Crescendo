@@ -8,21 +8,25 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.ArmPosition;
 import frc.robot.commands.ArmToForwardLimitCommand;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class ArmSubsystem extends SubsystemBase {
 
-    private final WPI_TalonSRX talonMotorLeft;
-    private final WPI_TalonSRX talonMotorRight;
+    public final WPI_TalonSRX talonMotorLeft;
+    public final WPI_TalonSRX talonMotorRight;
     // private final WPI_TalonSRX talonMotorCenter;
     private final Encoder throughBoreEncoder;
-    private double speed;
+    private double speed_up;
+    private double speed_down;
     private ArmPosition armPosition;
 
-    public ArmSubsystem(int motorIDInputLeft, int motorIDInputRight, double speed) {
-
+    public ArmSubsystem(int motorIDInputLeft, int motorIDInputRight, double speed_up, double speed_down) {
+        
         armPosition = ArmPosition.UNKNOWN;
-
-        this.speed = speed;
+        
+        this.speed_up = speed_up;
+        this.speed_down = speed_down;
 
         talonMotorLeft = new WPI_TalonSRX(motorIDInputLeft);
         talonMotorRight = new WPI_TalonSRX(motorIDInputRight);
@@ -62,13 +66,32 @@ public class ArmSubsystem extends SubsystemBase {
     }
 
     public void moveArmUp() {
-        talonMotorLeft.set(-speed);
-        talonMotorRight.set(-speed);
+        talonMotorLeft.set(-speed_up);
+        talonMotorRight.set(-speed_up);
+
+        //talonMotorLeft.set(0);
+        //talonMotorRight.set(0);
+        //System.out.println("Right ARM Reverse Limit Closed = "+talonMotorRight.isRevLimitSwitchClosed());
+        //System.out.println("Left ARM Reverse Limit Closed = "+talonMotorLeft.isRevLimitSwitchClosed());
+        //System.out.println("Right ARM Forward Limit Closed = "+talonMotorRight.isFwdLimitSwitchClosed());
+        //System.out.println("Left ARM Forward Limit Closed = "+talonMotorLeft.isFwdLimitSwitchClosed());
     }
 
     public void moveArmDown() {
-        talonMotorLeft.set(speed);
-        talonMotorRight.set(speed);
+        talonMotorLeft.set(speed_down);
+        talonMotorRight.set(speed_down);
+
+        //talonMotorLeft.set(0);
+        //talonMotorRight.set(0);
+        //System.out.println("Right ARM Reverse Limit Closed = "+talonMotorRight.isRevLimitSwitchClosed());
+        //System.out.println("Left ARM Reverse Limit Closed = "+talonMotorLeft.isRevLimitSwitchClosed());
+        //System.out.println("Right ARM Forward Limit Closed = "+talonMotorRight.isFwdLimitSwitchClosed());
+        //System.out.println("Left ARM Forward Limit Closed = "+talonMotorLeft.isFwdLimitSwitchClosed());
+    }
+
+    public void holdArmUp() {
+        talonMotorLeft.set(0);
+        talonMotorRight.set(0);
     }
 
     public void moveStop() {
@@ -79,13 +102,20 @@ public class ArmSubsystem extends SubsystemBase {
     public void resetEncoder() {
         throughBoreEncoder.reset();
     }
-
+ 
     public boolean isReverseLimitSwitchClosed() {
+        //return (talonMotorRight.isRevLimitSwitchClosed() == 1);
+        //return (talonMotorLeft.isRevLimitSwitchClosed() == 1);
         return (talonMotorRight.isRevLimitSwitchClosed() == 1) || (talonMotorLeft.isRevLimitSwitchClosed() == 1);
     }
 
     public boolean isForwardLimitSwitchClosed() {
+        //return (talonMotorRight.isFwdLimitSwitchClosed() == 1);
+        //return (talonMotorLeft.isFwdLimitSwitchClosed() == 1);
         return (talonMotorRight.isFwdLimitSwitchClosed() == 1) || (talonMotorLeft.isFwdLimitSwitchClosed() == 1);
     }
+
+    
+
 
 }

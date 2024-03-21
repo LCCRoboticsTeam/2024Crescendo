@@ -70,12 +70,14 @@ public final class Constants {
   public static final class ArmConstants {
     public static final int ARM_MOVE_DEADZONE = 100;
     public static final double ARM_MOTOR_SPEED = 0.2;
+    public static final double ARM_MOTOR_SPEED_UP = 0.3;
+    public static final double ARM_MOTOR_SPEED_DOWN = 0.2;
     public static final int ARM_MOTOR_LEFT_CAN_ID = 7;
     public static final int ARM_MOTOR_RIGHT_CAN_ID = 6;
     public static final int ARM_BORE_ENCODER_CHANNEL_A_DIO = 0;
     public static final int ARM_BORE_ENCODER_CHANNEL_B_DIO = 1;
     public static final int ARM_UPRIGHT_BORE_ENCODER_POSITION = 250;
-    public static final int ARM_AMP_SHOOTER_BORE_ENCODER_POSITION = 50;
+    public static final int ARM_AMP_SHOOTER_BORE_ENCODER_POSITION = 100;
     public static final int ARM_SPEAKER_SHOOTER_BORE_ENCODER_POSITION = 1000;
     public static final int ARM_HANG_BORE_ENCODER_POSITION = 400;
     public static final int ARM_INTAKE_BORE_ENCODER_POSITION = 900;
