@@ -28,13 +28,13 @@ public final class Constants {
     public static final int XBOX_CONTROLLER_PORT = 0;
     public static final int DRIVE_TRAIN_XBOX_CONTROLLER_PORT = 0;
     public static final int ARM_AND_SHOOTAKE_XBOX_CONTROLLER_PORT = 0;
-    public static final double XBOX_DEADBAND = 0.05;
+    public static final double XBOX_DEADBAND = 0.065;  // was 0.05
 
     public static final int LAUNCHPAD_PORT = 1;
   }
 
   public static final class AutoConstants {
-    public static final double MAX_SPEED_METERS_PER_SECOND = 1;
+    public static final double MAX_SPEED_METERS_PER_SECOND = 0.5;
     public static final double MAX_ACCELERATION_METERS_PER_SECOND_SQUARED = 1;
     public static final double MAX_ANGULAR_SPEED_RADIANS_PER_SECOND = Math.PI;
     public static final double MAX_ANGULAR_SPEED_RADIANS_PER_SECOND_SQUARED = Math.PI;
@@ -51,7 +51,7 @@ public final class Constants {
   public static final class HookConstants {
     public static final int HOOK_MOTOR_CAN_ID = 3;
     public static final int HOOK_SOLENOID_CAN_ID = 2;
-    public static final double SPEED = 0.4;
+    public static final double SPEED = 0.8;
   }
 
   public static final class IntakeConstants {
@@ -62,15 +62,15 @@ public final class Constants {
 
   public static final class ShooterConstants {
     public static final double SHOOTER_MOTOR_SPEED = 0.3;
-    public static final double SHOOTER_HIGH_SPEED_MULTIPLIER = 2;
+    public static final double SHOOTER_HIGH_SPEED_MULTIPLIER = 1.5;
     public static final int SHOOTER_MOTOR_LEFT_CAN_ID = 5;
     public static final int SHOOTER_MOTOR_RIGHT_CAN_ID = 9;
   }
 
   public static final class ArmConstants {
     public static final int ARM_MOVE_DEADZONE = 100;
-    public static final double ARM_MOTOR_SPEED_UP = 0.3;
-    public static final double ARM_MOTOR_SPEED_DOWN = 0.2;
+    public static final double ARM_MOTOR_SPEED_UP = 0.5;
+    public static final double ARM_MOTOR_SPEED_DOWN = 0.5;
     public static final int ARM_MOTOR_LEFT_CAN_ID = 7;
     public static final int ARM_MOTOR_RIGHT_CAN_ID = 6;
     public static final int ARM_BORE_ENCODER_CHANNEL_A_DIO = 0;
@@ -84,8 +84,8 @@ public final class Constants {
     FORWARD_LIMIT, 
     AMP_SHOOTER(50),
     UPRIGHT(250), 
-    HANG(400),
-    INTAKE(900),
+    HANG(50),
+    INTAKE(1100),
     SPEAKER_SHOOTER(1000);
 
     private int position;
@@ -106,7 +106,7 @@ public final class Constants {
   public static final class DriveConstants {
     // Driving Parameters - Note that these are not the maximum capable speeds of
     // the robot, rather the allowed maximum speeds
-    public static final double MAX_SPEED_METERS_PER_SECOND = 2;
+    public static final double MAX_SPEED_METERS_PER_SECOND = 3;
     public static final double MAX_ANGULAR_SPEED = Math.PI; // radians per second
 
     public static final double DIRECTION_SLEW_RATE = 0.6; // radians per second

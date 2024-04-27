@@ -112,8 +112,8 @@ public class RobotContainer {
     //   ACTIVE Safety ON (Safety=OFF, Alternate=N/A)
     //     ^ ARM Manual UP
     //     v ARM Manual DOWN
-    commandLaunchpad.safety().and(commandLaunchpad.armUp()).whileTrue(new ArmMoveCommand(Arm, true));
-    commandLaunchpad.safety().and(commandLaunchpad.armDown()).whileTrue(new ArmMoveCommand(Arm, false));
+    commandLaunchpad.safety().and(commandLaunchpad.armUp()).whileTrue(new ArmMoveCommand(Arm, true, hookSubsystem));
+    commandLaunchpad.safety().and(commandLaunchpad.armDown()).whileTrue(new ArmMoveCommand(Arm, false, hookSubsystem));
     ////////////////////////////////////////////////
 
     //  SHOOTAKE
@@ -130,14 +130,14 @@ public class RobotContainer {
     commandLaunchpad.intakeIn().and(commandLaunchpad.miscBlue()).whileTrue(new IntakeMoveOutCommand(inTake));
     commandLaunchpad.shooterOut().and(commandLaunchpad.miscBlue()).whileTrue(new ShooterMoveInCommand(Shooter));
 
-    // FIXME: Put back once basic hook motor tested
-    //commandLaunchpad.safety().onTrue(new ArmToPositionCommand(Arm, ArmPosition.HANG));
+   
+    commandLaunchpad.safety().onTrue(new ArmToPositionCommand(Arm, ArmPosition.HANG));
 
     commandLaunchpad.safety().and(commandLaunchpad.climbUp())
       .whileTrue(new HookMoveCommand(hookSubsystem, Direction.UP));
     commandLaunchpad.safety().and(commandLaunchpad.climbDown())
       .whileTrue(new HookMoveCommand(hookSubsystem, Direction.DOWN))
-      .whileTrue(new ArmMoveCommand(Arm, false));
+      .whileTrue(new ArmMoveCommand(Arm, false, hookSubsystem));
 
   }
 
@@ -147,8 +147,8 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    //return Autos.templateAuto(driveTrain);
-    return null;  
+    return Autos.templateAuto(driveTrain);
+    //return null;  
   }
 
   public Command getTeleopInitCommand() {

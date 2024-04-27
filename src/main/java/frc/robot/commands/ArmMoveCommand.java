@@ -7,16 +7,19 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.ArmPosition;
 import frc.robot.subsystems.ArmSubsystem;
+import frc.robot.subsystems.HookSubsystem;  
 
 public class ArmMoveCommand extends Command {
 
   private ArmSubsystem armSubsystem;
   private boolean moveUp;
+  private HookSubsystem hookSubsystem;
 
   /** Creates a new ArmMoveCommand. */
-  public ArmMoveCommand(ArmSubsystem armSubsystem, boolean moveUp) {
+  public ArmMoveCommand(ArmSubsystem armSubsystem, boolean moveUp, HookSubsystem hookSubsystem) {
     this.armSubsystem = armSubsystem;
     this.moveUp = moveUp;
+    this.hookSubsystem = hookSubsystem;
 
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(armSubsystem);
@@ -41,12 +44,25 @@ public class ArmMoveCommand extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    armSubsystem.moveStop();
+   // if ((!interrupted) || (!moveUp)) {
+     // hookSubsystem.setSolenoidState(false);
+      //armSubsystem.moveStop();
+     // armSubsystem.setArmPosition(ArmPosition.FORWARD_LIMIT);
+    //}else{
+     armSubsystem.moveStop();
+   // }
+    
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+   // if (!moveUp) {
+     // return armSubsystem.isForwardLimitSwitchClosed();
+   // }
+   // else {
+     return false;
+   // }
+    
   }
 }
