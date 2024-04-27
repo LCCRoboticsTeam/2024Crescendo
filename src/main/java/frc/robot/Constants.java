@@ -62,7 +62,7 @@ public final class Constants {
 
   public static final class ShooterConstants {
     public static final double SHOOTER_MOTOR_SPEED = 0.3;
-    public static final double SHOOTER_HIGH_SPEED_MULTIPLIER = 1.5;
+    public static final double SHOOTER_HIGH_SPEED_MULTIPLIER = 2;
     public static final int SHOOTER_MOTOR_LEFT_CAN_ID = 5;
     public static final int SHOOTER_MOTOR_RIGHT_CAN_ID = 9;
   }
@@ -71,6 +71,7 @@ public final class Constants {
     public static final int ARM_MOVE_DEADZONE = 100;
     public static final double ARM_MOTOR_SPEED_UP = 0.5;
     public static final double ARM_MOTOR_SPEED_DOWN = 0.5;
+    public static final double ARM_MOTORP_SPEED_HOLD = 0.1;
     public static final int ARM_MOTOR_LEFT_CAN_ID = 7;
     public static final int ARM_MOTOR_RIGHT_CAN_ID = 6;
     public static final int ARM_BORE_ENCODER_CHANNEL_A_DIO = 0;
@@ -82,7 +83,7 @@ public final class Constants {
     MOVING, 
     REVERSE_LIMIT, 
     FORWARD_LIMIT, 
-    AMP_SHOOTER(50),
+    AMP_SHOOTER(180),
     UPRIGHT(250), 
     HANG(50),
     INTAKE(1100),

@@ -73,7 +73,8 @@ public class RobotContainer {
     fieldRelativeChooser.setDefaultOption("Field Relative", true);
     fieldRelativeChooser.addOption("Robot Relative", false);
     
-    // SmartDashboard.putData(fieldRelativeChooser);
+    SmartDashboard.putData(fieldRelativeChooser);
+    SmartDashboard.putNumber("Arm Encoder Value", Arm.getBoreEncoderVal());
 
     driveTrain.setDefaultCommand(new SwerveGamepadDriveCommand(driveTrain, commandXboxController::getLeftX,
         commandXboxController::getLeftY, commandXboxController::getRightX, fieldRelativeChooser::getSelected));

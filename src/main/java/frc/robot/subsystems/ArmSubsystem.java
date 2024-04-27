@@ -90,8 +90,8 @@ public class ArmSubsystem extends SubsystemBase {
     }
 
     public void holdArmUp() {
-        talonMotorLeft.set(0);
-        talonMotorRight.set(0);
+        talonMotorLeft.set(-ArmConstants.ARM_MOTORP_SPEED_HOLD);
+        talonMotorRight.set(-ArmConstants.ARM_MOTORP_SPEED_HOLD);
     }
 
     public void moveStop() {

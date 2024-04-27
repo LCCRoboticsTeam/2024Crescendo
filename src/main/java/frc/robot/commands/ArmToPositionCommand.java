@@ -55,6 +55,9 @@ public class ArmToPositionCommand extends Command {
     armSubsystem.moveStop();
     if (!interrupted) {
       armSubsystem.setArmPosition(targetPosition);
+      if (targetPosition==ArmPosition.SPEAKER_SHOOTER) {
+        armSubsystem.holdArmUp();
+      }
     }
   }
 
