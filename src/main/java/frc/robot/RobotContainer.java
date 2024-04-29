@@ -6,21 +6,34 @@ package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.ShooterConstants;
-import frc.robot.commands.ArmSubsystemCommand;
+import frc.robot.commands.ArmMoveCommand;
+import frc.robot.commands.ArmToForwardLimitCommand;
+import frc.robot.commands.ArmToPositionCommand;
+import frc.robot.commands.ArmToReverseLimitCommand;
 import frc.robot.commands.Autos;
+import frc.robot.commands.HookMoveCommand;
+import frc.robot.commands.IntakeMoveInCommand;
+import frc.robot.commands.IntakeMoveOutCommand;
 import frc.robot.commands.SwerveGamepadDriveCommand;
-import frc.robot.commands.IntakeSubsystemCommand;
-import frc.robot.commands.ShooterSubsystemCommand;
+import frc.robot.commands.HookMoveCommand.Direction;
+import frc.robot.commands.ShooterMoveOutCommand;
+import frc.robot.commands.ShooterMoveInCommand;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.DriveTrainSubsystem;
+import frc.robot.subsystems.HookSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
-import edu.wpi.first.wpilibj.XboxController;
+
+import static frc.robot.Constants.HookConstants.HOOK_MOTOR_CAN_ID;
+import static frc.robot.Constants.HookConstants.HOOK_SOLENOID_CAN_ID;
+
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.ArmConstants;
+import frc.robot.Constants.ArmPosition;
 import frc.robot.Constants.IntakeConstants;
 
 /**
@@ -36,17 +49,17 @@ public class RobotContainer {
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController commandXboxController = new CommandXboxController(OperatorConstants.XBOX_CONTROLLER_PORT);
-  private final XboxController xboxController = new XboxController(OperatorConstants.ARM_AND_SHOOTAKE_XBOX_CONTROLLER_PORT);
-  private final LaunchpadController launchpad = new LaunchpadController(OperatorConstants.LAUNCHPAD_PORT);
+  private final CommandLaunchpadController commandLaunchpad = new CommandLaunchpadController(OperatorConstants.LAUNCHPAD_PORT);
 
   // The robot's subsystems and commands are defined here...
   private final DriveTrainSubsystem driveTrain = new DriveTrainSubsystem();
   private final IntakeSubsystem inTake = new IntakeSubsystem(IntakeConstants.INTAKE_CAN_ID,
-      IntakeConstants.INTAKE_MOTOR_SPEED, false);
+      IntakeConstants.INTAKE_MOTOR_SPEED);
   private final ArmSubsystem Arm = new ArmSubsystem(ArmConstants.ARM_MOTOR_LEFT_CAN_ID,
-      ArmConstants.ARM_MOTOR_RIGHT_CAN_ID, ArmConstants.ARM_MOTOR_SPEED, false);
+      ArmConstants.ARM_MOTOR_RIGHT_CAN_ID, ArmConstants.ARM_MOTOR_SPEED_UP, ArmConstants.ARM_MOTOR_SPEED_DOWN);
   private final ShooterSubsystem Shooter = new ShooterSubsystem(ShooterConstants.SHOOTER_MOTOR_LEFT_CAN_ID,
-      ShooterConstants.SHOOTER_MOTOR_RIGHT_CAN_ID, ShooterConstants.SHOOTER_MOTOR_SPEED, false);
+      ShooterConstants.SHOOTER_MOTOR_RIGHT_CAN_ID, ShooterConstants.SHOOTER_MOTOR_SPEED);
+  private final HookSubsystem hookSubsystem = new HookSubsystem(HOOK_MOTOR_CAN_ID, HOOK_SOLENOID_CAN_ID);
 
   private final SendableChooser<Boolean> fieldRelativeChooser = new SendableChooser<>();
 
@@ -59,18 +72,12 @@ public class RobotContainer {
 
     fieldRelativeChooser.setDefaultOption("Field Relative", true);
     fieldRelativeChooser.addOption("Robot Relative", false);
-    // SmartDashboard.putData(fieldRelativeChooser);
-
     
+    SmartDashboard.putData(fieldRelativeChooser);
+    SmartDashboard.putNumber("Arm Encoder Value", Arm.getBoreEncoderVal());
 
     driveTrain.setDefaultCommand(new SwerveGamepadDriveCommand(driveTrain, commandXboxController::getLeftX,
         commandXboxController::getLeftY, commandXboxController::getRightX, fieldRelativeChooser::getSelected));
-    inTake.setDefaultCommand(
-        new IntakeSubsystemCommand(inTake, launchpad::getIntakeIn, () -> false, true));
-    Shooter.setDefaultCommand(new ShooterSubsystemCommand(Shooter, Arm.armPosition, launchpad::getShooterOut,
-        () -> false, true));
-    Arm.setDefaultCommand(new ArmSubsystemCommand(Arm, xboxController::getBackButton, xboxController::getStartButton,
-        xboxController::getXButton, xboxController::getYButton, false));
   }
 
   /**
@@ -89,6 +96,49 @@ public class RobotContainer {
    */
   private void configureBindings() {
     commandXboxController.rightBumper().whileTrue(driveTrain.run(driveTrain::setX));
+    //SmartDashboard.putBoolean("Reverse Limit Switch Closed", ArmSubsystem.revLimSwitchClosed);
+
+    //  ARM
+    ////////////////////////////////////////////////
+    //    ACTIVE default (Safety=OFF, Alternate=OFF)
+    //     ^ ARM AMP Position
+    //     v ARM INTAKE Position
+    commandLaunchpad.safety().negate().and(commandLaunchpad.armUp().and(commandLaunchpad.miscBlue().negate())).onTrue(new ArmToPositionCommand(Arm, ArmPosition.AMP_SHOOTER));
+    commandLaunchpad.safety().negate().and(commandLaunchpad.armDown().and(commandLaunchpad.miscBlue().negate())).onTrue(new ArmToPositionCommand(Arm, ArmPosition.INTAKE));
+    //   ACTIVE Alternate (Safety=OFF, Alternate=ON)
+    //     ^ ARM SHOOTER Position
+    //     v ARM Reverse Limit Position (Note already happens by default at Teleopt start)
+    commandLaunchpad.safety().negate().and(commandLaunchpad.armUp().and(commandLaunchpad.miscBlue())).onTrue(new ArmToPositionCommand(Arm, ArmPosition.SPEAKER_SHOOTER));
+    commandLaunchpad.safety().negate().and(commandLaunchpad.armDown().and(commandLaunchpad.miscBlue())).onTrue(new ArmToReverseLimitCommand(Arm));
+    //   ACTIVE Safety ON (Safety=OFF, Alternate=N/A)
+    //     ^ ARM Manual UP
+    //     v ARM Manual DOWN
+    commandLaunchpad.safety().and(commandLaunchpad.armUp()).whileTrue(new ArmMoveCommand(Arm, true, hookSubsystem));
+    commandLaunchpad.safety().and(commandLaunchpad.armDown()).whileTrue(new ArmMoveCommand(Arm, false, hookSubsystem));
+    ////////////////////////////////////////////////
+
+    //  SHOOTAKE
+    ////////////////////////////////////////////////
+    //    ACTIVE default (Safety=N/A, Alternate=OFF)
+    //      ^ INTAKE IN
+    //      v SHOOTER OUT
+    commandLaunchpad.intakeIn().and(commandLaunchpad.miscBlue().negate()).whileTrue(new IntakeMoveInCommand(inTake));
+    commandLaunchpad.shooterOut().and(commandLaunchpad.miscBlue().negate()).whileTrue(new ShooterMoveOutCommand(Shooter, Arm::getArmPosition));
+    ////////////////////////////////////////////////
+    //    ACTIVE default (Safety=N/A, Alternate=ON)
+    //      ^ INTAKE OUT (Normally never needed)
+    //      v SHOOTER IN (Normally never needed)
+    commandLaunchpad.intakeIn().and(commandLaunchpad.miscBlue()).whileTrue(new IntakeMoveOutCommand(inTake));
+    commandLaunchpad.shooterOut().and(commandLaunchpad.miscBlue()).whileTrue(new ShooterMoveInCommand(Shooter));
+
+   
+    commandLaunchpad.safety().onTrue(new ArmToPositionCommand(Arm, ArmPosition.HANG));
+
+    commandLaunchpad.safety().and(commandLaunchpad.climbUp())
+      .whileTrue(new HookMoveCommand(hookSubsystem, Direction.UP));
+    commandLaunchpad.safety().and(commandLaunchpad.climbDown())
+      .whileTrue(new HookMoveCommand(hookSubsystem, Direction.DOWN))
+      .whileTrue(new ArmMoveCommand(Arm, false, hookSubsystem));
 
   }
 
@@ -99,5 +149,12 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     return Autos.templateAuto(driveTrain);
+    //return null;  
   }
+
+  public Command getTeleopInitCommand() {
+    return new ArmToReverseLimitCommand(Arm);
+    //return null;  
+  }
+
 }

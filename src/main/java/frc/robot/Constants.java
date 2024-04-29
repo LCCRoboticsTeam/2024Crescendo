@@ -28,14 +28,14 @@ public final class Constants {
     public static final int XBOX_CONTROLLER_PORT = 0;
     public static final int DRIVE_TRAIN_XBOX_CONTROLLER_PORT = 0;
     public static final int ARM_AND_SHOOTAKE_XBOX_CONTROLLER_PORT = 0;
-    public static final double XBOX_DEADBAND = 0.05;
+    public static final double XBOX_DEADBAND = 0.065;  // was 0.05
 
     public static final int LAUNCHPAD_PORT = 1;
   }
 
   public static final class AutoConstants {
-    public static final double MAX_SPEED_METERS_PER_SECOND = 3;
-    public static final double MAX_ACCELERATION_METERS_PER_SECOND_SQUARED = 3;
+    public static final double MAX_SPEED_METERS_PER_SECOND = 0.5;
+    public static final double MAX_ACCELERATION_METERS_PER_SECOND_SQUARED = 1;
     public static final double MAX_ANGULAR_SPEED_RADIANS_PER_SECOND = Math.PI;
     public static final double MAX_ANGULAR_SPEED_RADIANS_PER_SECOND_SQUARED = Math.PI;
 
@@ -48,41 +48,67 @@ public final class Constants {
         MAX_ANGULAR_SPEED_RADIANS_PER_SECOND, MAX_ANGULAR_SPEED_RADIANS_PER_SECOND_SQUARED);
   }
 
-public static final class IntakeConstants {
-  public static final double INTAKE_MOTOR_SPEED = 0.4;
-  public static final int INTAKE_BEAM_BREAK_DIO = 2;
-  public static final int INTAKE_CAN_ID = 4;
-}
+  public static final class HookConstants {
+    public static final int HOOK_MOTOR_CAN_ID = 3;
+    public static final int HOOK_SOLENOID_CAN_ID = 2;
+    public static final double SPEED = 0.8;
+  }
 
-public static final class ShooterConstants {
-  public static final double SHOOTER_MOTOR_SPEED = 0.3;
-  public static final double SHOOTER_HIGH_SPEED_MULTIPLIER = 2;
-  public static final int SHOOTER_MOTOR_LEFT_CAN_ID = 5; 
-  public static final int SHOOTER_MOTOR_RIGHT_CAN_ID = 9; 
-}
+  public static final class IntakeConstants {
+    public static final double INTAKE_MOTOR_SPEED = 0.4;
+    public static final int INTAKE_BEAM_BREAK_DIO = 2;
+    public static final int INTAKE_CAN_ID = 4;
+  }
 
-public static final class ArmConstants {
-  public static final double ARM_MOTOR_SPEED = 0.2;
-  public static final int ARM_MOTOR_LEFT_CAN_ID = 7; 
-  public static final int ARM_MOTOR_RIGHT_CAN_ID = 6; 
-  public static final int ARM_BORE_ENCODER_CHANNEL_A_DIO = 0;
-  public static final int ARM_BORE_ENCODER_CHANNEL_B_DIO = 1;
-  public static final int ARM_UPRIGHT_BORE_ENCODER_POSITION = 250;
-  public static final int ARM_AMP_SHOOTER_BORE_ENCODER_POSITION = 50;
-  public static final int ARM_SPEAKER_SHOOTER_BORE_ENCODER_POSITION = 1000;
-  public static final int ARM_HANG_BORE_ENCODER_POSITION = 400;
-  public static final int ARM_INTAKE_BORE_ENCODER_POSITION = 900;
-}
+  public static final class ShooterConstants {
+    public static final double SHOOTER_MOTOR_SPEED = 0.3;
+    public static final double SHOOTER_HIGH_SPEED_MULTIPLIER = 2;
+    public static final int SHOOTER_MOTOR_LEFT_CAN_ID = 5;
+    public static final int SHOOTER_MOTOR_RIGHT_CAN_ID = 9;
+  }
 
-public enum ArmPosition {
-  UNKNOWN, REVERSE_LIMIT, FORWARD_LIMIT, UPRIGHT, INTAKE, SPEAKER_SHOOTER, AMP_SHOOTER, HANG;
-}
+  public static final class ArmConstants {
+    public static final int ARM_MOVE_DEADZONE = 100;
+    public static final double ARM_MOTOR_SPEED_UP = 0.5;
+    public static final double ARM_MOTOR_SPEED_DOWN = 0.5;
+    public static final double ARM_MOTORP_SPEED_HOLD = 0.1;
+    public static final int ARM_MOTOR_LEFT_CAN_ID = 7;
+    public static final int ARM_MOTOR_RIGHT_CAN_ID = 6;
+    public static final int ARM_BORE_ENCODER_CHANNEL_A_DIO = 0;
+    public static final int ARM_BORE_ENCODER_CHANNEL_B_DIO = 1;
+  }
+
+  public enum ArmPosition {
+    UNKNOWN, 
+    MOVING, 
+    REVERSE_LIMIT, 
+    FORWARD_LIMIT, 
+    AMP_SHOOTER(180),
+    UPRIGHT(250), 
+    HANG(50),
+    INTAKE(1100),
+    SPEAKER_SHOOTER(1000);
+
+    private int position;
+
+    ArmPosition(int position) {
+      this.position = position;
+    }
+
+    ArmPosition() {
+    }
+
+    public int getPosition() {
+      return position;
+    }
+
+  }
 
   public static final class DriveConstants {
     // Driving Parameters - Note that these are not the maximum capable speeds of
     // the robot, rather the allowed maximum speeds
-    public static final double MAX_SPEED_METERS_PER_SECOND = 2;
-    public static final double MAX_ANGULAR_SPEED =  Math.PI; // radians per second
+    public static final double MAX_SPEED_METERS_PER_SECOND = 3;
+    public static final double MAX_ANGULAR_SPEED = Math.PI; // radians per second
 
     public static final double DIRECTION_SLEW_RATE = 0.6; // radians per second
     public static final double MAGNITUDE_SLEW_RATE = 0.9; // percent per second (1 = 100%)
@@ -120,12 +146,15 @@ public enum ArmPosition {
   }
 
   public static final class ModuleConstants {
-    // The MAXSwerve module can be configured with one of three pinion gears: 12T, 13T, or 14T.
-    // This changes the drive speed of the module (a pinion gear with more teeth will result in a
+    // The MAXSwerve module can be configured with one of three pinion gears: 12T,
+    // 13T, or 14T.
+    // This changes the drive speed of the module (a pinion gear with more teeth
+    // will result in a
     // robot that drives faster).
     public static final int DRIVING_MOTOR_PINION_TEETH = 13;
 
-    // Invert the turning encoder, since the output shaft rotates in the opposite direction of
+    // Invert the turning encoder, since the output shaft rotates in the opposite
+    // direction of
     // the steering motor in the MAXSwerve Module.
     public static final boolean TURNING_ENCODER_INVERTED = true;
 
@@ -133,7 +162,8 @@ public enum ArmPosition {
     public static final double DRIVING_MOTOR_FREE_SPEED_RPS = NeoMotorConstants.FREE_SPEED_RPM / 60;
     public static final double WHEEL_DIAMETER_METERS = 0.072;
     public static final double WHEEL_CIRCUMFERENCE_METERS = WHEEL_DIAMETER_METERS * Math.PI;
-    // 45 teeth on the wheel's bevel gear, 22 teeth on the first-stage spur gear, 15 teeth on the bevel pinion
+    // 45 teeth on the wheel's bevel gear, 22 teeth on the first-stage spur gear, 15
+    // teeth on the bevel pinion
     public static final double DRIVING_MOTOR_REDUCTION = (45.0 * 22) / (DRIVING_MOTOR_PINION_TEETH * 15);
     public static final double DRIVE_WHEEL_FREE_SPEED_RPS = (DRIVING_MOTOR_FREE_SPEED_RPS * WHEEL_CIRCUMFERENCE_METERS)
         / DRIVING_MOTOR_REDUCTION;
