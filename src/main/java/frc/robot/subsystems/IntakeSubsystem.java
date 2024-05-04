@@ -1,13 +1,17 @@
 package frc.robot.subsystems;
 
-import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
-//import edu.wpi.first.wpilibj.DigitalInput;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import au.grapplerobotics.LaserCan;
 import au.grapplerobotics.ConfigurationFailedException;
+import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+
+import java.nio.file.NotLinkException;
+
+//import edu.wpi.first.wpilibj.DigitalInput;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.IntakeConstants;
+import frc.robot.Constants.ShooterConstants;
 
 public class IntakeSubsystem extends SubsystemBase {
    
@@ -16,6 +20,7 @@ public class IntakeSubsystem extends SubsystemBase {
     private LaserCan LC_1;
     //private final Encoder throughBoreEncoder;
     private double speed;
+    
   
     public IntakeSubsystem (int motorIDInput, int LC_0_ID, int LC_1_ID, double speed) {
 
@@ -68,13 +73,20 @@ public class IntakeSubsystem extends SubsystemBase {
     }
 
     /* Sets intake to take in game piece */
-    public void intakeIn() {
-        talonMotor.set(-speed);
+    public void intakeIn(boolean highspeed) {
+        if (highspeed) {
+            talonMotor.set(-speed*ShooterConstants.SHOOTER_HIGH_SPEED_MULTIPLIER);
+        }
+        else {
+            talonMotor.set(-speed);
+        }
     }
 
     /* Sets intake to spit out game piece */
     public void intakeOut() {
-        talonMotor.set(speed);
+
+      talonMotor.set(speed);
+
     }
 
     /* Turn intake off */
@@ -85,8 +97,9 @@ public class IntakeSubsystem extends SubsystemBase {
 
     public boolean noteDetected() {
         LaserCan.Measurement measurement = LC_0.getMeasurement();
-        if (measurement != null && measurement.status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT) {
-            //System.out.println("The target is " + measurement.distance_mm + "mm away!");
+        if ((measurement != null) && (measurement.status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT) && 
+            (measurement.distance_mm<80)) {
+            System.out.println("The target is " + measurement.distance_mm + "mm away!");
             return true;
           } else {
             //System.out.println("Oh no! The target is out of range, or we can't get a reliable measurement!");

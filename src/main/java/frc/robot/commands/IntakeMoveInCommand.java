@@ -17,6 +17,7 @@ public class IntakeMoveInCommand extends Command {
   private boolean noteDetectedInitial;
   private int executeCount;
   private int executeDelayInMs;
+  private Integer noteDetectedCount = 0;
 
   /** Creates a new IntakeMoveCommand. */
   public IntakeMoveInCommand(IntakeSubsystem intakeSubsystem, Supplier<ArmPosition> armPosition, int executeDelayInMs) {
@@ -33,6 +34,7 @@ public class IntakeMoveInCommand extends Command {
   public void initialize() {
     // Capture if the intake starts with a note or not
     this.noteDetectedInitial=intakeSubsystem.noteDetected();
+
     executeCount=0;
     if (armPosition.get().equals(ArmPosition.AMP_SHOOTER)) {
       executeDelayInMs=(executeDelayInMs/2);
@@ -43,7 +45,7 @@ public class IntakeMoveInCommand extends Command {
   @Override
   public void execute() {
     if (executeCount>=executeDelayInMs) {
-      intakeSubsystem.intakeIn();
+      intakeSubsystem.intakeIn(armPosition.get().equals(ArmPosition.SPEAKER_SHOOTER));
     } else {
       // This should be run every 20ms
       executeCount+=20;
@@ -59,10 +61,21 @@ public class IntakeMoveInCommand extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    // Only return true on intake of note or note is shot
-    if (this.noteDetectedInitial!=intakeSubsystem.noteDetected())
-      return true;
-    else
+    // Only return true on intake if note Detected or note is shot
+    if ((executeDelayInMs==0) && (intakeSubsystem.noteDetected())) {
+      noteDetectedCount++;
+      System.out.println("The noteDetectedCount is " + noteDetectedCount);
+
+      if (noteDetectedCount>7) {
+        return true;
+      }
+      else {
+        return false;
+      }
+    }
+    else {
       return false;
+    }
   }
+
 }

@@ -4,9 +4,7 @@
     "version": "2024.2.1",
     "frcYear": "2024",
     "uuid": "8ef3423d-9532-4665-8339-206dae1d7168",
-    "mavenUrls": [
-        "https://storage.googleapis.com/grapple-frc-maven"
-    ],
+    "mavenUrls": [ "https://storage.googleapis.com/grapple-frc-maven" ],
     "jsonUrl": "https://storage.googleapis.com/grapple-frc-maven/libgrapplefrc2024.json",
     "javaDependencies": [
         {

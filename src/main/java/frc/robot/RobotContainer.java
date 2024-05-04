@@ -125,7 +125,7 @@ public class RobotContainer {
     //      v SHOOTER OUT
     //commandLaunchpad.intakeIn().and(commandLaunchpad.miscBlue().negate()).whileTrue(new IntakeMoveInCommand(inTake));
     commandLaunchpad.intakeIn().and(commandLaunchpad.miscBlue().negate()).onTrue(new IntakeMoveInCommand(inTake, Arm::getArmPosition, 0));
-    commandLaunchpad.shooterOut().and(commandLaunchpad.miscBlue().negate()).whileTrue(new ShooterMoveOutCommand(Shooter, Arm::getArmPosition)).onTrue(new IntakeMoveInCommand(inTake, Arm::getArmPosition, 1000));
+    commandLaunchpad.shooterOut().and(commandLaunchpad.miscBlue().negate()).whileTrue(new ShooterMoveOutCommand(Shooter, Arm::getArmPosition)).whileTrue(new IntakeMoveInCommand(inTake, Arm::getArmPosition, 1500));
     ////////////////////////////////////////////////
     //    ACTIVE default (Safety=N/A, Alternate=ON)
     //      ^ INTAKE OUT (Normally never needed)
