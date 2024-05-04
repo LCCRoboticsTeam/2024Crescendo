@@ -53,7 +53,8 @@ public class RobotContainer {
 
   // The robot's subsystems and commands are defined here...
   private final DriveTrainSubsystem driveTrain = new DriveTrainSubsystem();
-  private final IntakeSubsystem inTake = new IntakeSubsystem(IntakeConstants.INTAKE_CAN_ID,
+  private final IntakeSubsystem inTake = new IntakeSubsystem(IntakeConstants.INTAKE_MOTOR_CAN_ID, 
+      IntakeConstants.INTAKE_LASERCAN_0_CAN_ID, IntakeConstants.INTAKE_LASERCAN_1_CAN_ID,
       IntakeConstants.INTAKE_MOTOR_SPEED);
   private final ArmSubsystem Arm = new ArmSubsystem(ArmConstants.ARM_MOTOR_LEFT_CAN_ID,
       ArmConstants.ARM_MOTOR_RIGHT_CAN_ID, ArmConstants.ARM_MOTOR_SPEED_UP, ArmConstants.ARM_MOTOR_SPEED_DOWN);
@@ -122,8 +123,9 @@ public class RobotContainer {
     //    ACTIVE default (Safety=N/A, Alternate=OFF)
     //      ^ INTAKE IN
     //      v SHOOTER OUT
-    commandLaunchpad.intakeIn().and(commandLaunchpad.miscBlue().negate()).whileTrue(new IntakeMoveInCommand(inTake));
-    commandLaunchpad.shooterOut().and(commandLaunchpad.miscBlue().negate()).whileTrue(new ShooterMoveOutCommand(Shooter, Arm::getArmPosition));
+    //commandLaunchpad.intakeIn().and(commandLaunchpad.miscBlue().negate()).whileTrue(new IntakeMoveInCommand(inTake));
+    commandLaunchpad.intakeIn().and(commandLaunchpad.miscBlue().negate()).onTrue(new IntakeMoveInCommand(inTake, Arm::getArmPosition, 0));
+    commandLaunchpad.shooterOut().and(commandLaunchpad.miscBlue().negate()).whileTrue(new ShooterMoveOutCommand(Shooter, Arm::getArmPosition)).onTrue(new IntakeMoveInCommand(inTake, Arm::getArmPosition, 1000));
     ////////////////////////////////////////////////
     //    ACTIVE default (Safety=N/A, Alternate=ON)
     //      ^ INTAKE OUT (Normally never needed)

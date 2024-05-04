@@ -15,11 +15,11 @@ public class ShooterMoveInCommand extends Command {
   private final ShooterSubsystem shooterSubsystem;
 
   /** Creates a new IntakeMoveCommand. */
-  public ShooterMoveInCommand(ShooterSubsystem intakeSubsystem) {
-    this.shooterSubsystem = intakeSubsystem;
+  public ShooterMoveInCommand(ShooterSubsystem shooterSubsystem) {
+    this.shooterSubsystem = shooterSubsystem;
 
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(intakeSubsystem);
+    addRequirements(shooterSubsystem);
   }
 
   // Called when the command is initially scheduled.

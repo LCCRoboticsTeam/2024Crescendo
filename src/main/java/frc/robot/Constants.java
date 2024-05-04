@@ -56,8 +56,9 @@ public final class Constants {
 
   public static final class IntakeConstants {
     public static final double INTAKE_MOTOR_SPEED = 0.4;
-    public static final int INTAKE_BEAM_BREAK_DIO = 2;
-    public static final int INTAKE_CAN_ID = 4;
+    public static final int INTAKE_MOTOR_CAN_ID = 4;
+    public static final int INTAKE_LASERCAN_0_CAN_ID = 19;
+    public static final int INTAKE_LASERCAN_1_CAN_ID = 20;
   }
 
   public static final class ShooterConstants {

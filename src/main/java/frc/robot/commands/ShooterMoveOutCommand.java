@@ -16,18 +16,17 @@ public class ShooterMoveOutCommand extends Command {
   private final Supplier<ArmPosition> armPosition;
 
   /** Creates a new IntakeMoveCommand. */
-  public ShooterMoveOutCommand(ShooterSubsystem intakeSubsystem, Supplier<ArmPosition> armPosition) {
-    this.shooterSubsystem = intakeSubsystem;
+  public ShooterMoveOutCommand(ShooterSubsystem shooterSubsystem, Supplier<ArmPosition> armPosition) {
+    this.shooterSubsystem = shooterSubsystem;
     this.armPosition = armPosition;
 
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(intakeSubsystem);
+    addRequirements(shooterSubsystem);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-
   }
 
   // Called every time the scheduler runs while the command is scheduled.
