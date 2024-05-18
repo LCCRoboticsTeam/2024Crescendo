@@ -34,8 +34,8 @@ public final class Constants {
   }
 
   public static final class AutoConstants {
-    public static final double MAX_SPEED_METERS_PER_SECOND = 0.5;
-    public static final double MAX_ACCELERATION_METERS_PER_SECOND_SQUARED = 1;
+    public static final double MAX_SPEED_METERS_PER_SECOND = 0.5; // (was 3)
+    public static final double MAX_ACCELERATION_METERS_PER_SECOND_SQUARED = 1; // (was 3)
     public static final double MAX_ANGULAR_SPEED_RADIANS_PER_SECOND = Math.PI;
     public static final double MAX_ANGULAR_SPEED_RADIANS_PER_SECOND_SQUARED = Math.PI;
 
@@ -59,6 +59,11 @@ public final class Constants {
     public static final int INTAKE_MOTOR_CAN_ID = 4;
     public static final int INTAKE_LASERCAN_0_CAN_ID = 19;
     public static final int INTAKE_LASERCAN_1_CAN_ID = 20;
+    public static final int INTAKE_MOVE_IN_SHOOT_DELAY_IN_MS = 1500;
+    public static final int INTAKE_MOVE_IN_SHOOT_DELAY_ARM_POSITION_AMP_SHOOTER_DIVIDER = 2;
+    public static final int INTAKE_EXECUTE_COUNT_INCREMENT_IN_MS = 20;
+    public static final int INTAKE_NOTE_DETECTED_TRUE_COUNT_THRESHOLD = 7;
+    public static final int INTAKE_NOTE_DETECTED_FALSE_COUNT_THRESHOLD = 7;
   }
 
   public static final class ShooterConstants {
@@ -197,11 +202,11 @@ public final class Constants {
     public static final IdleMode DRIVING_MOTOR_IDLE_MODE = IdleMode.kBrake;
     public static final IdleMode TURNING_MOTOR_IDLE_MODE = IdleMode.kBrake;
 
-    public static final int DRIVING_MOTOR_CURRENT_LIMIT = 10; // amps (was 50)
-    public static final int TURNING_MOTOR_CURRENT_LIMIT = 5; // amps (was 20)
+    public static final int DRIVING_MOTOR_CURRENT_LIMIT = 50; // amps (tried 10, though orig was 50)
+    public static final int TURNING_MOTOR_CURRENT_LIMIT = 20; // amps (tried 5, though orig was 20)
   }
 
   public static final class NeoMotorConstants {
-    public static final double FREE_SPEED_RPM = 2838;
+    public static final double FREE_SPEED_RPM = 5676; // tried 2838, though orig was 5676
   }
 }

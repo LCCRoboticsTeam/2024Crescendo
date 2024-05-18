@@ -54,13 +54,18 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final DriveTrainSubsystem driveTrain = new DriveTrainSubsystem();
   private final IntakeSubsystem inTake = new IntakeSubsystem(IntakeConstants.INTAKE_MOTOR_CAN_ID, 
-      IntakeConstants.INTAKE_LASERCAN_0_CAN_ID, IntakeConstants.INTAKE_LASERCAN_1_CAN_ID,
-      IntakeConstants.INTAKE_MOTOR_SPEED);
+                                                             IntakeConstants.INTAKE_LASERCAN_0_CAN_ID, 
+                                                             IntakeConstants.INTAKE_LASERCAN_1_CAN_ID,
+                                                             IntakeConstants.INTAKE_MOTOR_SPEED);
   private final ArmSubsystem Arm = new ArmSubsystem(ArmConstants.ARM_MOTOR_LEFT_CAN_ID,
-      ArmConstants.ARM_MOTOR_RIGHT_CAN_ID, ArmConstants.ARM_MOTOR_SPEED_UP, ArmConstants.ARM_MOTOR_SPEED_DOWN);
+                                                    ArmConstants.ARM_MOTOR_RIGHT_CAN_ID, 
+                                                    ArmConstants.ARM_MOTOR_SPEED_UP, 
+                                                    ArmConstants.ARM_MOTOR_SPEED_DOWN);
   private final ShooterSubsystem Shooter = new ShooterSubsystem(ShooterConstants.SHOOTER_MOTOR_LEFT_CAN_ID,
-      ShooterConstants.SHOOTER_MOTOR_RIGHT_CAN_ID, ShooterConstants.SHOOTER_MOTOR_SPEED);
-  private final HookSubsystem hookSubsystem = new HookSubsystem(HOOK_MOTOR_CAN_ID, HOOK_SOLENOID_CAN_ID);
+                                                                ShooterConstants.SHOOTER_MOTOR_RIGHT_CAN_ID, 
+                                                                ShooterConstants.SHOOTER_MOTOR_SPEED);
+  private final HookSubsystem hookSubsystem = new HookSubsystem(HOOK_MOTOR_CAN_ID, 
+                                                                HOOK_SOLENOID_CAN_ID);
 
   private final SendableChooser<Boolean> fieldRelativeChooser = new SendableChooser<>();
 
@@ -125,7 +130,7 @@ public class RobotContainer {
     //      v SHOOTER OUT
     //commandLaunchpad.intakeIn().and(commandLaunchpad.miscBlue().negate()).whileTrue(new IntakeMoveInCommand(inTake));
     commandLaunchpad.intakeIn().and(commandLaunchpad.miscBlue().negate()).onTrue(new IntakeMoveInCommand(inTake, Arm::getArmPosition, 0));
-    commandLaunchpad.shooterOut().and(commandLaunchpad.miscBlue().negate()).whileTrue(new ShooterMoveOutCommand(Shooter, Arm::getArmPosition)).whileTrue(new IntakeMoveInCommand(inTake, Arm::getArmPosition, 1500));
+    commandLaunchpad.shooterOut().and(commandLaunchpad.miscBlue().negate()).whileTrue(new ShooterMoveOutCommand(Shooter, Arm::getArmPosition)).whileTrue(new IntakeMoveInCommand(inTake, Arm::getArmPosition, IntakeConstants.INTAKE_MOVE_IN_SHOOT_DELAY_IN_MS));
     ////////////////////////////////////////////////
     //    ACTIVE default (Safety=N/A, Alternate=ON)
     //      ^ INTAKE OUT (Normally never needed)

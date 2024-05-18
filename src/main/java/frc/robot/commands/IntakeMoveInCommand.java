@@ -8,16 +8,17 @@ import java.util.function.Supplier;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.ArmPosition;
+import frc.robot.Constants.IntakeConstants;
 import frc.robot.subsystems.IntakeSubsystem;
 
 public class IntakeMoveInCommand extends Command {
 
   private final IntakeSubsystem intakeSubsystem;
   private final Supplier<ArmPosition> armPosition;
-  private boolean noteDetectedInitial;
-  private int executeCount;
-  private int executeDelayInMs;
-  private Integer noteDetectedCount = 0;
+  private int executeCount = 0;
+  private int executeDelayInMs = 0;
+  private int noteDetectedTrueCount = 0;
+  private int noteDetectedFalseCount = 0;
 
   /** Creates a new IntakeMoveCommand. */
   public IntakeMoveInCommand(IntakeSubsystem intakeSubsystem, Supplier<ArmPosition> armPosition, int executeDelayInMs) {
@@ -32,12 +33,9 @@ public class IntakeMoveInCommand extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    // Capture if the intake starts with a note or not
-    this.noteDetectedInitial=intakeSubsystem.noteDetected();
-
     executeCount=0;
     if (armPosition.get().equals(ArmPosition.AMP_SHOOTER)) {
-      executeDelayInMs=(executeDelayInMs/2);
+      executeDelayInMs=(executeDelayInMs/IntakeConstants.INTAKE_MOVE_IN_SHOOT_DELAY_ARM_POSITION_AMP_SHOOTER_DIVIDER);
     }
   }
 
@@ -48,7 +46,7 @@ public class IntakeMoveInCommand extends Command {
       intakeSubsystem.intakeIn(armPosition.get().equals(ArmPosition.SPEAKER_SHOOTER));
     } else {
       // This should be run every 20ms
-      executeCount+=20;
+      executeCount+=IntakeConstants.INTAKE_EXECUTE_COUNT_INCREMENT_IN_MS;
     }
   }
 
@@ -62,11 +60,15 @@ public class IntakeMoveInCommand extends Command {
   @Override
   public boolean isFinished() {
     // Only return true on intake if note Detected or note is shot
-    if ((executeDelayInMs==0) && (intakeSubsystem.noteDetected())) {
-      noteDetectedCount++;
-      System.out.println("The noteDetectedCount is " + noteDetectedCount);
-
-      if (noteDetectedCount>7) {
+    // Assumption is if executeDelayInMs=0, then we run until we detect a note, else 
+    // we have a note and will run until we do not have a note (ie: it is shot)
+    if (executeDelayInMs==0) {
+      // Only the first detection starts counter
+      if (intakeSubsystem.noteDetected() || noteDetectedTrueCount>0) {
+        noteDetectedTrueCount++;
+        //System.out.println("The noteDetectedTrueCount is " + noteDetectedTrueCount);
+      }
+      if (noteDetectedTrueCount>IntakeConstants.INTAKE_NOTE_DETECTED_TRUE_COUNT_THRESHOLD) {
         return true;
       }
       else {
@@ -74,7 +76,17 @@ public class IntakeMoveInCommand extends Command {
       }
     }
     else {
-      return false;
+      // Only the first detection starts counter
+      if (!intakeSubsystem.noteDetected() || noteDetectedFalseCount>0) {
+        noteDetectedFalseCount++;
+        System.out.println("The noteDetectedFalseCount is " + noteDetectedFalseCount);
+      }
+      if (noteDetectedFalseCount>IntakeConstants.INTAKE_NOTE_DETECTED_FALSE_COUNT_THRESHOLD) {
+        return true;
+      }
+      else {
+        return false;
+      }
     }
   }
 
