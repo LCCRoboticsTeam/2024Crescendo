@@ -99,7 +99,7 @@ public class IntakeSubsystem extends SubsystemBase {
         LaserCan.Measurement measurement = LC_0.getMeasurement();
         if ((measurement != null) && (measurement.status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT) && 
             (measurement.distance_mm<80)) {
-            System.out.println("The target is " + measurement.distance_mm + "mm away!");
+            //System.out.println("The target is " + measurement.distance_mm + "mm away!");
             return true;
           } else {
             //System.out.println("Oh no! The target is out of range, or we can't get a reliable measurement!");

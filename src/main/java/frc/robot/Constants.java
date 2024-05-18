@@ -59,11 +59,11 @@ public final class Constants {
     public static final int INTAKE_MOTOR_CAN_ID = 4;
     public static final int INTAKE_LASERCAN_0_CAN_ID = 19;
     public static final int INTAKE_LASERCAN_1_CAN_ID = 20;
-    public static final int INTAKE_MOVE_IN_SHOOT_DELAY_IN_MS = 1500;
+    public static final int INTAKE_MOVE_IN_SHOOT_DELAY_IN_MS = 1200;
     public static final int INTAKE_MOVE_IN_SHOOT_DELAY_ARM_POSITION_AMP_SHOOTER_DIVIDER = 2;
     public static final int INTAKE_EXECUTE_COUNT_INCREMENT_IN_MS = 20;
     public static final int INTAKE_NOTE_DETECTED_TRUE_COUNT_THRESHOLD = 7;
-    public static final int INTAKE_NOTE_DETECTED_FALSE_COUNT_THRESHOLD = 7;
+    public static final int INTAKE_NOTE_DETECTED_FALSE_COUNT_THRESHOLD = 50;
   }
 
   public static final class ShooterConstants {
@@ -92,8 +92,8 @@ public final class Constants {
     AMP_SHOOTER(180),
     UPRIGHT(250), 
     HANG(50),
-    INTAKE(1100),
-    SPEAKER_SHOOTER(1000);
+    INTAKE(1150),
+    SPEAKER_SHOOTER(1100);
 
     private int position;
 

@@ -69,6 +69,10 @@ public class RobotContainer {
 
   private final SendableChooser<Boolean> fieldRelativeChooser = new SendableChooser<>();
 
+  private final SendableChooser<Double> fieldRelativeChooser_IntakeMoveInDelay = new SendableChooser<>();
+
+  private final double[] addToDelay = {0, 100, 200, 300, 400, 500};
+
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
@@ -78,8 +82,14 @@ public class RobotContainer {
 
     fieldRelativeChooser.setDefaultOption("Field Relative", true);
     fieldRelativeChooser.addOption("Robot Relative", false);
+
+    //fieldRelativeChooser_IntakeMoveInDelay.setDefaultOption("0", addToDelay[0]);
+    //for (int i = 1; i < addToDelay.length; i++) {
+    //  fieldRelativeChooser_IntakeMoveInDelay.addOption(String.valueOf(addToDelay[i]), addToDelay[i]);
+    //}
     
     SmartDashboard.putData(fieldRelativeChooser);
+    SmartDashboard.putData(fieldRelativeChooser_IntakeMoveInDelay);
     SmartDashboard.putNumber("Arm Encoder Value", Arm.getBoreEncoderVal());
 
     driveTrain.setDefaultCommand(new SwerveGamepadDriveCommand(driveTrain, commandXboxController::getLeftX,
@@ -129,8 +139,8 @@ public class RobotContainer {
     //      ^ INTAKE IN
     //      v SHOOTER OUT
     //commandLaunchpad.intakeIn().and(commandLaunchpad.miscBlue().negate()).whileTrue(new IntakeMoveInCommand(inTake));
-    commandLaunchpad.intakeIn().and(commandLaunchpad.miscBlue().negate()).onTrue(new IntakeMoveInCommand(inTake, Arm::getArmPosition, 0));
-    commandLaunchpad.shooterOut().and(commandLaunchpad.miscBlue().negate()).whileTrue(new ShooterMoveOutCommand(Shooter, Arm::getArmPosition)).whileTrue(new IntakeMoveInCommand(inTake, Arm::getArmPosition, IntakeConstants.INTAKE_MOVE_IN_SHOOT_DELAY_IN_MS));
+    commandLaunchpad.intakeIn().and(commandLaunchpad.miscBlue().negate()).onTrue(new IntakeMoveInCommand(inTake, Arm::getArmPosition, 0, false));
+    commandLaunchpad.shooterOut().and(commandLaunchpad.miscBlue().negate()).whileTrue(new ShooterMoveOutCommand(Shooter, Arm::getArmPosition)).onTrue(new IntakeMoveInCommand(inTake, Arm::getArmPosition, IntakeConstants.INTAKE_MOVE_IN_SHOOT_DELAY_IN_MS, true));
     ////////////////////////////////////////////////
     //    ACTIVE default (Safety=N/A, Alternate=ON)
     //      ^ INTAKE OUT (Normally never needed)
