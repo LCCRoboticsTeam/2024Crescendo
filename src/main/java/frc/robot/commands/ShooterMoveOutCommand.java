@@ -38,6 +38,7 @@ public class ShooterMoveOutCommand extends Command {
   public void initialize() {
 
   isFinishedDelayCount=0;
+  
   ledController.setColor(LEDColorState.SHOOTING);
   if (armPosition.get().equals(ArmPosition.AMP_SHOOTER)) {
     isFinishedDelayInMs=(isFinishedDelayInMs/ShooterConstants.SHOOTER_MOVE_OUT_DELAY_ARM_POSITION_AMP_SHOOTER_DIVIDER);

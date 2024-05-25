@@ -47,9 +47,9 @@ public class IntakeMoveInCommand extends Command {
     noteDetectedTrueCount=0;
     noteDetectedFalseCount=0;
     executeDelayComplete=false;
-    if (armPosition.get().equals(ArmPosition.AMP_SHOOTER)) {
-      executeDelayInMs=(executeDelayInMs/IntakeConstants.INTAKE_MOVE_IN_SHOOT_DELAY_ARM_POSITION_AMP_SHOOTER_DIVIDER);
-    }
+    //if (armPosition.get().equals(ArmPosition.AMP_SHOOTER)) {
+    //  executeDelayInMs=(executeDelayInMs/IntakeConstants.INTAKE_MOVE_IN_SHOOT_DELAY_ARM_POSITION_AMP_SHOOTER_DIVIDER);
+    //}
   }
 
   // Called every time the scheduler runs while the command is scheduled.

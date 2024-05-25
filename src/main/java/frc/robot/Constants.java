@@ -34,7 +34,7 @@ public final class Constants {
   }
 
   public static final class AutoConstants {
-    public static final double MAX_SPEED_METERS_PER_SECOND = 0.5; // (was 3)
+    public static final double MAX_SPEED_METERS_PER_SECOND = 1.0; // (was 3)
     public static final double MAX_ACCELERATION_METERS_PER_SECOND_SQUARED = 1; // (was 3)
     public static final double MAX_ANGULAR_SPEED_RADIANS_PER_SECOND = Math.PI;
     public static final double MAX_ANGULAR_SPEED_RADIANS_PER_SECOND_SQUARED = Math.PI;
@@ -73,7 +73,7 @@ public final class Constants {
     public static final int SHOOTER_MOTOR_LEFT_CAN_ID = 5;
     public static final int SHOOTER_MOTOR_RIGHT_CAN_ID = 9;
     public static final int SHOOTER_EXECUTE_COUNT_INCREMENT_IN_MS = 20;
-    public static final int SHOOTER_MOVE_OUT_DELAY_IN_MS = 1800;
+    public static final int SHOOTER_MOVE_OUT_DELAY_IN_MS = 3200;
     public static final int SHOOTER_MOVE_OUT_DELAY_ARM_POSITION_AMP_SHOOTER_DIVIDER = 2;
   }
 
@@ -93,7 +93,7 @@ public final class Constants {
     MOVING, 
     REVERSE_LIMIT, 
     FORWARD_LIMIT, 
-    AMP_SHOOTER(180),
+    AMP_SHOOTER(120),
     UPRIGHT(250), 
     HANG(50),
     INTAKE(1150),
