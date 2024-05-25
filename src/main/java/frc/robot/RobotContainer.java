@@ -23,6 +23,7 @@ import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.robot.subsystems.HookSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
+import frc.robot.subsystems.LEDController;
 
 import static frc.robot.Constants.HookConstants.HOOK_MOTOR_CAN_ID;
 import static frc.robot.Constants.HookConstants.HOOK_SOLENOID_CAN_ID;
@@ -66,6 +67,7 @@ public class RobotContainer {
                                                                 ShooterConstants.SHOOTER_MOTOR_SPEED);
   private final HookSubsystem hookSubsystem = new HookSubsystem(HOOK_MOTOR_CAN_ID, 
                                                                 HOOK_SOLENOID_CAN_ID);
+  private final LEDController ledController = new LEDController();
 
   private final SendableChooser<Boolean> fieldRelativeChooser = new SendableChooser<>();
 
@@ -119,13 +121,21 @@ public class RobotContainer {
     //    ACTIVE default (Safety=OFF, Alternate=OFF)
     //     ^ ARM AMP Position
     //     v ARM INTAKE Position
-    commandLaunchpad.safety().negate().and(commandLaunchpad.armUp().and(commandLaunchpad.miscBlue().negate())).onTrue(new ArmToPositionCommand(Arm, ArmPosition.AMP_SHOOTER));
-    commandLaunchpad.safety().negate().and(commandLaunchpad.armDown().and(commandLaunchpad.miscBlue().negate())).onTrue(new ArmToPositionCommand(Arm, ArmPosition.INTAKE));
+    commandLaunchpad.safety().negate().and(commandLaunchpad.armUp()
+                                      .and(commandLaunchpad.miscBlue().negate()))
+                                      .onTrue(new ArmToPositionCommand(Arm, ArmPosition.AMP_SHOOTER));
+    commandLaunchpad.safety().negate().and(commandLaunchpad.armDown()
+                                      .and(commandLaunchpad.miscBlue().negate()))
+                                      .onTrue(new ArmToPositionCommand(Arm, ArmPosition.INTAKE));
     //   ACTIVE Alternate (Safety=OFF, Alternate=ON)
     //     ^ ARM SHOOTER Position
     //     v ARM Reverse Limit Position (Note already happens by default at Teleopt start)
-    commandLaunchpad.safety().negate().and(commandLaunchpad.armUp().and(commandLaunchpad.miscBlue())).onTrue(new ArmToPositionCommand(Arm, ArmPosition.SPEAKER_SHOOTER));
-    commandLaunchpad.safety().negate().and(commandLaunchpad.armDown().and(commandLaunchpad.miscBlue())).onTrue(new ArmToReverseLimitCommand(Arm));
+    commandLaunchpad.safety().negate().and(commandLaunchpad.armUp()
+                                      .and(commandLaunchpad.miscBlue()))
+                                      .onTrue(new ArmToPositionCommand(Arm, ArmPosition.SPEAKER_SHOOTER));
+    commandLaunchpad.safety().negate().and(commandLaunchpad.armDown()
+                                      .and(commandLaunchpad.miscBlue()))
+                                      .onTrue(new ArmToReverseLimitCommand(Arm));
     //   ACTIVE Safety ON (Safety=OFF, Alternate=N/A)
     //     ^ ARM Manual UP
     //     v ARM Manual DOWN
@@ -139,8 +149,11 @@ public class RobotContainer {
     //      ^ INTAKE IN
     //      v SHOOTER OUT
     //commandLaunchpad.intakeIn().and(commandLaunchpad.miscBlue().negate()).whileTrue(new IntakeMoveInCommand(inTake));
-    commandLaunchpad.intakeIn().and(commandLaunchpad.miscBlue().negate()).onTrue(new IntakeMoveInCommand(inTake, Arm::getArmPosition, 0, false));
-    commandLaunchpad.shooterOut().and(commandLaunchpad.miscBlue().negate()).whileTrue(new ShooterMoveOutCommand(Shooter, Arm::getArmPosition)).onTrue(new IntakeMoveInCommand(inTake, Arm::getArmPosition, IntakeConstants.INTAKE_MOVE_IN_SHOOT_DELAY_IN_MS, true));
+    commandLaunchpad.intakeIn().and(commandLaunchpad.miscBlue().negate())
+                               .onTrue(new IntakeMoveInCommand(inTake, Arm::getArmPosition, ledController, 0, false));
+    commandLaunchpad.shooterOut().and(commandLaunchpad.miscBlue().negate())
+                                 .whileTrue(new ShooterMoveOutCommand(Shooter, Arm::getArmPosition, ledController, ShooterConstants.SHOOTER_MOVE_OUT_DELAY_IN_MS))
+                                 .onTrue(new IntakeMoveInCommand(inTake, Arm::getArmPosition, ledController, IntakeConstants.INTAKE_MOVE_IN_SHOOT_DELAY_IN_MS, true));
     ////////////////////////////////////////////////
     //    ACTIVE default (Safety=N/A, Alternate=ON)
     //      ^ INTAKE OUT (Normally never needed)
@@ -148,7 +161,6 @@ public class RobotContainer {
     commandLaunchpad.intakeIn().and(commandLaunchpad.miscBlue()).whileTrue(new IntakeMoveOutCommand(inTake));
     commandLaunchpad.shooterOut().and(commandLaunchpad.miscBlue()).whileTrue(new ShooterMoveInCommand(Shooter));
 
-   
     commandLaunchpad.safety().onTrue(new ArmToPositionCommand(Arm, ArmPosition.HANG));
 
     commandLaunchpad.safety().and(commandLaunchpad.climbUp())

@@ -9,7 +9,9 @@ import java.util.function.Supplier;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.ArmPosition;
 import frc.robot.Constants.IntakeConstants;
+import frc.robot.Constants.LEDColorState;
 import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.LEDController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -17,6 +19,7 @@ public class IntakeMoveInCommand extends Command {
 
   private final IntakeSubsystem intakeSubsystem;
   private final Supplier<ArmPosition> armPosition;
+  private final LEDController ledController;
   private int executeCount = 0;
   private int executeDelayInMs = 0;
   private Boolean high_speed;
@@ -25,9 +28,10 @@ public class IntakeMoveInCommand extends Command {
   private Boolean executeDelayComplete;
 
   /** Creates a new IntakeMoveCommand. */
-  public IntakeMoveInCommand(IntakeSubsystem intakeSubsystem, Supplier<ArmPosition> armPosition, int executeDelayInMs, Boolean high_speed) {
+  public IntakeMoveInCommand(IntakeSubsystem intakeSubsystem, Supplier<ArmPosition> armPosition, LEDController ledController, int executeDelayInMs, Boolean high_speed) {
     this.intakeSubsystem = intakeSubsystem;
     this.armPosition = armPosition;
+    this.ledController = ledController;
     this.executeDelayInMs = executeDelayInMs;
     this.high_speed = high_speed;
 
@@ -55,7 +59,7 @@ public class IntakeMoveInCommand extends Command {
     if (!executeDelayComplete && (executeCount>=executeDelayInMs)) {
       intakeSubsystem.intakeIn(high_speed);
       executeDelayComplete=true;
-      System.out.println("The executeCount is " + executeCount);
+      //System.out.println("The executeCount is " + executeCount);
     } else {
       // This should be run every 20ms
       executeCount+=IntakeConstants.INTAKE_EXECUTE_COUNT_INCREMENT_IN_MS;
@@ -73,17 +77,17 @@ public class IntakeMoveInCommand extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    // Only return true on intake if note Detected or note is shot
     // Assumption is if executeDelayInMs=0, then we run until we detect a note, else 
     // we have a note and will run until we do not have a note (ie: it is shot)
     if (executeDelayInMs==0) {
       // Only the first detection starts counter
       if (intakeSubsystem.noteDetected() || noteDetectedTrueCount>0) {
         noteDetectedTrueCount++;
+        ledController.setColor(LEDColorState.NOTE_DETECTED);
         //System.out.println("The noteDetectedTrueCount is " + noteDetectedTrueCount);
       }
       if (noteDetectedTrueCount>IntakeConstants.INTAKE_NOTE_DETECTED_TRUE_COUNT_THRESHOLD) {
-        System.out.println("The noteDetectedTrueCount is " + noteDetectedTrueCount);
+        //System.out.println("The noteDetectedTrueCount is " + noteDetectedTrueCount);
         return true;
       }
       else {
@@ -91,14 +95,16 @@ public class IntakeMoveInCommand extends Command {
       }
     }
     else {
+      // No need to check for note until the executeDelay has completed
       if (executeDelayComplete) {
         // Only the first detection starts counter
         if (!intakeSubsystem.noteDetected() || noteDetectedFalseCount>0) {
           noteDetectedFalseCount++;
+          ledController.setColor(LEDColorState.NOTE_LESS);
           //System.out.println("The noteDetectedFalseCount is " + noteDetectedFalseCount);
           }
         if (noteDetectedFalseCount>IntakeConstants.INTAKE_NOTE_DETECTED_FALSE_COUNT_THRESHOLD) {
-          System.out.println("The noteDetectedFalseCount is " + noteDetectedFalseCount);
+          //System.out.println("The noteDetectedFalseCount is " + noteDetectedFalseCount);
           return true;
           }
         else {
@@ -111,5 +117,3 @@ public class IntakeMoveInCommand extends Command {
       }
     }
   }
-
-//}

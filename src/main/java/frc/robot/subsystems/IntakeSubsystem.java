@@ -98,7 +98,7 @@ public class IntakeSubsystem extends SubsystemBase {
     public boolean noteDetected() {
         LaserCan.Measurement measurement = LC_0.getMeasurement();
         if ((measurement != null) && (measurement.status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT) && 
-            (measurement.distance_mm<80)) {
+            (measurement.distance_mm<IntakeConstants.INTAKE_NOTE_DETECTED_LASERCAN_0_DISTANCE_IN_MM)) {
             //System.out.println("The target is " + measurement.distance_mm + "mm away!");
             return true;
           } else {

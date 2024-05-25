@@ -64,6 +64,7 @@ public final class Constants {
     public static final int INTAKE_EXECUTE_COUNT_INCREMENT_IN_MS = 20;
     public static final int INTAKE_NOTE_DETECTED_TRUE_COUNT_THRESHOLD = 7;
     public static final int INTAKE_NOTE_DETECTED_FALSE_COUNT_THRESHOLD = 50;
+    public static final int INTAKE_NOTE_DETECTED_LASERCAN_0_DISTANCE_IN_MM = 80;
   }
 
   public static final class ShooterConstants {
@@ -71,6 +72,9 @@ public final class Constants {
     public static final double SHOOTER_HIGH_SPEED_MULTIPLIER = 2;
     public static final int SHOOTER_MOTOR_LEFT_CAN_ID = 5;
     public static final int SHOOTER_MOTOR_RIGHT_CAN_ID = 9;
+    public static final int SHOOTER_EXECUTE_COUNT_INCREMENT_IN_MS = 20;
+    public static final int SHOOTER_MOVE_OUT_DELAY_IN_MS = 1800;
+    public static final int SHOOTER_MOVE_OUT_DELAY_ARM_POSITION_AMP_SHOOTER_DIVIDER = 2;
   }
 
   public static final class ArmConstants {
@@ -109,6 +113,26 @@ public final class Constants {
     }
 
   }
+
+  public static final class LEDConstants {
+    public static final int PWM_PORT = 0;
+    public static final double SOLID_DARK_GREEN = 0.75;
+    public static final double SOLID_GREEN = 0.77;
+    public static final double SOLID_SKY_BLUE = 0.83;
+    public static final double SOLID_BLUE = 0.85;
+    public static final double SOLID_DARK_BLUE = 0.87;
+    public static final double SOLID_BLUE_VIOLET = 0.89;
+    public static final double FIXED_PALETTE_PATTERN_FIRE_MEDIUM = -0.59;
+    public static final double FIXED_PALETTE_PATTERN_FIRE_LARGE = -0.57;
+  }
+
+  public enum LEDColorState {
+    NOTE_LESS,
+    NOTE_DETECTED,
+    SHOOTING;
+  }
+
+
 
   public static final class DriveConstants {
     // Driving Parameters - Note that these are not the maximum capable speeds of
