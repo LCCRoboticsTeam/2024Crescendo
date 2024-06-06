@@ -6,11 +6,14 @@ package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.ShooterConstants;
+import frc.robot.Constants.AutoConstants;
+import frc.robot.Constants.AutoTypes;
 import frc.robot.commands.ArmMoveCommand;
 import frc.robot.commands.ArmToForwardLimitCommand;
 import frc.robot.commands.ArmToPositionCommand;
 import frc.robot.commands.ArmToReverseLimitCommand;
 import frc.robot.commands.Autos;
+import frc.robot.commands.ComplexAuto;
 import frc.robot.commands.HookMoveCommand;
 import frc.robot.commands.IntakeMoveInCommand;
 import frc.robot.commands.IntakeMoveOutCommand;
@@ -28,6 +31,7 @@ import frc.robot.subsystems.LEDController;
 import static frc.robot.Constants.HookConstants.HOOK_MOTOR_CAN_ID;
 import static frc.robot.Constants.HookConstants.HOOK_SOLENOID_CAN_ID;
 
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -69,8 +73,12 @@ public class RobotContainer {
                                                                 HOOK_SOLENOID_CAN_ID);
   private final LEDController ledController = new LEDController();
 
-  private final SendableChooser<Boolean> fieldRelativeChooser = new SendableChooser<>();
+  private final Command m_simpleAuto = new ComplexAuto(driveTrain, Arm, inTake, Shooter, ledController, AutoTypes.MOVE_OUT);
+  private final Command m_complexAuto = new ComplexAuto(driveTrain, Arm, inTake, Shooter, ledController, AutoTypes.ONE_NOTE);
 
+  private final SendableChooser<Boolean> fieldRelativeChooser = new SendableChooser<>();
+  // A chooser for autonomous commands
+  private final SendableChooser<Command> m_chooser = new SendableChooser<>();
   private final SendableChooser<Double> fieldRelativeChooser_IntakeMoveInDelay = new SendableChooser<>();
 
   private final double[] addToDelay = {0, 100, 200, 300, 400, 500};
@@ -84,6 +92,14 @@ public class RobotContainer {
 
     fieldRelativeChooser.setDefaultOption("Field Relative", true);
     fieldRelativeChooser.addOption("Robot Relative", false);
+
+    // Add commands to the autonomous command chooser
+    m_chooser.setDefaultOption("Simple Auto", m_simpleAuto);
+    m_chooser.addOption("Complex Auto", m_complexAuto);
+
+    // Put the chooser on the dashboard
+    //Shuffleboard.getTab("Autonomous").add(m_chooser);
+    SmartDashboard.putData(m_chooser);
 
     //fieldRelativeChooser_IntakeMoveInDelay.setDefaultOption("0", addToDelay[0]);
     //for (int i = 1; i < addToDelay.length; i++) {
@@ -177,7 +193,8 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return Autos.templateAuto(driveTrain);
+    //return Autos.templateAuto(driveTrain);
+    return m_chooser.getSelected();
     //return null;  
   }
 

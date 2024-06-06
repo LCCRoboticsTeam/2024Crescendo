@@ -77,6 +77,11 @@ public class ArmSubsystem extends SubsystemBase {
         //System.out.println("Left ARM Forward Limit Closed = "+talonMotorLeft.isFwdLimitSwitchClosed());
     }
 
+    public void moveArmUpHalfSpeed() {
+        talonMotorLeft.set(-speed_up/2);
+        talonMotorRight.set(-speed_up/2);
+    }
+
     public void moveArmDown() {
         talonMotorLeft.set(speed_down);
         talonMotorRight.set(speed_down);

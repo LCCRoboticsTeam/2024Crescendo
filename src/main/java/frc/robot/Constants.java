@@ -88,6 +88,14 @@ public final class Constants {
     public static final int ARM_BORE_ENCODER_CHANNEL_B_DIO = 1;
   }
 
+  public enum AutoTypes {
+    MOVE_OUT,
+    ONE_NOTE,
+    TWO_NOTE_CENTER,
+    TWO_NOTE_LEFT,
+    TWO_NOTE_RIGHT;
+  }
+
   public enum ArmPosition {
     UNKNOWN, 
     MOVING, 
