@@ -74,7 +74,8 @@ public class RobotContainer {
   private final LEDController ledController = new LEDController();
 
   private final Command m_simpleAuto = new ComplexAuto(driveTrain, Arm, inTake, Shooter, ledController, AutoTypes.MOVE_OUT);
-  private final Command m_complexAuto = new ComplexAuto(driveTrain, Arm, inTake, Shooter, ledController, AutoTypes.ONE_NOTE);
+  private final Command m_complexAuto1Note = new ComplexAuto(driveTrain, Arm, inTake, Shooter, ledController, AutoTypes.ONE_NOTE);
+  private final Command m_complexAuto2Note = new ComplexAuto(driveTrain, Arm, inTake, Shooter, ledController, AutoTypes.TWO_NOTE_CENTER);
 
   private final SendableChooser<Boolean> fieldRelativeChooser = new SendableChooser<>();
   // A chooser for autonomous commands
@@ -95,7 +96,8 @@ public class RobotContainer {
 
     // Add commands to the autonomous command chooser
     m_chooser.setDefaultOption("Simple Auto", m_simpleAuto);
-    m_chooser.addOption("Complex Auto", m_complexAuto);
+    m_chooser.addOption("Complex Auto 1 Note", m_complexAuto1Note);
+    m_chooser.addOption("Complex Auto 2 Note", m_complexAuto2Note);
 
     // Put the chooser on the dashboard
     //Shuffleboard.getTab("Autonomous").add(m_chooser);
