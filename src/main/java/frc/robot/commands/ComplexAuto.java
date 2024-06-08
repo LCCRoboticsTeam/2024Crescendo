@@ -91,6 +91,7 @@ public class ComplexAuto extends SequentialCommandGroup {
         switch (autoType) {
             case ONE_NOTE:
                 addCommands(
+                    // Zero the ARM encoder to Reverse Limit position
                     new ArmToReverseLimitCommand(Arm),
                     // Move ARM to Speaker position
                     new ArmToPositionCommand(Arm, ArmPosition.SPEAKER_SHOOTER),
@@ -105,6 +106,7 @@ public class ComplexAuto extends SequentialCommandGroup {
                 break;
             case TWO_NOTE_CENTER:
                 addCommands(
+                    // Zero the ARM encoder to Reverse Limit position
                     new ArmToReverseLimitCommand(Arm),
                     // Move ARM to Speaker position
                     new ArmToPositionCommand(Arm, ArmPosition.SPEAKER_SHOOTER),
@@ -113,18 +115,20 @@ public class ComplexAuto extends SequentialCommandGroup {
                                              new IntakeMoveInCommand(inTake, Arm::getArmPosition, ledController, IntakeConstants.INTAKE_MOVE_IN_SHOOT_DELAY_IN_MS, true)),
                     // Move ARM to Intake position
                     new ArmToPositionCommand(Arm, ArmPosition.INTAKE),
-                    // Move out of starting zone and start Intake
-                    
-                   new ParallelCommandGroup(new IntakeMoveInCommand(inTake, Arm::getArmPosition, ledController, 0, false),
-                    swerveControllerCommand.andThen(() -> driveTrain.drive(0, 0, 0, true, true))),
-                    // Moving back in and ARM to Speaker position
-                    new ParallelCommandGroup(swerveControllerCommandReverse.andThen(() -> driveTrain.drive(0, 0, 0, true, true)),
-                    new ArmToPositionCommand(Arm, ArmPosition.SPEAKER_SHOOTER)),
+                    // Start the intake and move out of the starting zone, intake will stop once note is detected
+                    new ParallelCommandGroup(new IntakeMoveInCommand(inTake, Arm::getArmPosition, ledController, 0, false),
+                                             swerveControllerCommand.andThen(() -> driveTrain.drive(0, 0, 0, true, true))),
+                    // Moving back in to Speaker position
+                    swerveControllerCommandReverse.andThen(() -> driveTrain.drive(0, 0, 0, true, true)),
+                    //new ParallelCommandGroup(swerveControllerCommandReverse.andThen(() -> driveTrain.drive(0, 0, 0, true, true)),
+                    //                         new ArmToPositionCommand(Arm, ArmPosition.SPEAKER_SHOOTER)),
+                    // Move ARM to Speaker position
+                    new ArmToPositionCommand(Arm, ArmPosition.SPEAKER_SHOOTER),
                     
                     // Shoot
                     new ParallelCommandGroup(new ShooterMoveOutCommand(Shooter, Arm::getArmPosition, ledController, ShooterConstants.SHOOTER_MOVE_OUT_DELAY_IN_MS),
-                                             new IntakeMoveInCommand(inTake, Arm::getArmPosition, ledController, IntakeConstants.INTAKE_MOVE_IN_SHOOT_DELAY_IN_MS, true))
-                    //swerveControllerCommand.andThen(() -> driveTrain.drive(0, 0, 0, true, true))                         
+                                             new IntakeMoveInCommand(inTake, Arm::getArmPosition, ledController, IntakeConstants.INTAKE_MOVE_IN_SHOOT_DELAY_IN_MS, true)),
+                    swerveControllerCommand.andThen(() -> driveTrain.drive(0, 0, 0, true, true))                         
                 );
                 break;
             case MOVE_OUT: default:

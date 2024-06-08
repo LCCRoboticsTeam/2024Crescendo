@@ -35,6 +35,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.ArmConstants;
@@ -168,7 +169,9 @@ public class RobotContainer {
     //      v SHOOTER OUT
     //commandLaunchpad.intakeIn().and(commandLaunchpad.miscBlue().negate()).whileTrue(new IntakeMoveInCommand(inTake));
     commandLaunchpad.intakeIn().and(commandLaunchpad.miscBlue().negate())
-                               .onTrue(new IntakeMoveInCommand(inTake, Arm::getArmPosition, ledController, 0, false));
+                               //.onTrue(new IntakeMoveInCommand(inTake, Arm::getArmPosition, ledController, 0, false));
+                               .onTrue(new SequentialCommandGroup(new IntakeMoveInCommand(inTake, Arm::getArmPosition, ledController, 0, false), 
+                                       new ArmToPositionCommand(Arm, ArmPosition.SPEAKER_SHOOTER)));
     commandLaunchpad.shooterOut().and(commandLaunchpad.miscBlue().negate())
                                  .whileTrue(new ShooterMoveOutCommand(Shooter, Arm::getArmPosition, ledController, 0))
                                  .onTrue(new IntakeMoveInCommand(inTake, Arm::getArmPosition, ledController, IntakeConstants.INTAKE_MOVE_IN_SHOOT_DELAY_IN_MS, true));
