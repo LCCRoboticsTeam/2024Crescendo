@@ -120,7 +120,8 @@ public class ArmSubsystem extends SubsystemBase {
         return (talonMotorRight.isFwdLimitSwitchClosed() == 1) || (talonMotorLeft.isFwdLimitSwitchClosed() == 1);
     }
 
-    
-
-
+    @Override
+    public void periodic() {
+      SmartDashboard.putNumber("Arm Encoder Value", getBoreEncoderVal());
+    }
 }

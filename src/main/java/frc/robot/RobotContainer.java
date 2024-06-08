@@ -32,6 +32,7 @@ import static frc.robot.Constants.HookConstants.HOOK_MOTOR_CAN_ID;
 import static frc.robot.Constants.HookConstants.HOOK_SOLENOID_CAN_ID;
 
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -94,24 +95,13 @@ public class RobotContainer {
 
     fieldRelativeChooser.setDefaultOption("Field Relative", true);
     fieldRelativeChooser.addOption("Robot Relative", false);
+    SmartDashboard.putData(fieldRelativeChooser);
 
     // Add commands to the autonomous command chooser
-    m_chooser.setDefaultOption("Simple Auto", m_simpleAuto);
-    m_chooser.addOption("Complex Auto 1 Note", m_complexAuto1Note);
+    m_chooser.setDefaultOption("Complex Auto 1 Note", m_complexAuto1Note);
     m_chooser.addOption("Complex Auto 2 Note", m_complexAuto2Note);
-
-    // Put the chooser on the dashboard
-    //Shuffleboard.getTab("Autonomous").add(m_chooser);
+    m_chooser.addOption("Simple Auto", m_simpleAuto);
     SmartDashboard.putData(m_chooser);
-
-    //fieldRelativeChooser_IntakeMoveInDelay.setDefaultOption("0", addToDelay[0]);
-    //for (int i = 1; i < addToDelay.length; i++) {
-    //  fieldRelativeChooser_IntakeMoveInDelay.addOption(String.valueOf(addToDelay[i]), addToDelay[i]);
-    //}
-    
-    SmartDashboard.putData(fieldRelativeChooser);
-    SmartDashboard.putData(fieldRelativeChooser_IntakeMoveInDelay);
-    SmartDashboard.putNumber("Arm Encoder Value", Arm.getBoreEncoderVal());
 
     driveTrain.setDefaultCommand(new SwerveGamepadDriveCommand(driveTrain, commandXboxController::getLeftX,
         commandXboxController::getLeftY, commandXboxController::getRightX, fieldRelativeChooser::getSelected));

@@ -69,7 +69,7 @@ public final class Constants {
 
   public static final class ShooterConstants {
     public static final double SHOOTER_MOTOR_SPEED = 0.3;
-    public static final double SHOOTER_HIGH_SPEED_MULTIPLIER = 2;
+    public static final double SHOOTER_HIGH_SPEED_MULTIPLIER = 2.5;
     public static final int SHOOTER_MOTOR_LEFT_CAN_ID = 5;
     public static final int SHOOTER_MOTOR_RIGHT_CAN_ID = 9;
     public static final int SHOOTER_EXECUTE_COUNT_INCREMENT_IN_MS = 20;
@@ -198,7 +198,7 @@ public final class Constants {
 
     // Calculations required for driving motor conversion factors and feed forward
     public static final double DRIVING_MOTOR_FREE_SPEED_RPS = NeoMotorConstants.FREE_SPEED_RPM / 60;
-    public static final double WHEEL_DIAMETER_METERS = 0.072;
+    public static final double WHEEL_DIAMETER_METERS = 0.075;
     public static final double WHEEL_CIRCUMFERENCE_METERS = WHEEL_DIAMETER_METERS * Math.PI;
     // 45 teeth on the wheel's bevel gear, 22 teeth on the first-stage spur gear, 15
     // teeth on the bevel pinion
