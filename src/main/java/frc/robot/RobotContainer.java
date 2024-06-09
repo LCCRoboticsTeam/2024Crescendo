@@ -31,11 +31,11 @@ import frc.robot.subsystems.LEDController;
 import static frc.robot.Constants.HookConstants.HOOK_MOTOR_CAN_ID;
 import static frc.robot.Constants.HookConstants.HOOK_SOLENOID_CAN_ID;
 
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -55,6 +55,7 @@ import frc.robot.Constants.IntakeConstants;
 public class RobotContainer {
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
+  private final XboxController xboxController = new XboxController(OperatorConstants.XBOX_CONTROLLER_PORT);
   private final CommandXboxController commandXboxController = new CommandXboxController(OperatorConstants.XBOX_CONTROLLER_PORT);
   private final CommandLaunchpadController commandLaunchpad = new CommandLaunchpadController(OperatorConstants.LAUNCHPAD_PORT);
 
@@ -75,9 +76,9 @@ public class RobotContainer {
                                                                 HOOK_SOLENOID_CAN_ID);
   private final LEDController ledController = new LEDController();
 
-  private final Command m_simpleAuto = new ComplexAuto(driveTrain, Arm, inTake, Shooter, ledController, AutoTypes.MOVE_OUT);
-  private final Command m_complexAuto1Note = new ComplexAuto(driveTrain, Arm, inTake, Shooter, ledController, AutoTypes.ONE_NOTE);
-  private final Command m_complexAuto2Note = new ComplexAuto(driveTrain, Arm, inTake, Shooter, ledController, AutoTypes.TWO_NOTE_CENTER);
+  private final Command m_simpleAuto = new ComplexAuto(driveTrain, Arm, inTake, Shooter, ledController, xboxController, AutoTypes.MOVE_OUT);
+  private final Command m_complexAuto1Note = new ComplexAuto(driveTrain, Arm, inTake, Shooter, ledController, xboxController, AutoTypes.ONE_NOTE);
+  private final Command m_complexAuto2Note = new ComplexAuto(driveTrain, Arm, inTake, Shooter, ledController, xboxController, AutoTypes.TWO_NOTE_CENTER);
 
   private final SendableChooser<Boolean> fieldRelativeChooser = new SendableChooser<>();
   // A chooser for autonomous commands
@@ -122,7 +123,7 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    commandXboxController.rightBumper().whileTrue(driveTrain.run(driveTrain::setX));
+    //commandXboxController.rightBumper().whileTrue(driveTrain.run(driveTrain::setX));
     //SmartDashboard.putBoolean("Reverse Limit Switch Closed", ArmSubsystem.revLimSwitchClosed);
 
     //  ARM
@@ -160,11 +161,17 @@ public class RobotContainer {
     //commandLaunchpad.intakeIn().and(commandLaunchpad.miscBlue().negate()).whileTrue(new IntakeMoveInCommand(inTake));
     commandLaunchpad.intakeIn().and(commandLaunchpad.miscBlue().negate())
                                //.onTrue(new IntakeMoveInCommand(inTake, Arm::getArmPosition, ledController, 0, false));
-                               .onTrue(new SequentialCommandGroup(new IntakeMoveInCommand(inTake, Arm::getArmPosition, ledController, 0, false), 
-                                       new ArmToPositionCommand(Arm, ArmPosition.SPEAKER_SHOOTER)));
+                               .onTrue(new SequentialCommandGroup(new IntakeMoveInCommand(inTake, Arm::getArmPosition, ledController, xboxController, 0, false), 
+                                                                  new ArmToPositionCommand(Arm, ArmPosition.SPEAKER_SHOOTER)));
     commandLaunchpad.shooterOut().and(commandLaunchpad.miscBlue().negate())
-                                 .whileTrue(new ShooterMoveOutCommand(Shooter, Arm::getArmPosition, ledController, 0))
-                                 .onTrue(new IntakeMoveInCommand(inTake, Arm::getArmPosition, ledController, IntakeConstants.INTAKE_MOVE_IN_SHOOT_DELAY_IN_MS, true));
+                                 //.whileTrue(new ShooterMoveOutCommand(Shooter, Arm::getArmPosition, ledController, 0))
+                                 //.onTrue(new IntakeMoveInCommand(inTake, Arm::getArmPosition, ledController, IntakeConstants.INTAKE_MOVE_IN_SHOOT_DELAY_IN_MS, true));
+                                 //.whileTrue(new ParallelCommandGroup(new ShooterMoveOutCommand(Shooter, Arm::getArmPosition, ledController, 0), 
+                                 //                                    new IntakeMoveInCommand(inTake, Arm::getArmPosition, ledController, IntakeConstants.INTAKE_MOVE_IN_SHOOT_DELAY_IN_MS, true)));
+                                 .whileTrue(new SequentialCommandGroup(new ShooterMoveOutCommand(Shooter, Arm::getArmPosition, ledController, xboxController, 0), 
+                                                                       new IntakeMoveInCommand(inTake, Arm::getArmPosition, ledController, xboxController, IntakeConstants.INTAKE_MOVE_IN_SHOOT_DELAY_IN_MS, true),
+                                                                       new ArmToPositionCommand(Arm, ArmPosition.INTAKE)));
+
     ////////////////////////////////////////////////
     //    ACTIVE default (Safety=N/A, Alternate=ON)
     //      ^ INTAKE OUT (Normally never needed)

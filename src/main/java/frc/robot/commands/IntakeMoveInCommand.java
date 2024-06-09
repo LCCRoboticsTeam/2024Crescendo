@@ -7,11 +7,14 @@ package frc.robot.commands;
 import java.util.function.Supplier;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.Constants.ArmPosition;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.LEDColorState;
+import frc.robot.Constants.OperatorConstants;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.LEDController;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -20,6 +23,7 @@ public class IntakeMoveInCommand extends Command {
   private final IntakeSubsystem intakeSubsystem;
   private final Supplier<ArmPosition> armPosition;
   private final LEDController ledController;
+  private final XboxController xboxController;
   private int executeCount = 0;
   private int executeDelayInMs = 0;
   private Boolean high_speed;
@@ -28,10 +32,11 @@ public class IntakeMoveInCommand extends Command {
   private Boolean executeDelayComplete;
 
   /** Creates a new IntakeMoveCommand. */
-  public IntakeMoveInCommand(IntakeSubsystem intakeSubsystem, Supplier<ArmPosition> armPosition, LEDController ledController, int executeDelayInMs, Boolean high_speed) {
+  public IntakeMoveInCommand(IntakeSubsystem intakeSubsystem, Supplier<ArmPosition> armPosition, LEDController ledController, XboxController xboxController, int executeDelayInMs, Boolean high_speed) {
     this.intakeSubsystem = intakeSubsystem;
     this.armPosition = armPosition;
     this.ledController = ledController;
+    this.xboxController = xboxController;
     this.executeDelayInMs = executeDelayInMs;
     this.high_speed = high_speed;
 
@@ -47,6 +52,7 @@ public class IntakeMoveInCommand extends Command {
     noteDetectedTrueCount=0;
     noteDetectedFalseCount=0;
     executeDelayComplete=false;
+    xboxController.setRumble(RumbleType.kBothRumble, 0.0);
     //if (armPosition.get().equals(ArmPosition.AMP_SHOOTER)) {
     //  executeDelayInMs=(executeDelayInMs/IntakeConstants.INTAKE_MOVE_IN_SHOOT_DELAY_ARM_POSITION_AMP_SHOOTER_DIVIDER);
     //}
@@ -72,6 +78,7 @@ public class IntakeMoveInCommand extends Command {
   @Override
   public void end(boolean interrupted) {
     intakeSubsystem.intakeOff();
+    xboxController.setRumble(RumbleType.kBothRumble, 0.0);
   }
 
   // Returns true when the command should end.
@@ -84,10 +91,13 @@ public class IntakeMoveInCommand extends Command {
       if (intakeSubsystem.noteDetected() || noteDetectedTrueCount>0) {
         noteDetectedTrueCount++;
         ledController.setColor(LEDColorState.NOTE_DETECTED);
+        xboxController.setRumble(RumbleType.kBothRumble, 1.0);
+
         //System.out.println("The noteDetectedTrueCount is " + noteDetectedTrueCount);
       }
       if (noteDetectedTrueCount>IntakeConstants.INTAKE_NOTE_DETECTED_TRUE_COUNT_THRESHOLD) {
         //System.out.println("The noteDetectedTrueCount is " + noteDetectedTrueCount);
+        xboxController.setRumble(RumbleType.kBothRumble, 0.0);
         return true;
       }
       else {
