@@ -166,11 +166,11 @@ public class RobotContainer {
     commandLaunchpad.shooterOut().and(commandLaunchpad.miscBlue().negate())
                                  //.whileTrue(new ShooterMoveOutCommand(Shooter, Arm::getArmPosition, ledController, 0))
                                  //.onTrue(new IntakeMoveInCommand(inTake, Arm::getArmPosition, ledController, IntakeConstants.INTAKE_MOVE_IN_SHOOT_DELAY_IN_MS, true));
-                                 //.whileTrue(new ParallelCommandGroup(new ShooterMoveOutCommand(Shooter, Arm::getArmPosition, ledController, 0), 
-                                 //                                    new IntakeMoveInCommand(inTake, Arm::getArmPosition, ledController, IntakeConstants.INTAKE_MOVE_IN_SHOOT_DELAY_IN_MS, true)));
-                                 .whileTrue(new SequentialCommandGroup(new ShooterMoveOutCommand(Shooter, Arm::getArmPosition, ledController, xboxController, 0), 
-                                                                       new IntakeMoveInCommand(inTake, Arm::getArmPosition, ledController, xboxController, IntakeConstants.INTAKE_MOVE_IN_SHOOT_DELAY_IN_MS, true),
-                                                                       new ArmToPositionCommand(Arm, ArmPosition.INTAKE)));
+                                 .whileTrue(new ParallelCommandGroup(new ShooterMoveOutCommand(Shooter, Arm::getArmPosition, ledController, xboxController, 0), 
+                                                                     new IntakeMoveInCommand(inTake, Arm::getArmPosition, ledController, xboxController, IntakeConstants.INTAKE_MOVE_IN_SHOOT_DELAY_IN_MS, true)).andThen(new ArmToPositionCommand(Arm, ArmPosition.INTAKE)));
+                                 //.whileTrue(new SequentialCommandGroup(new ShooterMoveOutCommand(Shooter, Arm::getArmPosition, ledController, xboxController, 0), 
+                                 //                                      new IntakeMoveInCommand(inTake, Arm::getArmPosition, ledController, xboxController, IntakeConstants.INTAKE_MOVE_IN_SHOOT_DELAY_IN_MS, true),
+                                 //                                      new ArmToPositionCommand(Arm, ArmPosition.INTAKE)));
 
     ////////////////////////////////////////////////
     //    ACTIVE default (Safety=N/A, Alternate=ON)

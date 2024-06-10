@@ -62,7 +62,7 @@ public final class Constants {
     public static final int INTAKE_MOVE_IN_SHOOT_DELAY_IN_MS = 1200;
     public static final int INTAKE_MOVE_IN_SHOOT_DELAY_ARM_POSITION_AMP_SHOOTER_DIVIDER = 2;
     public static final int INTAKE_EXECUTE_COUNT_INCREMENT_IN_MS = 20;
-    public static final int INTAKE_NOTE_DETECTED_TRUE_COUNT_THRESHOLD = 10; //was 7 before
+    public static final int INTAKE_NOTE_DETECTED_TRUE_COUNT_THRESHOLD = 10; //was 10
     public static final int INTAKE_NOTE_DETECTED_FALSE_COUNT_THRESHOLD = 50;
     public static final int INTAKE_NOTE_DETECTED_LASERCAN_0_DISTANCE_IN_MM = 80;
   }
@@ -101,7 +101,7 @@ public final class Constants {
     MOVING, 
     REVERSE_LIMIT, 
     FORWARD_LIMIT, 
-    AMP_SHOOTER(155), //was 120 before
+    AMP_SHOOTER(140), //was 120 before
     UPRIGHT(250), 
     HANG(50),
     INTAKE(1150),

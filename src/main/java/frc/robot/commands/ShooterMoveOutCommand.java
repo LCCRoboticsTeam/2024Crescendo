@@ -44,7 +44,7 @@ public class ShooterMoveOutCommand extends Command {
 
   isFinishedDelayCount=0;
   RumbleToggle=true;
-  xboxController.setRumble(RumbleType.kBothRumble, 0.0);
+  //xboxController.setRumble(RumbleType.kBothRumble, 0.0);
   
   ledController.setColor(LEDColorState.SHOOTING);
   if (armPosition.get().equals(ArmPosition.AMP_SHOOTER)) {
@@ -57,15 +57,15 @@ public class ShooterMoveOutCommand extends Command {
   public void execute() {
     shooterSubsystem.ShooterOut(armPosition.get().equals(ArmPosition.SPEAKER_SHOOTER) || armPosition.get().equals(ArmPosition.INTAKE));
     
-    if (RumbleToggle) {
-        xboxController.setRumble(RumbleType.kLeftRumble, 1.0);
-        xboxController.setRumble(RumbleType.kRightRumble, 0.0);
-    }
-    else {
-      xboxController.setRumble(RumbleType.kLeftRumble, 0.0);
-      xboxController.setRumble(RumbleType.kRightRumble, 1.0);
-    }
-    RumbleToggle=!RumbleToggle;
+    //if (RumbleToggle) {
+    //    xboxController.setRumble(RumbleType.kLeftRumble, 1.0);
+    //    xboxController.setRumble(RumbleType.kRightRumble, 0.0);
+    //}
+    //else {
+    //  xboxController.setRumble(RumbleType.kLeftRumble, 0.0);
+    //  xboxController.setRumble(RumbleType.kRightRumble, 1.0);
+    //}
+    //RumbleToggle=!RumbleToggle;
 
     // This should be run every 20ms
     isFinishedDelayCount+=ShooterConstants.SHOOTER_EXECUTE_COUNT_INCREMENT_IN_MS;
