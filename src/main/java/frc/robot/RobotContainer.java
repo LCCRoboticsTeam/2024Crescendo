@@ -99,8 +99,8 @@ public class RobotContainer {
     SmartDashboard.putData(fieldRelativeChooser);
 
     // Add commands to the autonomous command chooser
-    m_chooser.setDefaultOption("Complex Auto 1 Note", m_complexAuto1Note);
-    m_chooser.addOption("Complex Auto 2 Note", m_complexAuto2Note);
+    m_chooser.setDefaultOption("Complex Auto 2 Note", m_complexAuto2Note);
+    m_chooser.addOption("Complex Auto 1 Note", m_complexAuto1Note);
     m_chooser.addOption("Simple Auto", m_simpleAuto);
     SmartDashboard.putData(m_chooser);
 
