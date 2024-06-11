@@ -77,6 +77,11 @@ public class ArmSubsystem extends SubsystemBase {
         //System.out.println("Left ARM Forward Limit Closed = "+talonMotorLeft.isFwdLimitSwitchClosed());
     }
 
+    public void moveArmUpHalfSpeed() {
+        talonMotorLeft.set(-speed_up/2);
+        talonMotorRight.set(-speed_up/2);
+    }
+
     public void moveArmDown() {
         talonMotorLeft.set(speed_down);
         talonMotorRight.set(speed_down);
@@ -115,7 +120,8 @@ public class ArmSubsystem extends SubsystemBase {
         return (talonMotorRight.isFwdLimitSwitchClosed() == 1) || (talonMotorLeft.isFwdLimitSwitchClosed() == 1);
     }
 
-    
-
-
+    @Override
+    public void periodic() {
+      SmartDashboard.putNumber("Arm Encoder Value", getBoreEncoderVal());
+    }
 }

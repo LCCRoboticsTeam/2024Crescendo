@@ -42,7 +42,7 @@ public class SwerveGamepadDriveCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    SmartDashboard.putNumber("Gyro value", swerveDriveTrain.getHeading());
+    //SmartDashboard.putNumber("Gyro value", swerveDriveTrain.getHeading());
     double xSpeed = xSpeedSupplier.getAsDouble();
     double ySpeed = ySpeedSupplier.getAsDouble();
     double rotateSpeed = rotateSpeedSupplier.getAsDouble();

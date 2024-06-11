@@ -27,7 +27,7 @@ public class ArmToReverseLimitCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    armSubsystem.moveArmUp();
+    armSubsystem.moveArmUpHalfSpeed();
   }
 
   // Returns true when the command should end.

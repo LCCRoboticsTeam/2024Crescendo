@@ -34,8 +34,8 @@ public final class Constants {
   }
 
   public static final class AutoConstants {
-    public static final double MAX_SPEED_METERS_PER_SECOND = 0.5;
-    public static final double MAX_ACCELERATION_METERS_PER_SECOND_SQUARED = 1;
+    public static final double MAX_SPEED_METERS_PER_SECOND = 1.0; // (was 3)
+    public static final double MAX_ACCELERATION_METERS_PER_SECOND_SQUARED = 1; // (was 3)
     public static final double MAX_ANGULAR_SPEED_RADIANS_PER_SECOND = Math.PI;
     public static final double MAX_ANGULAR_SPEED_RADIANS_PER_SECOND_SQUARED = Math.PI;
 
@@ -55,16 +55,26 @@ public final class Constants {
   }
 
   public static final class IntakeConstants {
-    public static final double INTAKE_MOTOR_SPEED = 0.4;
-    public static final int INTAKE_BEAM_BREAK_DIO = 2;
-    public static final int INTAKE_CAN_ID = 4;
+    public static final double INTAKE_MOTOR_SPEED = 0.5;
+    public static final int INTAKE_MOTOR_CAN_ID = 4;
+    public static final int INTAKE_LASERCAN_0_CAN_ID = 19;
+    public static final int INTAKE_LASERCAN_1_CAN_ID = 20;
+    public static final int INTAKE_MOVE_IN_SHOOT_DELAY_IN_MS = 1200;
+    public static final int INTAKE_MOVE_IN_SHOOT_DELAY_ARM_POSITION_AMP_SHOOTER_DIVIDER = 2;
+    public static final int INTAKE_EXECUTE_COUNT_INCREMENT_IN_MS = 20;
+    public static final int INTAKE_NOTE_DETECTED_TRUE_COUNT_THRESHOLD = 10; //was 10
+    public static final int INTAKE_NOTE_DETECTED_FALSE_COUNT_THRESHOLD = 50;
+    public static final int INTAKE_NOTE_DETECTED_LASERCAN_0_DISTANCE_IN_MM = 80;
   }
 
   public static final class ShooterConstants {
     public static final double SHOOTER_MOTOR_SPEED = 0.3;
-    public static final double SHOOTER_HIGH_SPEED_MULTIPLIER = 2;
+    public static final double SHOOTER_HIGH_SPEED_MULTIPLIER = 2.5;
     public static final int SHOOTER_MOTOR_LEFT_CAN_ID = 5;
     public static final int SHOOTER_MOTOR_RIGHT_CAN_ID = 9;
+    public static final int SHOOTER_EXECUTE_COUNT_INCREMENT_IN_MS = 20;
+    public static final int SHOOTER_MOVE_OUT_DELAY_IN_MS = 3200;
+    public static final int SHOOTER_MOVE_OUT_DELAY_ARM_POSITION_AMP_SHOOTER_DIVIDER = 2;
   }
 
   public static final class ArmConstants {
@@ -78,16 +88,24 @@ public final class Constants {
     public static final int ARM_BORE_ENCODER_CHANNEL_B_DIO = 1;
   }
 
+  public enum AutoTypes {
+    MOVE_OUT,
+    ONE_NOTE,
+    TWO_NOTE_CENTER,
+    TWO_NOTE_LEFT,
+    TWO_NOTE_RIGHT;
+  }
+
   public enum ArmPosition {
     UNKNOWN, 
     MOVING, 
     REVERSE_LIMIT, 
     FORWARD_LIMIT, 
-    AMP_SHOOTER(180),
+    AMP_SHOOTER(140), //was 120 before
     UPRIGHT(250), 
     HANG(50),
-    INTAKE(1100),
-    SPEAKER_SHOOTER(1000);
+    INTAKE(1150),
+    SPEAKER_SHOOTER(1125);
 
     private int position;
 
@@ -103,6 +121,26 @@ public final class Constants {
     }
 
   }
+
+  public static final class LEDConstants {
+    public static final int PWM_PORT = 0;
+    public static final double SOLID_DARK_GREEN = 0.75;
+    public static final double SOLID_GREEN = 0.77;
+    public static final double SOLID_SKY_BLUE = 0.83;
+    public static final double SOLID_BLUE = 0.85;
+    public static final double SOLID_DARK_BLUE = 0.87;
+    public static final double SOLID_BLUE_VIOLET = 0.89;
+    public static final double FIXED_PALETTE_PATTERN_FIRE_MEDIUM = -0.59;
+    public static final double FIXED_PALETTE_PATTERN_FIRE_LARGE = -0.57;
+  }
+
+  public enum LEDColorState {
+    NOTE_LESS,
+    NOTE_DETECTED,
+    SHOOTING;
+  }
+
+
 
   public static final class DriveConstants {
     // Driving Parameters - Note that these are not the maximum capable speeds of
@@ -160,7 +198,7 @@ public final class Constants {
 
     // Calculations required for driving motor conversion factors and feed forward
     public static final double DRIVING_MOTOR_FREE_SPEED_RPS = NeoMotorConstants.FREE_SPEED_RPM / 60;
-    public static final double WHEEL_DIAMETER_METERS = 0.072;
+    public static final double WHEEL_DIAMETER_METERS = 0.075;
     public static final double WHEEL_CIRCUMFERENCE_METERS = WHEEL_DIAMETER_METERS * Math.PI;
     // 45 teeth on the wheel's bevel gear, 22 teeth on the first-stage spur gear, 15
     // teeth on the bevel pinion
@@ -196,11 +234,11 @@ public final class Constants {
     public static final IdleMode DRIVING_MOTOR_IDLE_MODE = IdleMode.kBrake;
     public static final IdleMode TURNING_MOTOR_IDLE_MODE = IdleMode.kBrake;
 
-    public static final int DRIVING_MOTOR_CURRENT_LIMIT = 10; // amps (was 50)
-    public static final int TURNING_MOTOR_CURRENT_LIMIT = 5; // amps (was 20)
+    public static final int DRIVING_MOTOR_CURRENT_LIMIT = 50; // amps (tried 10, though orig was 50)
+    public static final int TURNING_MOTOR_CURRENT_LIMIT = 20; // amps (tried 5, though orig was 20)
   }
 
   public static final class NeoMotorConstants {
-    public static final double FREE_SPEED_RPM = 2838;
+    public static final double FREE_SPEED_RPM = 5676; // tried 2838, though orig was 5676
   }
 }
