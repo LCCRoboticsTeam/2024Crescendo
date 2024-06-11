@@ -161,7 +161,8 @@ public class RobotContainer {
     //commandLaunchpad.intakeIn().and(commandLaunchpad.miscBlue().negate()).whileTrue(new IntakeMoveInCommand(inTake));
     commandLaunchpad.intakeIn().and(commandLaunchpad.miscBlue().negate())
                                //.onTrue(new IntakeMoveInCommand(inTake, Arm::getArmPosition, ledController, 0, false));
-                               .onTrue(new SequentialCommandGroup(new IntakeMoveInCommand(inTake, Arm::getArmPosition, ledController, xboxController, 0, false), 
+                               .onTrue(new SequentialCommandGroup(new ArmToPositionCommand(Arm, ArmPosition.INTAKE),
+                                                                  new IntakeMoveInCommand(inTake, Arm::getArmPosition, ledController, xboxController, 0, false), 
                                                                   new ArmToPositionCommand(Arm, ArmPosition.SPEAKER_SHOOTER)));
     commandLaunchpad.shooterOut().and(commandLaunchpad.miscBlue().negate())
                                  //.whileTrue(new ShooterMoveOutCommand(Shooter, Arm::getArmPosition, ledController, 0))
