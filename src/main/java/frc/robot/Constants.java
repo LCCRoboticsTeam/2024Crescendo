@@ -107,7 +107,7 @@ public final class Constants {
     UPRIGHT(250), 
     HANG(50),
     INTAKE(1150),
-    SPEAKER_SHOOTER(1010); //was 1125
+    SPEAKER_SHOOTER(1005); //was 1010
 
     private int position;
 
@@ -150,9 +150,9 @@ public final class Constants {
     public static final double MAX_SPEED_METERS_PER_SECOND = 3;
     public static final double MAX_ANGULAR_SPEED = Math.PI; // radians per second
 
-    public static final double DIRECTION_SLEW_RATE = 0.6; // radians per second
-    public static final double MAGNITUDE_SLEW_RATE = 0.9; // percent per second (1 = 100%)
-    public static final double ROTATIONAL_SLEW_RATE = 1; // percent per second (1 = 100%)
+    public static final double DIRECTION_SLEW_RATE = 2; // radians per second; was .6
+    public static final double MAGNITUDE_SLEW_RATE = 2; // percent per second (1 = 100%); was .9
+    public static final double ROTATIONAL_SLEW_RATE = 2; // percent per second (1 = 100%); was .9
 
     // Chassis configuration
     public static final double TRACK_WIDTH = Units.inchesToMeters(27.5);
