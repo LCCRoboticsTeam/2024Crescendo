@@ -90,7 +90,7 @@ public final class Constants {
 
   public enum AutoTypes {
     MOVE_OUT,
-    ONE_NOTE,
+    ONE_NOTE_CENTER,
     ONE_NOTE_LEFT,
     ONE_NOTE_RIGHT,
     TWO_NOTE_CENTER,

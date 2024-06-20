@@ -2,6 +2,7 @@ package frc.robot.commands;
 
 import java.util.List;
 
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -61,9 +62,9 @@ public class ComplexAuto extends SequentialCommandGroup {
             new Pose2d(0, 0, new Rotation2d(0)),
             // Pass through these two interior waypoints, making an 's' curve path
             //List.of(new Translation2d(1, 1), new Translation2d(2, -1)),
-            List.of(new Translation2d(1, 0), new Translation2d(1.5, 0)),
+            List.of(new Translation2d(0.3, 0), new Translation2d(0.6, 0)),
             // End 2 meters straight ahead of where we started, facing forward
-            new Pose2d(2, 0, new Rotation2d(0)),
+            new Pose2d(1, 0, new Rotation2d(Units.degreesToRadians(45))),
             config);
 
         Trajectory exampleTrajectoryRightSpeaker = TrajectoryGenerator.generateTrajectory(
@@ -71,10 +72,20 @@ public class ComplexAuto extends SequentialCommandGroup {
             new Pose2d(0, 0, new Rotation2d(0)),
             // Pass through these two interior waypoints, making an 's' curve path
             //List.of(new Translation2d(1, 1), new Translation2d(2, -1)),
-            List.of(new Translation2d(1, 0), new Translation2d(1.5, 0)),
+            List.of(new Translation2d(1.0, 0), new Translation2d(1.5, 0)),
             // End 2 meters straight ahead of where we started, facing forward
-            new Pose2d(2, 0, new Rotation2d(0)),
+            new Pose2d(2, 0, new Rotation2d(Units.degreesToRadians(-45))),
             config);
+
+        Trajectory exampleTrajectoryRightSpeakerReverse = TrajectoryGenerator.generateTrajectory(
+            // Start at the origin facing the +X direction
+            new Pose2d(0, 0, new Rotation2d(0)),
+            // Pass through these two interior waypoints, making an 's' curve path
+            //List.of(new Translation2d(1, 1), new Translation2d(2, -1)),
+            List.of(new Translation2d(1.0, 0), new Translation2d(1.5, 0)),
+            // End 2 meters straight ahead of where we started, facing forward
+            new Pose2d(2, 0, new Rotation2d(Units.degreesToRadians(-45))),
+            configReversed);
 
         Trajectory exampleTrajectoryReverse = TrajectoryGenerator.generateTrajectory(
             // Start at the origin facing the +X direction
@@ -103,6 +114,28 @@ public class ComplexAuto extends SequentialCommandGroup {
 
         SwerveControllerCommand swerveControllerCommandRightSpeaker = new SwerveControllerCommand(
             exampleTrajectoryRightSpeaker,
+            driveTrain::getPose, // Functional interface to feed supplier
+            DriveConstants.DRIVE_KINEMATICS,
+            // Position controllers
+            new PIDController(AutoConstants.P_X_CONTROLLER, 0, 0),
+            new PIDController(AutoConstants.P_Y_CONTROLLER, 0, 0),
+            thetaController,
+            driveTrain::setModuleStates,
+            driveTrain);
+
+        SwerveControllerCommand swerveControllerCommandRightSpeaker2nd = new SwerveControllerCommand(
+            exampleTrajectoryRightSpeaker,
+            driveTrain::getPose, // Functional interface to feed supplier
+            DriveConstants.DRIVE_KINEMATICS,
+            // Position controllers
+            new PIDController(AutoConstants.P_X_CONTROLLER, 0, 0),
+            new PIDController(AutoConstants.P_Y_CONTROLLER, 0, 0),
+            thetaController,
+            driveTrain::setModuleStates,
+            driveTrain);
+
+        SwerveControllerCommand swerveControllerCommandRightSpeakerReverese = new SwerveControllerCommand(
+            exampleTrajectoryRightSpeakerReverse,
             driveTrain::getPose, // Functional interface to feed supplier
             DriveConstants.DRIVE_KINEMATICS,
             // Position controllers
@@ -150,7 +183,7 @@ public class ComplexAuto extends SequentialCommandGroup {
         //driveTrain.resetOdometry(exampleTrajectoryReverse.getInitialPose());
 
         switch (autoType) {
-            case ONE_NOTE:
+            case ONE_NOTE_CENTER:
                 addCommands(
                     // Zero the ARM encoder to Reverse Limit position
                     new ArmToReverseLimitCommand(Arm),
@@ -193,7 +226,7 @@ public class ComplexAuto extends SequentialCommandGroup {
                     swerveControllerCommand2nd.andThen(() -> driveTrain.drive(0, 0, 0, true, true))                         
                 );
                 break;
-            case ONE_NOTE_LEFT:
+            case TWO_NOTE_RIGHT:
                 addCommands(
                     // Zero the ARM encoder to Reverse Limit position
                     new ArmToReverseLimitCommand(Arm),
@@ -202,6 +235,33 @@ public class ComplexAuto extends SequentialCommandGroup {
                     // Shoot
                     new ParallelCommandGroup(new ShooterMoveOutCommand(Shooter, Arm::getArmPosition, ledController, xboxController, ShooterConstants.SHOOTER_MOVE_OUT_DELAY_IN_MS),
                                              new IntakeMoveInCommand(inTake, Arm::getArmPosition, ledController, xboxController, IntakeConstants.INTAKE_MOVE_IN_SHOOT_DELAY_IN_MS, true)),
+                    // Move ARM to Intake position
+                    new ArmToPositionCommand(Arm, ArmPosition.INTAKE),
+                    // Start the intake and move out of the starting zone, intake will stop once note is detected
+                    new ParallelCommandGroup(new IntakeMoveInCommand(inTake, Arm::getArmPosition, ledController, xboxController, 0, false),
+                                             swerveControllerCommandRightSpeaker.andThen(() -> driveTrain.drive(0, 0, 0, true, true))),
+                    // Moving back in to Speaker position
+                    swerveControllerCommandRightSpeakerReverese.andThen(() -> driveTrain.drive(0, 0, 0, true, true)),
+                    //new ParallelCommandGroup(swerveControllerCommandReverse.andThen(() -> driveTrain.drive(0, 0, 0, true, true)),
+                    //                         new ArmToPositionCommand(Arm, ArmPosition.SPEAKER_SHOOTER)),
+                    // Move ARM to Speaker position
+                    new ArmToPositionCommand(Arm, ArmPosition.SPEAKER_SHOOTER),
+                    
+                    // Shoot
+                    new ParallelCommandGroup(new ShooterMoveOutCommand(Shooter, Arm::getArmPosition, ledController, xboxController, ShooterConstants.SHOOTER_MOVE_OUT_DELAY_IN_MS),
+                                             new IntakeMoveInCommand(inTake, Arm::getArmPosition, ledController, xboxController, IntakeConstants.INTAKE_MOVE_IN_SHOOT_DELAY_IN_MS, true)),
+                    swerveControllerCommandRightSpeaker2nd.andThen(() -> driveTrain.drive(0, 0, 0, true, true))                         
+                );
+                break;
+            case ONE_NOTE_LEFT:
+                addCommands(
+                    // Zero the ARM encoder to Reverse Limit position
+                    new ArmToReverseLimitCommand(Arm),
+                    // Move ARM to Speaker position
+                    new ArmToPositionCommand(Arm, ArmPosition.SPEAKER_SHOOTER),
+                    // Shoot
+                    //new ParallelCommandGroup(new ShooterMoveOutCommand(Shooter, Arm::getArmPosition, ledController, xboxController, ShooterConstants.SHOOTER_MOVE_OUT_DELAY_IN_MS),
+                    //                         new IntakeMoveInCommand(inTake, Arm::getArmPosition, ledController, xboxController, IntakeConstants.INTAKE_MOVE_IN_SHOOT_DELAY_IN_MS, true)),
                     // Move ARM to Intake position
                     new ArmToPositionCommand(Arm, ArmPosition.INTAKE),
                     // Move out of starting zone
@@ -222,7 +282,7 @@ public class ComplexAuto extends SequentialCommandGroup {
                     new ArmToPositionCommand(Arm, ArmPosition.INTAKE),
                     // Move out of starting zone
                     swerveControllerCommandRightSpeaker.andThen(() -> driveTrain.drive(0, 0, 0, true, true))
-                    //swerveControllerCommandReverse.andThen(() -> driveTrain.drive(0, 0, 0, true, true))                      
+                    //swerveControllerCommandRightReverse.andThen(() -> driveTrain.drive(0, 0, 0, true, true))                      
                 );
                 break;
             case MOVE_OUT: default:
