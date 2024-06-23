@@ -77,15 +77,19 @@ public class RobotContainer {
   private final LEDController ledController = new LEDController();
 
   private final Command m_simpleAuto = new ComplexAuto(driveTrain, Arm, inTake, Shooter, ledController, xboxController, AutoTypes.MOVE_OUT);
-  private final Command m_complexAuto1Note = new ComplexAuto(driveTrain, Arm, inTake, Shooter, ledController, xboxController, AutoTypes.ONE_NOTE);
-  private final Command m_complexAuto2Note = new ComplexAuto(driveTrain, Arm, inTake, Shooter, ledController, xboxController, AutoTypes.TWO_NOTE_CENTER);
+  private final Command m_complexAuto1NoteCenter = new ComplexAuto(driveTrain, Arm, inTake, Shooter, ledController, xboxController, AutoTypes.ONE_NOTE_CENTER);
+  private final Command m_complexAuto1NoteLeft = new ComplexAuto(driveTrain, Arm, inTake, Shooter, ledController, xboxController, AutoTypes.ONE_NOTE_LEFT);
+  private final Command m_complexAuto1NoteRight = new ComplexAuto(driveTrain, Arm, inTake, Shooter, ledController, xboxController, AutoTypes.ONE_NOTE_RIGHT);
+  private final Command m_complexAuto2NoteCenter = new ComplexAuto(driveTrain, Arm, inTake, Shooter, ledController, xboxController, AutoTypes.TWO_NOTE_CENTER);
+  private final Command m_complexAuto2NoteRight = new ComplexAuto(driveTrain, Arm, inTake, Shooter, ledController, xboxController, AutoTypes.TWO_NOTE_RIGHT);
+
+
 
   private final SendableChooser<Boolean> fieldRelativeChooser = new SendableChooser<>();
   // A chooser for autonomous commands
   private final SendableChooser<Command> m_chooser = new SendableChooser<>();
-  private final SendableChooser<Double> fieldRelativeChooser_IntakeMoveInDelay = new SendableChooser<>();
+  private Boolean ArmToReverseLimitCommand_Done = false;
 
-  private final double[] addToDelay = {0, 100, 200, 300, 400, 500};
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -99,13 +103,18 @@ public class RobotContainer {
     SmartDashboard.putData(fieldRelativeChooser);
 
     // Add commands to the autonomous command chooser
-    m_chooser.setDefaultOption("Complex Auto 2 Note", m_complexAuto2Note);
-    m_chooser.addOption("Complex Auto 1 Note", m_complexAuto1Note);
+    m_chooser.setDefaultOption("Complex Auto 2 Note Center", m_complexAuto2NoteCenter);
+    m_chooser.addOption("Complex Auto 1 Note Center", m_complexAuto1NoteCenter);
+    m_chooser.addOption("Complex Auto 1 Note Left", m_complexAuto1NoteLeft);
+    m_chooser.addOption("Complex Auto 1 Note Right", m_complexAuto1NoteRight);
+    m_chooser.addOption("Complex Auto 2 Note Right", m_complexAuto2NoteRight);
     m_chooser.addOption("Simple Auto", m_simpleAuto);
     SmartDashboard.putData(m_chooser);
 
     driveTrain.setDefaultCommand(new SwerveGamepadDriveCommand(driveTrain, commandXboxController::getLeftX,
         commandXboxController::getLeftY, commandXboxController::getRightX, fieldRelativeChooser::getSelected));
+
+    ArmToReverseLimitCommand_Done = false;
   }
 
   /**
@@ -197,13 +206,16 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     //return Autos.templateAuto(driveTrain);
+    ArmToReverseLimitCommand_Done=true;
     return m_chooser.getSelected();
     //return null;  
   }
 
   public Command getTeleopInitCommand() {
-    return new ArmToReverseLimitCommand(Arm);
-    //return null;  
+    if (ArmToReverseLimitCommand_Done)
+        return null;
+    else
+        return new ArmToReverseLimitCommand(Arm);
   }
 
 }

@@ -112,7 +112,7 @@ public class Autos {
             // Reset odometry to the starting pose of the trajectory.
             driveTrain.resetOdometry(exampleTrajectory.getInitialPose());
 
-            if (autoType==AutoTypes.ONE_NOTE) {
+            if (autoType==AutoTypes.ONE_NOTE_CENTER) {
                 addCommands(
                     // Move ARM to Speaker position
                     new ArmToPositionCommand(Arm, ArmPosition.SPEAKER_SHOOTER),

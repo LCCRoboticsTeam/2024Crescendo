@@ -62,14 +62,14 @@ public final class Constants {
     public static final int INTAKE_MOVE_IN_SHOOT_DELAY_IN_MS = 1200;
     public static final int INTAKE_MOVE_IN_SHOOT_DELAY_ARM_POSITION_AMP_SHOOTER_DIVIDER = 2;
     public static final int INTAKE_EXECUTE_COUNT_INCREMENT_IN_MS = 20;
-    public static final int INTAKE_NOTE_DETECTED_TRUE_COUNT_THRESHOLD = 10; //was 10
+    public static final int INTAKE_NOTE_DETECTED_TRUE_COUNT_THRESHOLD = 1; //was 10
     public static final int INTAKE_NOTE_DETECTED_FALSE_COUNT_THRESHOLD = 50;
     public static final int INTAKE_NOTE_DETECTED_LASERCAN_0_DISTANCE_IN_MM = 80;
   }
 
   public static final class ShooterConstants {
     public static final double SHOOTER_MOTOR_SPEED = 0.3;
-    public static final double SHOOTER_HIGH_SPEED_MULTIPLIER = 2.5;
+    public static final double SHOOTER_HIGH_SPEED_MULTIPLIER = 3;
     public static final int SHOOTER_MOTOR_LEFT_CAN_ID = 5;
     public static final int SHOOTER_MOTOR_RIGHT_CAN_ID = 9;
     public static final int SHOOTER_EXECUTE_COUNT_INCREMENT_IN_MS = 20;
@@ -90,7 +90,9 @@ public final class Constants {
 
   public enum AutoTypes {
     MOVE_OUT,
-    ONE_NOTE,
+    ONE_NOTE_CENTER,
+    ONE_NOTE_LEFT,
+    ONE_NOTE_RIGHT,
     TWO_NOTE_CENTER,
     TWO_NOTE_LEFT,
     TWO_NOTE_RIGHT;
@@ -105,7 +107,7 @@ public final class Constants {
     UPRIGHT(250), 
     HANG(50),
     INTAKE(1150),
-    SPEAKER_SHOOTER(1125);
+    SPEAKER_SHOOTER(1005); //was 1010
 
     private int position;
 
@@ -148,9 +150,9 @@ public final class Constants {
     public static final double MAX_SPEED_METERS_PER_SECOND = 3;
     public static final double MAX_ANGULAR_SPEED = Math.PI; // radians per second
 
-    public static final double DIRECTION_SLEW_RATE = 0.6; // radians per second
-    public static final double MAGNITUDE_SLEW_RATE = 0.9; // percent per second (1 = 100%)
-    public static final double ROTATIONAL_SLEW_RATE = 1; // percent per second (1 = 100%)
+    public static final double DIRECTION_SLEW_RATE = 2; // radians per second; was .6
+    public static final double MAGNITUDE_SLEW_RATE = 2; // percent per second (1 = 100%); was .9
+    public static final double ROTATIONAL_SLEW_RATE = 2; // percent per second (1 = 100%); was .9
 
     // Chassis configuration
     public static final double TRACK_WIDTH = Units.inchesToMeters(27.5);
