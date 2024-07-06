@@ -12,7 +12,7 @@ import frc.robot.commands.ArmMoveCommand;
 import frc.robot.commands.ArmToForwardLimitCommand;
 import frc.robot.commands.ArmToPositionCommand;
 import frc.robot.commands.ArmToReverseLimitCommand;
-import frc.robot.commands.Autos;
+//import frc.robot.commands.Autos;
 import frc.robot.commands.ComplexAuto;
 import frc.robot.commands.HookMoveCommand;
 import frc.robot.commands.IntakeMoveInCommand;
@@ -30,6 +30,8 @@ import frc.robot.subsystems.LEDController;
 
 import static frc.robot.Constants.HookConstants.HOOK_MOTOR_CAN_ID;
 import static frc.robot.Constants.HookConstants.HOOK_SOLENOID_CAN_ID;
+
+import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -95,6 +97,9 @@ public class RobotContainer {
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
+
+    NamedCommands.registerCommand("ArmToIntake", new ArmToPositionCommand(Arm, ArmPosition.INTAKE));
+
     // Configure the trigger bindings
     configureBindings();
 

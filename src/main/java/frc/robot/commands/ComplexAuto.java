@@ -28,6 +28,9 @@ import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.LEDController;
+import com.pathplanner.lib.path.*;
+import com.pathplanner.lib.auto.*;
+
 
 public class ComplexAuto extends SequentialCommandGroup {
     
@@ -178,6 +181,9 @@ public class ComplexAuto extends SequentialCommandGroup {
             driveTrain::setModuleStates,
             driveTrain);
 
+            PathPlannerPath pathCenterSpeakerIn = PathPlannerPath.fromPathFile("CenterSpeakerIn");
+            PathPlannerPath pathCenterSpeakerOut = PathPlannerPath.fromPathFile("CenterSpeakerOut");
+
         // Reset odometry to the starting pose of the trajectory.
         driveTrain.resetOdometry(exampleTrajectory.getInitialPose());
         //driveTrain.resetOdometry(exampleTrajectoryReverse.getInitialPose());
@@ -212,18 +218,18 @@ public class ComplexAuto extends SequentialCommandGroup {
                     new ArmToPositionCommand(Arm, ArmPosition.INTAKE),
                     // Start the intake and move out of the starting zone, intake will stop once note is detected
                     new ParallelCommandGroup(new IntakeMoveInCommand(inTake, Arm::getArmPosition, ledController, xboxController, 0, false),
-                                             swerveControllerCommand.andThen(() -> driveTrain.drive(0, 0, 0, true, true))),
+                                             AutoBuilder.followPath(pathCenterSpeakerOut)),
+                    //                         swerveControllerCommand.andThen(() -> driveTrain.drive(0, 0, 0, true, true))),
                     // Moving back in to Speaker position
                     swerveControllerCommandReverse.andThen(() -> driveTrain.drive(0, 0, 0, true, true)),
-                    //new ParallelCommandGroup(swerveControllerCommandReverse.andThen(() -> driveTrain.drive(0, 0, 0, true, true)),
-                    //                         new ArmToPositionCommand(Arm, ArmPosition.SPEAKER_SHOOTER)),
+                    AutoBuilder.followPath(pathCenterSpeakerIn),
                     // Move ARM to Speaker position
                     new ArmToPositionCommand(Arm, ArmPosition.SPEAKER_SHOOTER),
-                    
                     // Shoot
                     new ParallelCommandGroup(new ShooterMoveOutCommand(Shooter, Arm::getArmPosition, ledController, xboxController, ShooterConstants.SHOOTER_MOVE_OUT_DELAY_IN_MS),
                                              new IntakeMoveInCommand(inTake, Arm::getArmPosition, ledController, xboxController, IntakeConstants.INTAKE_MOVE_IN_SHOOT_DELAY_IN_MS, true)),
-                    swerveControllerCommand2nd.andThen(() -> driveTrain.drive(0, 0, 0, true, true))                         
+                    //swerveControllerCommand2nd.andThen(() -> driveTrain.drive(0, 0, 0, true, true))  
+                    AutoBuilder.followPath(pathCenterSpeakerOut)
                 );
                 break;
             case TWO_NOTE_RIGHT:
@@ -242,11 +248,8 @@ public class ComplexAuto extends SequentialCommandGroup {
                                              swerveControllerCommandRightSpeaker.andThen(() -> driveTrain.drive(0, 0, 0, true, true))),
                     // Moving back in to Speaker position
                     swerveControllerCommandRightSpeakerReverese.andThen(() -> driveTrain.drive(0, 0, 0, true, true)),
-                    //new ParallelCommandGroup(swerveControllerCommandReverse.andThen(() -> driveTrain.drive(0, 0, 0, true, true)),
-                    //                         new ArmToPositionCommand(Arm, ArmPosition.SPEAKER_SHOOTER)),
                     // Move ARM to Speaker position
                     new ArmToPositionCommand(Arm, ArmPosition.SPEAKER_SHOOTER),
-                    
                     // Shoot
                     new ParallelCommandGroup(new ShooterMoveOutCommand(Shooter, Arm::getArmPosition, ledController, xboxController, ShooterConstants.SHOOTER_MOVE_OUT_DELAY_IN_MS),
                                              new IntakeMoveInCommand(inTake, Arm::getArmPosition, ledController, xboxController, IntakeConstants.INTAKE_MOVE_IN_SHOOT_DELAY_IN_MS, true)),
@@ -260,13 +263,12 @@ public class ComplexAuto extends SequentialCommandGroup {
                     // Move ARM to Speaker position
                     new ArmToPositionCommand(Arm, ArmPosition.SPEAKER_SHOOTER),
                     // Shoot
-                    //new ParallelCommandGroup(new ShooterMoveOutCommand(Shooter, Arm::getArmPosition, ledController, xboxController, ShooterConstants.SHOOTER_MOVE_OUT_DELAY_IN_MS),
-                    //                         new IntakeMoveInCommand(inTake, Arm::getArmPosition, ledController, xboxController, IntakeConstants.INTAKE_MOVE_IN_SHOOT_DELAY_IN_MS, true)),
+                    new ParallelCommandGroup(new ShooterMoveOutCommand(Shooter, Arm::getArmPosition, ledController, xboxController, ShooterConstants.SHOOTER_MOVE_OUT_DELAY_IN_MS),
+                                             new IntakeMoveInCommand(inTake, Arm::getArmPosition, ledController, xboxController, IntakeConstants.INTAKE_MOVE_IN_SHOOT_DELAY_IN_MS, true)),
                     // Move ARM to Intake position
                     new ArmToPositionCommand(Arm, ArmPosition.INTAKE),
                     // Move out of starting zone
                     swerveControllerCommandLeftSpeaker.andThen(() -> driveTrain.drive(0, 0, 0, true, true))
-                    //swerveControllerCommandReverse.andThen(() -> driveTrain.drive(0, 0, 0, true, true))                       
                 );
                 break;
             case ONE_NOTE_RIGHT:
@@ -282,7 +284,6 @@ public class ComplexAuto extends SequentialCommandGroup {
                     new ArmToPositionCommand(Arm, ArmPosition.INTAKE),
                     // Move out of starting zone
                     swerveControllerCommandRightSpeaker.andThen(() -> driveTrain.drive(0, 0, 0, true, true))
-                    //swerveControllerCommandRightReverse.andThen(() -> driveTrain.drive(0, 0, 0, true, true))                      
                 );
                 break;
             case MOVE_OUT: default:
