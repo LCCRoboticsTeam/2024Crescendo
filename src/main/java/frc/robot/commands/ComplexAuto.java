@@ -42,13 +42,13 @@ public class ComplexAuto extends SequentialCommandGroup {
             AutoConstants.MAX_ACCELERATION_METERS_PER_SECOND_SQUARED)
             // Add kinematics to ensure max speed is actually obeyed
             .setKinematics(DriveConstants.DRIVE_KINEMATICS);
-   
+/* 
         TrajectoryConfig configReversed = new TrajectoryConfig(
             AutoConstants.MAX_SPEED_METERS_PER_SECOND,
             AutoConstants.MAX_ACCELERATION_METERS_PER_SECOND_SQUARED)
             // Add kinematics to ensure max speed is actually obeyed
             .setKinematics(DriveConstants.DRIVE_KINEMATICS).setReversed(true);
-
+*/
         // An example trajectory to follow. All units in meters.
         Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(
             // Start at the origin facing the +X direction
@@ -59,7 +59,7 @@ public class ComplexAuto extends SequentialCommandGroup {
             // End 2 meters straight ahead of where we started, facing forward
             new Pose2d(2, 0, new Rotation2d(0)),
             config);
-
+/*
         Trajectory exampleTrajectoryLeftSpeaker = TrajectoryGenerator.generateTrajectory(
             // Start at the origin facing the +X direction
             new Pose2d(0, 0, new Rotation2d(0)),
@@ -99,11 +99,11 @@ public class ComplexAuto extends SequentialCommandGroup {
             // End 2 meters straight ahead of where we started, facing forward
             new Pose2d(0, 0, new Rotation2d(0)),
             configReversed);
-
+*/
         var thetaController = new ProfiledPIDController(
             AutoConstants.P_THETA_CONTROLLER, 0, 0, AutoConstants.THETA_CONTROLLER_CONSTRAINTS);
         thetaController.enableContinuousInput(-Math.PI, Math.PI);
-
+/*
         SwerveControllerCommand swerveControllerCommand = new SwerveControllerCommand(
             exampleTrajectory,
             driveTrain::getPose, // Functional interface to feed supplier
@@ -180,9 +180,15 @@ public class ComplexAuto extends SequentialCommandGroup {
             thetaController,
             driveTrain::setModuleStates,
             driveTrain);
-
-            PathPlannerPath pathCenterSpeakerIn = PathPlannerPath.fromPathFile("CenterSpeakerIn");
-            PathPlannerPath pathCenterSpeakerOut = PathPlannerPath.fromPathFile("CenterSpeakerOut");
+*/
+        PathPlannerPath pathCenterSpeakerIn = PathPlannerPath.fromPathFile("CenterSpeakerIn");
+        PathPlannerPath pathCenterSpeakerOut = PathPlannerPath.fromPathFile("CenterSpeakerOut");
+        PathPlannerPath pathLeftSpeakerIn = PathPlannerPath.fromPathFile("LeftSpeakerIn");
+        PathPlannerPath pathLeftSpeakerOut = PathPlannerPath.fromPathFile("LeftSpeakerOut");
+        PathPlannerPath pathRightSpeakerIn = PathPlannerPath.fromPathFile("RightSpeakerIn");
+        PathPlannerPath pathRightSpeakerOut = PathPlannerPath.fromPathFile("RightSpeakerOut");
+        PathPlannerPath pathCenterLineIn = PathPlannerPath.fromPathFile("CenterlineIn");
+        PathPlannerPath pathCenterLineOut = PathPlannerPath.fromPathFile("CenterlineOut");
 
         // Reset odometry to the starting pose of the trajectory.
         driveTrain.resetOdometry(exampleTrajectory.getInitialPose());
@@ -201,7 +207,8 @@ public class ComplexAuto extends SequentialCommandGroup {
                     // Move ARM to Intake position
                     new ArmToPositionCommand(Arm, ArmPosition.INTAKE),
                     // Move out of starting zone
-                    swerveControllerCommand.andThen(() -> driveTrain.drive(0, 0, 0, true, true))
+                    //swerveControllerCommand.andThen(() -> driveTrain.drive(0, 0, 0, true, true))
+                    AutoBuilder.followPath(pathCenterSpeakerOut)
                     //swerveControllerCommandReverse.andThen(() -> driveTrain.drive(0, 0, 0, true, true))
                 );
                 break;
@@ -221,7 +228,7 @@ public class ComplexAuto extends SequentialCommandGroup {
                                              AutoBuilder.followPath(pathCenterSpeakerOut)),
                     //                         swerveControllerCommand.andThen(() -> driveTrain.drive(0, 0, 0, true, true))),
                     // Moving back in to Speaker position
-                    swerveControllerCommandReverse.andThen(() -> driveTrain.drive(0, 0, 0, true, true)),
+                    //swerveControllerCommandReverse.andThen(() -> driveTrain.drive(0, 0, 0, true, true)),
                     AutoBuilder.followPath(pathCenterSpeakerIn),
                     // Move ARM to Speaker position
                     new ArmToPositionCommand(Arm, ArmPosition.SPEAKER_SHOOTER),
@@ -245,15 +252,72 @@ public class ComplexAuto extends SequentialCommandGroup {
                     new ArmToPositionCommand(Arm, ArmPosition.INTAKE),
                     // Start the intake and move out of the starting zone, intake will stop once note is detected
                     new ParallelCommandGroup(new IntakeMoveInCommand(inTake, Arm::getArmPosition, ledController, xboxController, 0, false),
-                                             swerveControllerCommandRightSpeaker.andThen(() -> driveTrain.drive(0, 0, 0, true, true))),
+                                             AutoBuilder.followPath(pathRightSpeakerOut)),
+                                             //swerveControllerCommandRightSpeaker.andThen(() -> driveTrain.drive(0, 0, 0, true, true))),
                     // Moving back in to Speaker position
-                    swerveControllerCommandRightSpeakerReverese.andThen(() -> driveTrain.drive(0, 0, 0, true, true)),
+                    //swerveControllerCommandRightSpeakerReverese.andThen(() -> driveTrain.drive(0, 0, 0, true, true)),
+                    AutoBuilder.followPath(pathRightSpeakerIn),
                     // Move ARM to Speaker position
                     new ArmToPositionCommand(Arm, ArmPosition.SPEAKER_SHOOTER),
                     // Shoot
                     new ParallelCommandGroup(new ShooterMoveOutCommand(Shooter, Arm::getArmPosition, ledController, xboxController, ShooterConstants.SHOOTER_MOVE_OUT_DELAY_IN_MS),
                                              new IntakeMoveInCommand(inTake, Arm::getArmPosition, ledController, xboxController, IntakeConstants.INTAKE_MOVE_IN_SHOOT_DELAY_IN_MS, true)),
-                    swerveControllerCommandRightSpeaker2nd.andThen(() -> driveTrain.drive(0, 0, 0, true, true))                         
+                    //swerveControllerCommandRightSpeaker2nd.andThen(() -> driveTrain.drive(0, 0, 0, true, true))
+                    AutoBuilder.followPath(pathRightSpeakerOut)                         
+                );
+                break;
+            case TWO_NOTE_LEFT:
+                addCommands(
+                    // Zero the ARM encoder to Reverse Limit position
+                    new ArmToReverseLimitCommand(Arm),
+                    // Move ARM to Speaker position
+                    new ArmToPositionCommand(Arm, ArmPosition.SPEAKER_SHOOTER),
+                    // Shoot
+                    new ParallelCommandGroup(new ShooterMoveOutCommand(Shooter, Arm::getArmPosition, ledController, xboxController, ShooterConstants.SHOOTER_MOVE_OUT_DELAY_IN_MS),
+                                             new IntakeMoveInCommand(inTake, Arm::getArmPosition, ledController, xboxController, IntakeConstants.INTAKE_MOVE_IN_SHOOT_DELAY_IN_MS, true)),
+                    // Move ARM to Intake position
+                    new ArmToPositionCommand(Arm, ArmPosition.INTAKE),
+                    // Start the intake and move out of the starting zone, intake will stop once note is detected
+                    new ParallelCommandGroup(new IntakeMoveInCommand(inTake, Arm::getArmPosition, ledController, xboxController, 0, false),
+                                             AutoBuilder.followPath(pathLeftSpeakerOut)),
+                                             //swerveControllerCommandRightSpeaker.andThen(() -> driveTrain.drive(0, 0, 0, true, true))),
+                    // Moving back in to Speaker position
+                    //swerveControllerCommandRightSpeakerReverese.andThen(() -> driveTrain.drive(0, 0, 0, true, true)),
+                    AutoBuilder.followPath(pathLeftSpeakerIn),
+                    // Move ARM to Speaker position
+                    new ArmToPositionCommand(Arm, ArmPosition.SPEAKER_SHOOTER),
+                    // Shoot
+                    new ParallelCommandGroup(new ShooterMoveOutCommand(Shooter, Arm::getArmPosition, ledController, xboxController, ShooterConstants.SHOOTER_MOVE_OUT_DELAY_IN_MS),
+                                             new IntakeMoveInCommand(inTake, Arm::getArmPosition, ledController, xboxController, IntakeConstants.INTAKE_MOVE_IN_SHOOT_DELAY_IN_MS, true)),
+                    //swerveControllerCommandRightSpeaker2nd.andThen(() -> driveTrain.drive(0, 0, 0, true, true))
+                    AutoBuilder.followPath(pathLeftSpeakerOut)                         
+                );
+                break;
+            case TWO_NOTE_CENTERLINE:
+                addCommands(
+                    // Zero the ARM encoder to Reverse Limit position
+                    new ArmToReverseLimitCommand(Arm),
+                    // Move ARM to Speaker position
+                    new ArmToPositionCommand(Arm, ArmPosition.SPEAKER_SHOOTER),
+                    // Shoot
+                    new ParallelCommandGroup(new ShooterMoveOutCommand(Shooter, Arm::getArmPosition, ledController, xboxController, ShooterConstants.SHOOTER_MOVE_OUT_DELAY_IN_MS),
+                                             new IntakeMoveInCommand(inTake, Arm::getArmPosition, ledController, xboxController, IntakeConstants.INTAKE_MOVE_IN_SHOOT_DELAY_IN_MS, true)),
+                    // Move ARM to Intake position
+                    new ArmToPositionCommand(Arm, ArmPosition.INTAKE),
+                    // Start the intake and move out of the starting zone, intake will stop once note is detected
+                    new ParallelCommandGroup(new IntakeMoveInCommand(inTake, Arm::getArmPosition, ledController, xboxController, 0, false),
+                                             AutoBuilder.followPath(pathCenterLineOut)),
+                                             //swerveControllerCommandRightSpeaker.andThen(() -> driveTrain.drive(0, 0, 0, true, true))),
+                    // Moving back in to Speaker position
+                    //swerveControllerCommandRightSpeakerReverese.andThen(() -> driveTrain.drive(0, 0, 0, true, true)),
+                    AutoBuilder.followPath(pathCenterLineIn),
+                    // Move ARM to Speaker position
+                    new ArmToPositionCommand(Arm, ArmPosition.SPEAKER_SHOOTER),
+                    // Shoot
+                    new ParallelCommandGroup(new ShooterMoveOutCommand(Shooter, Arm::getArmPosition, ledController, xboxController, ShooterConstants.SHOOTER_MOVE_OUT_DELAY_IN_MS),
+                                             new IntakeMoveInCommand(inTake, Arm::getArmPosition, ledController, xboxController, IntakeConstants.INTAKE_MOVE_IN_SHOOT_DELAY_IN_MS, true)),
+                    //swerveControllerCommandRightSpeaker2nd.andThen(() -> driveTrain.drive(0, 0, 0, true, true))
+                    AutoBuilder.followPath(pathCenterLineOut)                         
                 );
                 break;
             case ONE_NOTE_LEFT:
@@ -268,7 +332,8 @@ public class ComplexAuto extends SequentialCommandGroup {
                     // Move ARM to Intake position
                     new ArmToPositionCommand(Arm, ArmPosition.INTAKE),
                     // Move out of starting zone
-                    swerveControllerCommandLeftSpeaker.andThen(() -> driveTrain.drive(0, 0, 0, true, true))
+                    //swerveControllerCommandLeftSpeaker.andThen(() -> driveTrain.drive(0, 0, 0, true, true))
+                    AutoBuilder.followPath(pathLeftSpeakerOut)
                 );
                 break;
             case ONE_NOTE_RIGHT:
@@ -283,14 +348,16 @@ public class ComplexAuto extends SequentialCommandGroup {
                     // Move ARM to Intake position
                     new ArmToPositionCommand(Arm, ArmPosition.INTAKE),
                     // Move out of starting zone
-                    swerveControllerCommandRightSpeaker.andThen(() -> driveTrain.drive(0, 0, 0, true, true))
+                    //swerveControllerCommandRightSpeaker.andThen(() -> driveTrain.drive(0, 0, 0, true, true))
+                    AutoBuilder.followPath(pathRightSpeakerOut)
                 );
                 break;
             case MOVE_OUT: default:
                 addCommands(
                 // Move out of starting zone
                 new ArmToReverseLimitCommand(Arm),
-                swerveControllerCommand.andThen(() -> driveTrain.drive(0, 0, 0, true, true))
+                //swerveControllerCommand.andThen(() -> driveTrain.drive(0, 0, 0, true, true))
+                AutoBuilder.followPath(pathCenterSpeakerOut)
                 );
                 break;
         }

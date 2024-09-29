@@ -84,6 +84,9 @@ public class RobotContainer {
   private final Command m_complexAuto1NoteRight = new ComplexAuto(driveTrain, Arm, inTake, Shooter, ledController, xboxController, AutoTypes.ONE_NOTE_RIGHT);
   private final Command m_complexAuto2NoteCenter = new ComplexAuto(driveTrain, Arm, inTake, Shooter, ledController, xboxController, AutoTypes.TWO_NOTE_CENTER);
   private final Command m_complexAuto2NoteRight = new ComplexAuto(driveTrain, Arm, inTake, Shooter, ledController, xboxController, AutoTypes.TWO_NOTE_RIGHT);
+  private final Command m_complexAuto2NoteLeft = new ComplexAuto(driveTrain, Arm, inTake, Shooter, ledController, xboxController, AutoTypes.TWO_NOTE_LEFT);
+  private final Command m_complexAuto2NoteCenterline = new ComplexAuto(driveTrain, Arm, inTake, Shooter, ledController, xboxController, AutoTypes.TWO_NOTE_CENTERLINE);
+
 
 
 
@@ -113,6 +116,9 @@ public class RobotContainer {
     m_chooser.addOption("Complex Auto 1 Note Left", m_complexAuto1NoteLeft);
     m_chooser.addOption("Complex Auto 1 Note Right", m_complexAuto1NoteRight);
     m_chooser.addOption("Complex Auto 2 Note Right", m_complexAuto2NoteRight);
+    m_chooser.addOption("Complex Auto 2 Note Left", m_complexAuto2NoteLeft);
+    m_chooser.addOption("Complex Auto 2 Note Centerline", m_complexAuto2NoteCenterline);
+
     m_chooser.addOption("Simple Auto", m_simpleAuto);
     SmartDashboard.putData(m_chooser);
 

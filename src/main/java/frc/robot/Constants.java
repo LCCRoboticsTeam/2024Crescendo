@@ -95,6 +95,7 @@ public final class Constants {
     ONE_NOTE_RIGHT,
     TWO_NOTE_CENTER,
     TWO_NOTE_LEFT,
+    TWO_NOTE_CENTERLINE,
     TWO_NOTE_RIGHT;
   }
 
