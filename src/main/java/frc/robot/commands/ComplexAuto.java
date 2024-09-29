@@ -82,7 +82,7 @@ public class ComplexAuto extends SequentialCommandGroup {
             new Pose2d(0, 0, new Rotation2d(0)),
             // Pass through these two interior waypoints, making an 's' curve path
             //List.of(new Translation2d(1, 1), new Translation2d(2, -1)),
-            List.of(new Translation2d(1.0, 0), new Translation2d(1.5, 0)),
+            List.of(new Translation2d(1.0, 0), new Translation2d(3, 3)),
             // End 2 meters straight ahead of where we started, facing forward
             new Pose2d(2, 0, new Rotation2d(Units.degreesToRadians(-45))),
             configReversed);
