@@ -35,20 +35,20 @@ import com.pathplanner.lib.auto.*;
 public class ComplexAuto extends SequentialCommandGroup {
     
     public ComplexAuto(DriveTrainSubsystem driveTrain, ArmSubsystem Arm, IntakeSubsystem inTake, ShooterSubsystem Shooter, LEDController ledController, XboxController xboxController, AutoTypes autoType) {
-
+/*
         // Create config for trajectory
         TrajectoryConfig config = new TrajectoryConfig(
             AutoConstants.MAX_SPEED_METERS_PER_SECOND,
             AutoConstants.MAX_ACCELERATION_METERS_PER_SECOND_SQUARED)
             // Add kinematics to ensure max speed is actually obeyed
             .setKinematics(DriveConstants.DRIVE_KINEMATICS);
-/* 
+ 
         TrajectoryConfig configReversed = new TrajectoryConfig(
             AutoConstants.MAX_SPEED_METERS_PER_SECOND,
             AutoConstants.MAX_ACCELERATION_METERS_PER_SECOND_SQUARED)
             // Add kinematics to ensure max speed is actually obeyed
             .setKinematics(DriveConstants.DRIVE_KINEMATICS).setReversed(true);
-*/
+
         // An example trajectory to follow. All units in meters.
         Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(
             // Start at the origin facing the +X direction
@@ -59,7 +59,7 @@ public class ComplexAuto extends SequentialCommandGroup {
             // End 2 meters straight ahead of where we started, facing forward
             new Pose2d(2, 0, new Rotation2d(0)),
             config);
-/*
+
         Trajectory exampleTrajectoryLeftSpeaker = TrajectoryGenerator.generateTrajectory(
             // Start at the origin facing the +X direction
             new Pose2d(0, 0, new Rotation2d(0)),
@@ -191,7 +191,7 @@ public class ComplexAuto extends SequentialCommandGroup {
         PathPlannerPath pathCenterLineOut = PathPlannerPath.fromPathFile("CenterlineOut");
 
         // Reset odometry to the starting pose of the trajectory.
-        driveTrain.resetOdometry(exampleTrajectory.getInitialPose());
+        //driveTrain.resetOdometry(exampleTrajectory.getInitialPose());
         //driveTrain.resetOdometry(exampleTrajectoryReverse.getInitialPose());
 
         switch (autoType) {
@@ -202,7 +202,7 @@ public class ComplexAuto extends SequentialCommandGroup {
                     // Move ARM to Speaker position
                     new ArmToPositionCommand(Arm, ArmPosition.SPEAKER_SHOOTER),
                     // Shoot
-                    new ParallelCommandGroup(new ShooterMoveOutCommand(Shooter, Arm::getArmPosition, ledController, xboxController, ShooterConstants.SHOOTER_MOVE_OUT_DELAY_IN_MS),
+                    new ParallelCommandGroup(new ShooterMoveOutCommand(Shooter, Arm::getArmPosition, ledController, xboxController, 0),
                                              new IntakeMoveInCommand(inTake, Arm::getArmPosition, ledController, xboxController, IntakeConstants.INTAKE_MOVE_IN_SHOOT_DELAY_IN_MS, true)),
                     // Move ARM to Intake position
                     new ArmToPositionCommand(Arm, ArmPosition.INTAKE),
@@ -219,7 +219,7 @@ public class ComplexAuto extends SequentialCommandGroup {
                     // Move ARM to Speaker position
                     new ArmToPositionCommand(Arm, ArmPosition.SPEAKER_SHOOTER),
                     // Shoot
-                    new ParallelCommandGroup(new ShooterMoveOutCommand(Shooter, Arm::getArmPosition, ledController, xboxController, ShooterConstants.SHOOTER_MOVE_OUT_DELAY_IN_MS),
+                    new ParallelCommandGroup(new ShooterMoveOutCommand(Shooter, Arm::getArmPosition, ledController, xboxController, 0),
                                              new IntakeMoveInCommand(inTake, Arm::getArmPosition, ledController, xboxController, IntakeConstants.INTAKE_MOVE_IN_SHOOT_DELAY_IN_MS, true)),
                     // Move ARM to Intake position
                     new ArmToPositionCommand(Arm, ArmPosition.INTAKE),
@@ -233,7 +233,7 @@ public class ComplexAuto extends SequentialCommandGroup {
                     // Move ARM to Speaker position
                     new ArmToPositionCommand(Arm, ArmPosition.SPEAKER_SHOOTER),
                     // Shoot
-                    new ParallelCommandGroup(new ShooterMoveOutCommand(Shooter, Arm::getArmPosition, ledController, xboxController, ShooterConstants.SHOOTER_MOVE_OUT_DELAY_IN_MS),
+                    new ParallelCommandGroup(new ShooterMoveOutCommand(Shooter, Arm::getArmPosition, ledController, xboxController, 0),
                                              new IntakeMoveInCommand(inTake, Arm::getArmPosition, ledController, xboxController, IntakeConstants.INTAKE_MOVE_IN_SHOOT_DELAY_IN_MS, true)),
                     //swerveControllerCommand2nd.andThen(() -> driveTrain.drive(0, 0, 0, true, true))  
                     AutoBuilder.followPath(pathCenterSpeakerOut)
@@ -246,7 +246,7 @@ public class ComplexAuto extends SequentialCommandGroup {
                     // Move ARM to Speaker position
                     new ArmToPositionCommand(Arm, ArmPosition.SPEAKER_SHOOTER),
                     // Shoot
-                    new ParallelCommandGroup(new ShooterMoveOutCommand(Shooter, Arm::getArmPosition, ledController, xboxController, ShooterConstants.SHOOTER_MOVE_OUT_DELAY_IN_MS),
+                    new ParallelCommandGroup(new ShooterMoveOutCommand(Shooter, Arm::getArmPosition, ledController, xboxController, 0),
                                              new IntakeMoveInCommand(inTake, Arm::getArmPosition, ledController, xboxController, IntakeConstants.INTAKE_MOVE_IN_SHOOT_DELAY_IN_MS, true)),
                     // Move ARM to Intake position
                     new ArmToPositionCommand(Arm, ArmPosition.INTAKE),
@@ -260,7 +260,7 @@ public class ComplexAuto extends SequentialCommandGroup {
                     // Move ARM to Speaker position
                     new ArmToPositionCommand(Arm, ArmPosition.SPEAKER_SHOOTER),
                     // Shoot
-                    new ParallelCommandGroup(new ShooterMoveOutCommand(Shooter, Arm::getArmPosition, ledController, xboxController, ShooterConstants.SHOOTER_MOVE_OUT_DELAY_IN_MS),
+                    new ParallelCommandGroup(new ShooterMoveOutCommand(Shooter, Arm::getArmPosition, ledController, xboxController, 0),
                                              new IntakeMoveInCommand(inTake, Arm::getArmPosition, ledController, xboxController, IntakeConstants.INTAKE_MOVE_IN_SHOOT_DELAY_IN_MS, true)),
                     //swerveControllerCommandRightSpeaker2nd.andThen(() -> driveTrain.drive(0, 0, 0, true, true))
                     AutoBuilder.followPath(pathRightSpeakerOut)                         
@@ -273,7 +273,7 @@ public class ComplexAuto extends SequentialCommandGroup {
                     // Move ARM to Speaker position
                     new ArmToPositionCommand(Arm, ArmPosition.SPEAKER_SHOOTER),
                     // Shoot
-                    new ParallelCommandGroup(new ShooterMoveOutCommand(Shooter, Arm::getArmPosition, ledController, xboxController, ShooterConstants.SHOOTER_MOVE_OUT_DELAY_IN_MS),
+                    new ParallelCommandGroup(new ShooterMoveOutCommand(Shooter, Arm::getArmPosition, ledController, xboxController, 0),
                                              new IntakeMoveInCommand(inTake, Arm::getArmPosition, ledController, xboxController, IntakeConstants.INTAKE_MOVE_IN_SHOOT_DELAY_IN_MS, true)),
                     // Move ARM to Intake position
                     new ArmToPositionCommand(Arm, ArmPosition.INTAKE),
@@ -287,7 +287,7 @@ public class ComplexAuto extends SequentialCommandGroup {
                     // Move ARM to Speaker position
                     new ArmToPositionCommand(Arm, ArmPosition.SPEAKER_SHOOTER),
                     // Shoot
-                    new ParallelCommandGroup(new ShooterMoveOutCommand(Shooter, Arm::getArmPosition, ledController, xboxController, ShooterConstants.SHOOTER_MOVE_OUT_DELAY_IN_MS),
+                    new ParallelCommandGroup(new ShooterMoveOutCommand(Shooter, Arm::getArmPosition, ledController, xboxController, 0),
                                              new IntakeMoveInCommand(inTake, Arm::getArmPosition, ledController, xboxController, IntakeConstants.INTAKE_MOVE_IN_SHOOT_DELAY_IN_MS, true)),
                     //swerveControllerCommandRightSpeaker2nd.andThen(() -> driveTrain.drive(0, 0, 0, true, true))
                     AutoBuilder.followPath(pathLeftSpeakerOut)                         
@@ -300,7 +300,7 @@ public class ComplexAuto extends SequentialCommandGroup {
                     // Move ARM to Speaker position
                     new ArmToPositionCommand(Arm, ArmPosition.SPEAKER_SHOOTER),
                     // Shoot
-                    new ParallelCommandGroup(new ShooterMoveOutCommand(Shooter, Arm::getArmPosition, ledController, xboxController, ShooterConstants.SHOOTER_MOVE_OUT_DELAY_IN_MS),
+                    new ParallelCommandGroup(new ShooterMoveOutCommand(Shooter, Arm::getArmPosition, ledController, xboxController, 0),
                                              new IntakeMoveInCommand(inTake, Arm::getArmPosition, ledController, xboxController, IntakeConstants.INTAKE_MOVE_IN_SHOOT_DELAY_IN_MS, true)),
                     // Move ARM to Intake position
                     new ArmToPositionCommand(Arm, ArmPosition.INTAKE),
@@ -314,7 +314,7 @@ public class ComplexAuto extends SequentialCommandGroup {
                     // Move ARM to Speaker position
                     new ArmToPositionCommand(Arm, ArmPosition.SPEAKER_SHOOTER),
                     // Shoot
-                    new ParallelCommandGroup(new ShooterMoveOutCommand(Shooter, Arm::getArmPosition, ledController, xboxController, ShooterConstants.SHOOTER_MOVE_OUT_DELAY_IN_MS),
+                    new ParallelCommandGroup(new ShooterMoveOutCommand(Shooter, Arm::getArmPosition, ledController, xboxController, 0),
                                              new IntakeMoveInCommand(inTake, Arm::getArmPosition, ledController, xboxController, IntakeConstants.INTAKE_MOVE_IN_SHOOT_DELAY_IN_MS, true)),
                     //swerveControllerCommandRightSpeaker2nd.andThen(() -> driveTrain.drive(0, 0, 0, true, true))
                     AutoBuilder.followPath(pathCenterLineOut)                         
@@ -327,7 +327,7 @@ public class ComplexAuto extends SequentialCommandGroup {
                     // Move ARM to Speaker position
                     new ArmToPositionCommand(Arm, ArmPosition.SPEAKER_SHOOTER),
                     // Shoot
-                    new ParallelCommandGroup(new ShooterMoveOutCommand(Shooter, Arm::getArmPosition, ledController, xboxController, ShooterConstants.SHOOTER_MOVE_OUT_DELAY_IN_MS),
+                    new ParallelCommandGroup(new ShooterMoveOutCommand(Shooter, Arm::getArmPosition, ledController, xboxController, 0),
                                              new IntakeMoveInCommand(inTake, Arm::getArmPosition, ledController, xboxController, IntakeConstants.INTAKE_MOVE_IN_SHOOT_DELAY_IN_MS, true)),
                     // Move ARM to Intake position
                     new ArmToPositionCommand(Arm, ArmPosition.INTAKE),
@@ -343,7 +343,7 @@ public class ComplexAuto extends SequentialCommandGroup {
                     // Move ARM to Speaker position
                     new ArmToPositionCommand(Arm, ArmPosition.SPEAKER_SHOOTER),
                     // Shoot
-                    new ParallelCommandGroup(new ShooterMoveOutCommand(Shooter, Arm::getArmPosition, ledController, xboxController, ShooterConstants.SHOOTER_MOVE_OUT_DELAY_IN_MS),
+                    new ParallelCommandGroup(new ShooterMoveOutCommand(Shooter, Arm::getArmPosition, ledController, xboxController, 0),
                                              new IntakeMoveInCommand(inTake, Arm::getArmPosition, ledController, xboxController, IntakeConstants.INTAKE_MOVE_IN_SHOOT_DELAY_IN_MS, true)),
                     // Move ARM to Intake position
                     new ArmToPositionCommand(Arm, ArmPosition.INTAKE),
