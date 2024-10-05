@@ -45,7 +45,8 @@ public class HookMoveCommand extends Command {
   public void end(boolean interrupted) {
     hookSubsystem.moveStop();
     if (!interrupted) {
-      hookSubsystem.setSolenoidState(false);
+      // Will do in ArmMoveCommand instead
+      //hookSubsystem.setSolenoidState(false);
     }
   }
 

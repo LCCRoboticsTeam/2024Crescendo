@@ -22,7 +22,7 @@ public class ArmMoveCommand extends Command {
     this.hookSubsystem = hookSubsystem;
 
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(armSubsystem);
+    addRequirements(armSubsystem, hookSubsystem);
   }
 
   // Called when the command is initially scheduled.
@@ -44,11 +44,12 @@ public class ArmMoveCommand extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-   // if ((!interrupted) || (!moveUp)) {
+   //if ((!interrupted) || (!moveUp)) {
      // hookSubsystem.setSolenoidState(false);
       //armSubsystem.moveStop();
      // armSubsystem.setArmPosition(ArmPosition.FORWARD_LIMIT);
     //}else{
+     hookSubsystem.setSolenoidState(false);
      armSubsystem.moveStop();
    // }
     
