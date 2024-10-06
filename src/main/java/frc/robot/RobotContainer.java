@@ -82,8 +82,9 @@ public class RobotContainer {
   private final Command m_complexAuto1NoteRight = new ComplexAuto(driveTrain, Arm, inTake, Shooter, ledController, xboxController, AutoTypes.ONE_NOTE_RIGHT);
   private final Command m_complexAuto2NoteCenter = new ComplexAuto(driveTrain, Arm, inTake, Shooter, ledController, xboxController, AutoTypes.TWO_NOTE_CENTER);
   private final Command m_complexAuto2NoteRight = new ComplexAuto(driveTrain, Arm, inTake, Shooter, ledController, xboxController, AutoTypes.TWO_NOTE_RIGHT);
-
-
+  private final Command m_complexAuto2NoteLeft = new ComplexAuto(driveTrain, Arm, inTake, Shooter, ledController, xboxController, AutoTypes.TWO_NOTE_LEFT);
+  private final Command m_complexAuto2NoteRightCenterline = new ComplexAuto(driveTrain, Arm, inTake, Shooter, ledController, xboxController, AutoTypes.RED_TWO_NOTE_RIGHT_CENTERLINE);
+  private final Command m_complexAuto2NoteLeftCenterline = new ComplexAuto(driveTrain, Arm, inTake, Shooter, ledController, xboxController, AutoTypes.BLUE_TWO_NOTE_LEFT_CENTERLINE);
 
   private final SendableChooser<Boolean> fieldRelativeChooser = new SendableChooser<>();
   // A chooser for autonomous commands
@@ -103,11 +104,14 @@ public class RobotContainer {
     SmartDashboard.putData(fieldRelativeChooser);
 
     // Add commands to the autonomous command chooser
-    m_chooser.setDefaultOption("Complex Auto 2 Note Center", m_complexAuto2NoteCenter);
-    m_chooser.addOption("Complex Auto 1 Note Center", m_complexAuto1NoteCenter);
-    m_chooser.addOption("Complex Auto 1 Note Left", m_complexAuto1NoteLeft);
-    m_chooser.addOption("Complex Auto 1 Note Right", m_complexAuto1NoteRight);
-    m_chooser.addOption("Complex Auto 2 Note Right", m_complexAuto2NoteRight);
+    m_chooser.setDefaultOption("2 Note Center", m_complexAuto2NoteCenter);
+    m_chooser.addOption("1 Note Center", m_complexAuto1NoteCenter);
+    m_chooser.addOption("1 Note Left", m_complexAuto1NoteLeft);
+    m_chooser.addOption("1 Note Right", m_complexAuto1NoteRight);
+    m_chooser.addOption("2 Note Right", m_complexAuto2NoteRight);
+    m_chooser.addOption("2 Note Left", m_complexAuto2NoteLeft);
+    m_chooser.addOption("RED 2 Note Right Centerline", m_complexAuto2NoteRightCenterline);
+    m_chooser.addOption("BLUE 2 Note Left Centerline", m_complexAuto2NoteLeftCenterline);
     m_chooser.addOption("Simple Auto", m_simpleAuto);
     SmartDashboard.putData(m_chooser);
 
@@ -189,13 +193,17 @@ public class RobotContainer {
     commandLaunchpad.intakeIn().and(commandLaunchpad.miscBlue()).whileTrue(new IntakeMoveOutCommand(inTake));
     commandLaunchpad.shooterOut().and(commandLaunchpad.miscBlue()).whileTrue(new ShooterMoveInCommand(Shooter));
 
+    // CLIMBER
+    ////////////////////////////////////////////////
     commandLaunchpad.safety().onTrue(new ArmToPositionCommand(Arm, ArmPosition.HANG));
 
     commandLaunchpad.safety().and(commandLaunchpad.climbUp())
       .whileTrue(new HookMoveCommand(hookSubsystem, Direction.UP));
     commandLaunchpad.safety().and(commandLaunchpad.climbDown())
-      .whileTrue(new HookMoveCommand(hookSubsystem, Direction.DOWN))
-      .whileTrue(new ArmMoveCommand(Arm, false, hookSubsystem));
+      //.whileTrue(new HookMoveCommand(hookSubsystem, Direction.DOWN))
+      //.whileTrue(new ArmMoveCommand(Arm, false, hookSubsystem));
+      .whileTrue(new ParallelCommandGroup(new HookMoveCommand(hookSubsystem, Direction.DOWN),
+                 new ArmMoveCommand(Arm, false, hookSubsystem)));
 
   }
 
