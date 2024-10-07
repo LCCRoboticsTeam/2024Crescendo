@@ -22,7 +22,7 @@ public class ArmMoveCommand extends Command {
     this.hookSubsystem = hookSubsystem;
 
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(armSubsystem, hookSubsystem);
+    addRequirements(armSubsystem);
   }
 
   // Called when the command is initially scheduled.

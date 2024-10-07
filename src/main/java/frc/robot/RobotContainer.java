@@ -76,7 +76,7 @@ public class RobotContainer {
                                                                 HOOK_SOLENOID_CAN_ID);
   private final LEDController ledController = new LEDController();
 
-  private final Command m_simpleAuto = new ComplexAuto(driveTrain, Arm, inTake, Shooter, ledController, xboxController, AutoTypes.MOVE_OUT);
+  //private final Command m_simpleAuto = new ComplexAuto(driveTrain, Arm, inTake, Shooter, ledController, xboxController, AutoTypes.MOVE_OUT);
   private final Command m_complexAuto1NoteCenter = new ComplexAuto(driveTrain, Arm, inTake, Shooter, ledController, xboxController, AutoTypes.ONE_NOTE_CENTER);
   private final Command m_complexAuto1NoteLeft = new ComplexAuto(driveTrain, Arm, inTake, Shooter, ledController, xboxController, AutoTypes.ONE_NOTE_LEFT);
   private final Command m_complexAuto1NoteRight = new ComplexAuto(driveTrain, Arm, inTake, Shooter, ledController, xboxController, AutoTypes.ONE_NOTE_RIGHT);
@@ -112,7 +112,7 @@ public class RobotContainer {
     m_chooser.addOption("2 Note Left", m_complexAuto2NoteLeft);
     m_chooser.addOption("RED 2 Note Right Centerline", m_complexAuto2NoteRightCenterline);
     m_chooser.addOption("BLUE 2 Note Left Centerline", m_complexAuto2NoteLeftCenterline);
-    m_chooser.addOption("Simple Auto", m_simpleAuto);
+    //m_chooser.addOption("Simple Auto", m_simpleAuto);
     SmartDashboard.putData(m_chooser);
 
     driveTrain.setDefaultCommand(new SwerveGamepadDriveCommand(driveTrain, commandXboxController::getLeftX,
@@ -200,10 +200,10 @@ public class RobotContainer {
     commandLaunchpad.safety().and(commandLaunchpad.climbUp())
       .whileTrue(new HookMoveCommand(hookSubsystem, Direction.UP));
     commandLaunchpad.safety().and(commandLaunchpad.climbDown())
-      //.whileTrue(new HookMoveCommand(hookSubsystem, Direction.DOWN))
-      //.whileTrue(new ArmMoveCommand(Arm, false, hookSubsystem));
-      .whileTrue(new ParallelCommandGroup(new HookMoveCommand(hookSubsystem, Direction.DOWN),
-                 new ArmMoveCommand(Arm, false, hookSubsystem)));
+      .whileTrue(new HookMoveCommand(hookSubsystem, Direction.DOWN))
+      .whileTrue(new ArmMoveCommand(Arm, false, hookSubsystem));
+      //.whileTrue(new ParallelCommandGroup(new HookMoveCommand(hookSubsystem, Direction.DOWN),
+      //           new ArmMoveCommand(Arm, false, hookSubsystem)));
 
   }
 

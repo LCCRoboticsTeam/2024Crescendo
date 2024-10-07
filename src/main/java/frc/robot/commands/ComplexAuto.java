@@ -57,6 +57,16 @@ public class ComplexAuto extends SequentialCommandGroup {
             new Pose2d(2, 0, new Rotation2d(0)),
             config);
 
+        Trajectory exampleTrajectoryReverse = TrajectoryGenerator.generateTrajectory(
+            // Start at the origin facing the +X direction
+            new Pose2d(0, 0, new Rotation2d(0)),
+            // Pass through these two interior waypoints, making an 's' curve path
+            //List.of(new Translation2d(1, 1), new Translation2d(2, -1)),
+            List.of(new Translation2d(1.0, 0), new Translation2d(1.5, 0)),
+            // End 2 meters straight ahead of where we started, facing forward
+            new Pose2d(2, 0, new Rotation2d(0)),
+            configReversed);
+
         Trajectory exampleTrajectoryLeftSpeaker = TrajectoryGenerator.generateTrajectory(
             // Start at the origin facing the +X direction
             new Pose2d(0, 0, new Rotation2d(Units.degreesToRadians(-60))),
@@ -78,7 +88,7 @@ public class ComplexAuto extends SequentialCommandGroup {
             configReversed);
 
         Trajectory exampleTrajectoryLeftSpeakerCenterline = TrajectoryGenerator.generateTrajectory(
-            // Start at the origin facing the +X direction
+ /*         // Start at the origin facing the +X direction
             new Pose2d(0, 0, new Rotation2d(Units.degreesToRadians(-60))),
             // Pass through these two interior waypoints, making an 's' curve path
             //List.of(new Translation2d(1, 1), new Translation2d(2, -1)),
@@ -86,45 +96,64 @@ public class ComplexAuto extends SequentialCommandGroup {
             // End 2 meters straight ahead of where we started, facing forward
             new Pose2d(1, 0, new Rotation2d(0)),
             config);
+*/
+            // Start at the origin facing the +X direction
+            //new Pose2d(0, 0, new Rotation2d(Units.degreesToRadians(60))),
+            new Pose2d(0, 0, new Rotation2d(Units.degreesToRadians(0))), // was 60
+            // Pass through these two interior waypoints, making an 's' curve path
+            //List.of(new Translation2d(1, 1), new Translation2d(2, -1)),
+            //List.of(new Translation2d(3.0, 3.0), new Translation2d(6.0, 3.0)),
+            List.of(new Translation2d(4.0, 2), new Translation2d(5, 4)), // 1, 1.0   -1.5, 2
+            // End 2 meters straight ahead of where we started, facing forward
+            //new Pose2d(2, 0, new Rotation2d(0)),
+            new Pose2d(5.5, 4.5, new Rotation2d(45)), // starting -90 (1.5, 6.5)
+            config);
 
         Trajectory exampleTrajectoryLeftSpeakerCenterlineReverse = TrajectoryGenerator.generateTrajectory(
-            // Start at the origin facing the +X direction
+          // Start at the origin facing the +X direction
             new Pose2d(0, 0, new Rotation2d(Units.degreesToRadians(-60))),
             // Pass through these two interior waypoints, making an 's' curve path
             //List.of(new Translation2d(1, 1), new Translation2d(2, -1)),
-            List.of(new Translation2d(3.0, -3.0), new Translation2d(6.0, -3.0)),
+            List.of(new Translation2d(3.0, -3.0), new Translation2d(6.0, -3.0)), 
             // End 2 meters straight ahead of where we started, facing forward
-            new Pose2d(1, 0, new Rotation2d(0)),
+            new Pose2d(1, 0, new Rotation2d(-45)),// was 0
             configReversed);
 
         Trajectory exampleTrajectoryRightSpeaker = TrajectoryGenerator.generateTrajectory(
             // Start at the origin facing the +X direction
-            new Pose2d(0, 0, new Rotation2d(Units.degreesToRadians(60))),
+            new Pose2d(0, 0, new Rotation2d(Units.degreesToRadians(0))), // was 60
             // Pass through these two interior waypoints, making an 's' curve path
             //List.of(new Translation2d(1, 1), new Translation2d(2, -1)),
-            List.of(new Translation2d(1.0, 0), new Translation2d(1.5, 0)),
+            //List.of(new Translation2d(1.0, 0), new Translation2d(1.5, 0)),
+            List.of(new Translation2d(0.0, -1.0), new Translation2d(0, -1.5)),
             // End 2 meters straight ahead of where we started, facing forward
-            new Pose2d(2, 0, new Rotation2d(0)),
+            //new Pose2d(2, 0, new Rotation2d(-60)),
+            new Pose2d(0, -2, new Rotation2d(60)), // was 0
             config);
 
         Trajectory exampleTrajectoryRightSpeakerReverse = TrajectoryGenerator.generateTrajectory(
             // Start at the origin facing the +X direction
-            new Pose2d(0, 0, new Rotation2d(Units.degreesToRadians(60))),
+            new Pose2d(0, 0, new Rotation2d(Units.degreesToRadians(0))), // was 60
             // Pass through these two interior waypoints, making an 's' curve path
             //List.of(new Translation2d(1, 1), new Translation2d(2, -1)),
-            List.of(new Translation2d(1.0, 0), new Translation2d(1.5, 0)),
+            //List.of(new Translation2d(1.0, 0), new Translation2d(1.5, 0)),
+            List.of(new Translation2d(0.0, -1.0), new Translation2d(0, -1.5)),
             // End 2 meters straight ahead of where we started, facing forward
-            new Pose2d(2, 0, new Rotation2d(0)),
+            //new Pose2d(2, 0, new Rotation2d(-60)),
+            new Pose2d(0, -2, new Rotation2d(60)),
             configReversed);
 
         Trajectory exampleTrajectoryRightSpeakerCenterline = TrajectoryGenerator.generateTrajectory(
             // Start at the origin facing the +X direction
-            new Pose2d(0, 0, new Rotation2d(Units.degreesToRadians(60))),
+            //new Pose2d(0, 0, new Rotation2d(Units.degreesToRadians(60))),
+            new Pose2d(0, 0, new Rotation2d(Units.degreesToRadians(0))), // was 60
             // Pass through these two interior waypoints, making an 's' curve path
             //List.of(new Translation2d(1, 1), new Translation2d(2, -1)),
-            List.of(new Translation2d(3.0, 3.0), new Translation2d(6.0, 3.0)),
+            //List.of(new Translation2d(3.0, 3.0), new Translation2d(6.0, 3.0)),
+            List.of(new Translation2d(1.0, -1.0), new Translation2d(1.5, -2.0)),
             // End 2 meters straight ahead of where we started, facing forward
-            new Pose2d(2, 0, new Rotation2d(0)),
+            //new Pose2d(2, 0, new Rotation2d(0)),
+            new Pose2d(1.5, -6.5, new Rotation2d(-90)), // was 60
             config);
 
         Trajectory exampleTrajectoryRightSpeakerCenterlineReverse = TrajectoryGenerator.generateTrajectory(
@@ -137,21 +166,35 @@ public class ComplexAuto extends SequentialCommandGroup {
             new Pose2d(2, 0, new Rotation2d(0)),
             configReversed);
 
-        Trajectory exampleTrajectoryReverse = TrajectoryGenerator.generateTrajectory(
-            // Start at the origin facing the +X direction
-            new Pose2d(2, 0, new Rotation2d(0)),
-            // Pass through these two interior waypoints, making an 's' curve path
-            //List.of(new Translation2d(1, 1), new Translation2d(2, -1)),
-            List.of(new Translation2d(1.0, 0), new Translation2d(.5, 0)),
-            // End 2 meters straight ahead of where we started, facing forward
-            new Pose2d(0, 0, new Rotation2d(0)),
-            configReversed);
+
 
         var thetaController = new ProfiledPIDController(
             AutoConstants.P_THETA_CONTROLLER, 0, 0, AutoConstants.THETA_CONTROLLER_CONSTRAINTS);
         thetaController.enableContinuousInput(-Math.PI, Math.PI);
 
         SwerveControllerCommand swerveControllerCommand = new SwerveControllerCommand(
+            exampleTrajectory,
+            driveTrain::getPose, // Functional interface to feed supplier
+            DriveConstants.DRIVE_KINEMATICS,
+            // Position controllers
+            new PIDController(AutoConstants.P_X_CONTROLLER, 0, 0),
+            new PIDController(AutoConstants.P_Y_CONTROLLER, 0, 0),
+            thetaController,
+            driveTrain::setModuleStates,
+            driveTrain);
+
+        SwerveControllerCommand swerveControllerCommandReverse = new SwerveControllerCommand(
+            exampleTrajectoryReverse,
+            driveTrain::getPose, // Functional interface to feed supplier
+            DriveConstants.DRIVE_KINEMATICS,
+            // Position controllers
+            new PIDController(AutoConstants.P_X_CONTROLLER, 0, 0),
+            new PIDController(AutoConstants.P_Y_CONTROLLER, 0, 0),
+            thetaController,
+            driveTrain::setModuleStates,
+            driveTrain);
+
+        SwerveControllerCommand swerveControllerCommand2nd = new SwerveControllerCommand(
             exampleTrajectory,
             driveTrain::getPose, // Functional interface to feed supplier
             DriveConstants.DRIVE_KINEMATICS,
@@ -294,30 +337,9 @@ public class ComplexAuto extends SequentialCommandGroup {
             driveTrain::setModuleStates,
             driveTrain);
 
-        SwerveControllerCommand swerveControllerCommandReverse = new SwerveControllerCommand(
-            exampleTrajectoryReverse,
-            driveTrain::getPose, // Functional interface to feed supplier
-            DriveConstants.DRIVE_KINEMATICS,
-            // Position controllers
-            new PIDController(AutoConstants.P_X_CONTROLLER, 0, 0),
-            new PIDController(AutoConstants.P_Y_CONTROLLER, 0, 0),
-            thetaController,
-            driveTrain::setModuleStates,
-            driveTrain);
-
-        SwerveControllerCommand swerveControllerCommand2nd = new SwerveControllerCommand(
-            exampleTrajectory,
-            driveTrain::getPose, // Functional interface to feed supplier
-            DriveConstants.DRIVE_KINEMATICS,
-            // Position controllers
-            new PIDController(AutoConstants.P_X_CONTROLLER, 0, 0),
-            new PIDController(AutoConstants.P_Y_CONTROLLER, 0, 0),
-            thetaController,
-            driveTrain::setModuleStates,
-            driveTrain);
-
         // Reset odometry to the starting pose of the trajectory.
         //driveTrain.resetOdometry(exampleTrajectory.getInitialPose());
+        driveTrain.zeroHeading();
 
         switch (autoType) {
             case ONE_NOTE_CENTER:
@@ -347,7 +369,7 @@ public class ComplexAuto extends SequentialCommandGroup {
                     // Move ARM to Speaker position
                     new ArmToPositionCommand(Arm, ArmPosition.SPEAKER_SHOOTER),
                     // Shoot
-                    new ParallelCommandGroup(new ShooterMoveOutCommand(Shooter, Arm::getArmPosition, ledController, xboxController, 0),
+                    new ParallelCommandGroup(new ShooterMoveOutCommand(Shooter, Arm::getArmPosition, ledController, xboxController, ShooterConstants.SHOOTER_MOVE_OUT_DELAY_IN_MS),
                                              new IntakeMoveInCommand(inTake, Arm::getArmPosition, ledController, xboxController, IntakeConstants.INTAKE_MOVE_IN_SHOOT_DELAY_IN_MS, true)),
                     // Move ARM to Intake position
                     new ArmToPositionCommand(Arm, ArmPosition.INTAKE),
@@ -362,7 +384,7 @@ public class ComplexAuto extends SequentialCommandGroup {
                     new ArmToPositionCommand(Arm, ArmPosition.SPEAKER_SHOOTER),
                     
                     // Shoot
-                    new ParallelCommandGroup(new ShooterMoveOutCommand(Shooter, Arm::getArmPosition, ledController, xboxController, 0),
+                    new ParallelCommandGroup(new ShooterMoveOutCommand(Shooter, Arm::getArmPosition, ledController, xboxController, ShooterConstants.SHOOTER_MOVE_OUT_DELAY_IN_MS),
                                              new IntakeMoveInCommand(inTake, Arm::getArmPosition, ledController, xboxController, IntakeConstants.INTAKE_MOVE_IN_SHOOT_DELAY_IN_MS, true)),
                     swerveControllerCommand2nd.andThen(() -> driveTrain.drive(0, 0, 0, true, true))                         
                 );
@@ -394,7 +416,7 @@ public class ComplexAuto extends SequentialCommandGroup {
                     // Move ARM to Speaker position
                     new ArmToPositionCommand(Arm, ArmPosition.SPEAKER_SHOOTER),
                     // Shoot
-                    new ParallelCommandGroup(new ShooterMoveOutCommand(Shooter, Arm::getArmPosition, ledController, xboxController, 0),
+                    new ParallelCommandGroup(new ShooterMoveOutCommand(Shooter, Arm::getArmPosition, ledController, xboxController, ShooterConstants.SHOOTER_MOVE_OUT_DELAY_IN_MS),
                                              new IntakeMoveInCommand(inTake, Arm::getArmPosition, ledController, xboxController, IntakeConstants.INTAKE_MOVE_IN_SHOOT_DELAY_IN_MS, true)),
                     // Move ARM to Intake position
                     new ArmToPositionCommand(Arm, ArmPosition.INTAKE),
@@ -409,7 +431,7 @@ public class ComplexAuto extends SequentialCommandGroup {
                     new ArmToPositionCommand(Arm, ArmPosition.SPEAKER_SHOOTER),
                     
                     // Shoot
-                    new ParallelCommandGroup(new ShooterMoveOutCommand(Shooter, Arm::getArmPosition, ledController, xboxController, 0),
+                    new ParallelCommandGroup(new ShooterMoveOutCommand(Shooter, Arm::getArmPosition, ledController, xboxController, ShooterConstants.SHOOTER_MOVE_OUT_DELAY_IN_MS),
                                              new IntakeMoveInCommand(inTake, Arm::getArmPosition, ledController, xboxController, IntakeConstants.INTAKE_MOVE_IN_SHOOT_DELAY_IN_MS, true)),
                     swerveControllerCommandRightSpeaker2nd.andThen(() -> driveTrain.drive(0, 0, 0, true, true))                         
                 );
@@ -423,24 +445,24 @@ public class ComplexAuto extends SequentialCommandGroup {
                     // Move ARM to Speaker position
                     new ArmToPositionCommand(Arm, ArmPosition.SPEAKER_SHOOTER),
                     // Shoot
-                    new ParallelCommandGroup(new ShooterMoveOutCommand(Shooter, Arm::getArmPosition, ledController, xboxController, 0),
+                    new ParallelCommandGroup(new ShooterMoveOutCommand(Shooter, Arm::getArmPosition, ledController, xboxController, ShooterConstants.SHOOTER_MOVE_OUT_DELAY_IN_MS),
                                              new IntakeMoveInCommand(inTake, Arm::getArmPosition, ledController, xboxController, IntakeConstants.INTAKE_MOVE_IN_SHOOT_DELAY_IN_MS, true)),
                     // Move ARM to Intake position
                     new ArmToPositionCommand(Arm, ArmPosition.INTAKE),
                     // Start the intake and move out of the starting zone, intake will stop once note is detected
                     new ParallelCommandGroup(new IntakeMoveInCommand(inTake, Arm::getArmPosition, ledController, xboxController, 0, false),
-                                             swerveControllerCommandRightSpeakerCenterline.andThen(() -> driveTrain.drive(0, 0, 0, true, true))),
+                                             swerveControllerCommandRightSpeakerCenterline.andThen(() -> driveTrain.drive(0, 0, 0, true, true)))
                     // Moving back in to Speaker position
-                    swerveControllerCommandRightSpeakerCenterlineReverese.andThen(() -> driveTrain.drive(0, 0, 0, true, true)),
+                //    swerveControllerCommandRightSpeakerCenterlineReverese.andThen(() -> driveTrain.drive(0, 0, 0, true, true)),
                     //new ParallelCommandGroup(swerveControllerCommandReverse.andThen(() -> driveTrain.drive(0, 0, 0, true, true)),
                     //                         new ArmToPositionCommand(Arm, ArmPosition.SPEAKER_SHOOTER)),
                     // Move ARM to Speaker position
-                    new ArmToPositionCommand(Arm, ArmPosition.SPEAKER_SHOOTER),
+                //    new ArmToPositionCommand(Arm, ArmPosition.SPEAKER_SHOOTER),
                     
                     // Shoot
-                    new ParallelCommandGroup(new ShooterMoveOutCommand(Shooter, Arm::getArmPosition, ledController, xboxController, 0),
-                                             new IntakeMoveInCommand(inTake, Arm::getArmPosition, ledController, xboxController, IntakeConstants.INTAKE_MOVE_IN_SHOOT_DELAY_IN_MS, true)),
-                    swerveControllerCommandRightSpeakerCenterline2nd.andThen(() -> driveTrain.drive(0, 0, 0, true, true))                         
+                //    new ParallelCommandGroup(new ShooterMoveOutCommand(Shooter, Arm::getArmPosition, ledController, xboxController, 0),
+                //                             new IntakeMoveInCommand(inTake, Arm::getArmPosition, ledController, xboxController, IntakeConstants.INTAKE_MOVE_IN_SHOOT_DELAY_IN_MS, true)),
+                //    swerveControllerCommandRightSpeakerCenterline2nd.andThen(() -> driveTrain.drive(0, 0, 0, true, true))                         
                 );
                 break;
             case ONE_NOTE_LEFT:
@@ -470,7 +492,7 @@ public class ComplexAuto extends SequentialCommandGroup {
                     // Move ARM to Speaker position
                     new ArmToPositionCommand(Arm, ArmPosition.SPEAKER_SHOOTER),
                     // Shoot
-                    new ParallelCommandGroup(new ShooterMoveOutCommand(Shooter, Arm::getArmPosition, ledController, xboxController, 0),
+                    new ParallelCommandGroup(new ShooterMoveOutCommand(Shooter, Arm::getArmPosition, ledController, xboxController, ShooterConstants.SHOOTER_MOVE_OUT_DELAY_IN_MS),
                                              new IntakeMoveInCommand(inTake, Arm::getArmPosition, ledController, xboxController, IntakeConstants.INTAKE_MOVE_IN_SHOOT_DELAY_IN_MS, true)),
                     // Move ARM to Intake position
                     new ArmToPositionCommand(Arm, ArmPosition.INTAKE),
@@ -485,7 +507,7 @@ public class ComplexAuto extends SequentialCommandGroup {
                     new ArmToPositionCommand(Arm, ArmPosition.SPEAKER_SHOOTER),
                     
                     // Shoot
-                    new ParallelCommandGroup(new ShooterMoveOutCommand(Shooter, Arm::getArmPosition, ledController, xboxController, 0),
+                    new ParallelCommandGroup(new ShooterMoveOutCommand(Shooter, Arm::getArmPosition, ledController, xboxController, ShooterConstants.SHOOTER_MOVE_OUT_DELAY_IN_MS),
                                              new IntakeMoveInCommand(inTake, Arm::getArmPosition, ledController, xboxController, IntakeConstants.INTAKE_MOVE_IN_SHOOT_DELAY_IN_MS, true)),
                     swerveControllerCommandLeftSpeaker2nd.andThen(() -> driveTrain.drive(0, 0, 0, true, true))                        
                 );
@@ -499,24 +521,24 @@ public class ComplexAuto extends SequentialCommandGroup {
                     // Move ARM to Speaker position
                     new ArmToPositionCommand(Arm, ArmPosition.SPEAKER_SHOOTER),
                     // Shoot
-                    new ParallelCommandGroup(new ShooterMoveOutCommand(Shooter, Arm::getArmPosition, ledController, xboxController, 0),
+                    new ParallelCommandGroup(new ShooterMoveOutCommand(Shooter, Arm::getArmPosition, ledController, xboxController, ShooterConstants.SHOOTER_MOVE_OUT_DELAY_IN_MS),
                                              new IntakeMoveInCommand(inTake, Arm::getArmPosition, ledController, xboxController, IntakeConstants.INTAKE_MOVE_IN_SHOOT_DELAY_IN_MS, true)),
                     // Move ARM to Intake position
                     new ArmToPositionCommand(Arm, ArmPosition.INTAKE),
                     // Start the intake and move out of the starting zone, intake will stop once note is detected
                     new ParallelCommandGroup(new IntakeMoveInCommand(inTake, Arm::getArmPosition, ledController, xboxController, 0, false),
-                                             swerveControllerCommandLeftSpeakerCenterline.andThen(() -> driveTrain.drive(0, 0, 0, true, true))),
+                                             swerveControllerCommandLeftSpeakerCenterline.andThen(() -> driveTrain.drive(0, 0, 0, true, true)))
                     // Moving back in to Speaker position
-                    swerveControllerCommandLeftSpeakerCenterlineReverese.andThen(() -> driveTrain.drive(0, 0, 0, true, true)),
+                //    swerveControllerCommandLeftSpeakerCenterlineReverese.andThen(() -> driveTrain.drive(0, 0, 0, true, true)),
                     //new ParallelCommandGroup(swerveControllerCommandReverse.andThen(() -> driveTrain.drive(0, 0, 0, true, true)),
                     //                         new ArmToPositionCommand(Arm, ArmPosition.SPEAKER_SHOOTER)),
                     // Move ARM to Speaker position
-                    new ArmToPositionCommand(Arm, ArmPosition.SPEAKER_SHOOTER),
+                //    new ArmToPositionCommand(Arm, ArmPosition.SPEAKER_SHOOTER),
                     
                     // Shoot
-                    new ParallelCommandGroup(new ShooterMoveOutCommand(Shooter, Arm::getArmPosition, ledController, xboxController, 0),
-                                             new IntakeMoveInCommand(inTake, Arm::getArmPosition, ledController, xboxController, IntakeConstants.INTAKE_MOVE_IN_SHOOT_DELAY_IN_MS, true)),
-                    swerveControllerCommandLeftSpeakerCenterline2nd.andThen(() -> driveTrain.drive(0, 0, 0, true, true))                        
+                //    new ParallelCommandGroup(new ShooterMoveOutCommand(Shooter, Arm::getArmPosition, ledController, xboxController, 0),
+                //                             new IntakeMoveInCommand(inTake, Arm::getArmPosition, ledController, xboxController, IntakeConstants.INTAKE_MOVE_IN_SHOOT_DELAY_IN_MS, true)),
+                //   swerveControllerCommandLeftSpeakerCenterline2nd.andThen(() -> driveTrain.drive(0, 0, 0, true, true))                        
                 );
                 break;
             case MOVE_OUT: default:
