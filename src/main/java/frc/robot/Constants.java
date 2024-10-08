@@ -96,8 +96,8 @@ public final class Constants {
     TWO_NOTE_CENTER,
     TWO_NOTE_LEFT,
     TWO_NOTE_RIGHT,
-    BLUE_TWO_NOTE_LEFT_CENTERLINE,
-    RED_TWO_NOTE_RIGHT_CENTERLINE;
+    BLUE_ONE_NOTE_LEFT_CENTERLINE,
+    RED_ONE_NOTE_RIGHT_CENTERLINE;
   }
 
   public enum ArmPosition {

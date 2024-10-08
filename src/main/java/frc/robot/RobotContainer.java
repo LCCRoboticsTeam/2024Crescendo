@@ -76,15 +76,15 @@ public class RobotContainer {
                                                                 HOOK_SOLENOID_CAN_ID);
   private final LEDController ledController = new LEDController();
 
-  //private final Command m_simpleAuto = new ComplexAuto(driveTrain, Arm, inTake, Shooter, ledController, xboxController, AutoTypes.MOVE_OUT);
+  private final Command m_simpleAuto = new ComplexAuto(driveTrain, Arm, inTake, Shooter, ledController, xboxController, AutoTypes.MOVE_OUT);
   private final Command m_complexAuto1NoteCenter = new ComplexAuto(driveTrain, Arm, inTake, Shooter, ledController, xboxController, AutoTypes.ONE_NOTE_CENTER);
   private final Command m_complexAuto1NoteLeft = new ComplexAuto(driveTrain, Arm, inTake, Shooter, ledController, xboxController, AutoTypes.ONE_NOTE_LEFT);
   private final Command m_complexAuto1NoteRight = new ComplexAuto(driveTrain, Arm, inTake, Shooter, ledController, xboxController, AutoTypes.ONE_NOTE_RIGHT);
   private final Command m_complexAuto2NoteCenter = new ComplexAuto(driveTrain, Arm, inTake, Shooter, ledController, xboxController, AutoTypes.TWO_NOTE_CENTER);
   private final Command m_complexAuto2NoteRight = new ComplexAuto(driveTrain, Arm, inTake, Shooter, ledController, xboxController, AutoTypes.TWO_NOTE_RIGHT);
   private final Command m_complexAuto2NoteLeft = new ComplexAuto(driveTrain, Arm, inTake, Shooter, ledController, xboxController, AutoTypes.TWO_NOTE_LEFT);
-  private final Command m_complexAuto2NoteRightCenterline = new ComplexAuto(driveTrain, Arm, inTake, Shooter, ledController, xboxController, AutoTypes.RED_TWO_NOTE_RIGHT_CENTERLINE);
-  private final Command m_complexAuto2NoteLeftCenterline = new ComplexAuto(driveTrain, Arm, inTake, Shooter, ledController, xboxController, AutoTypes.BLUE_TWO_NOTE_LEFT_CENTERLINE);
+  private final Command m_complexAuto1NoteRightCenterline = new ComplexAuto(driveTrain, Arm, inTake, Shooter, ledController, xboxController, AutoTypes.RED_ONE_NOTE_RIGHT_CENTERLINE);
+  private final Command m_complexAuto1NoteLeftCenterline = new ComplexAuto(driveTrain, Arm, inTake, Shooter, ledController, xboxController, AutoTypes.BLUE_ONE_NOTE_LEFT_CENTERLINE);
 
   private final SendableChooser<Boolean> fieldRelativeChooser = new SendableChooser<>();
   // A chooser for autonomous commands
@@ -105,14 +105,14 @@ public class RobotContainer {
 
     // Add commands to the autonomous command chooser
     m_chooser.setDefaultOption("2 Note Center", m_complexAuto2NoteCenter);
-    m_chooser.addOption("1 Note Center", m_complexAuto1NoteCenter);
-    m_chooser.addOption("1 Note Left", m_complexAuto1NoteLeft);
-    m_chooser.addOption("1 Note Right", m_complexAuto1NoteRight);
-    m_chooser.addOption("2 Note Right", m_complexAuto2NoteRight);
-    m_chooser.addOption("2 Note Left", m_complexAuto2NoteLeft);
-    m_chooser.addOption("RED 2 Note Right Centerline", m_complexAuto2NoteRightCenterline);
-    m_chooser.addOption("BLUE 2 Note Left Centerline", m_complexAuto2NoteLeftCenterline);
-    //m_chooser.addOption("Simple Auto", m_simpleAuto);
+    //m_chooser.addOption("1 Note Center", m_complexAuto1NoteCenter);
+    //m_chooser.addOption("1 Note Left", m_complexAuto1NoteLeft);
+    //m_chooser.addOption("1 Note Right", m_complexAuto1NoteRight);
+    //m_chooser.addOption("2 Note Right", m_complexAuto2NoteRight);
+    //m_chooser.addOption("2 Note Left", m_complexAuto2NoteLeft);
+    m_chooser.addOption("RED 1 Note Right Centerline", m_complexAuto1NoteRightCenterline);
+    m_chooser.addOption("BLUE 1 Note Left Centerline", m_complexAuto1NoteLeftCenterline);
+    m_chooser.addOption("Move Out", m_simpleAuto);
     SmartDashboard.putData(m_chooser);
 
     driveTrain.setDefaultCommand(new SwerveGamepadDriveCommand(driveTrain, commandXboxController::getLeftX,

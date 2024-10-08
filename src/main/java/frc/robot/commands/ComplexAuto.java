@@ -436,7 +436,7 @@ public class ComplexAuto extends SequentialCommandGroup {
                     swerveControllerCommandRightSpeaker2nd.andThen(() -> driveTrain.drive(0, 0, 0, true, true))                         
                 );
                 break;
-            case RED_TWO_NOTE_RIGHT_CENTERLINE:
+            case RED_ONE_NOTE_RIGHT_CENTERLINE:
                 // Reset odometry to the starting pose of the trajectory.
                 driveTrain.resetOdometry(exampleTrajectoryRightSpeakerCenterline.getInitialPose());
                 addCommands(
@@ -512,7 +512,7 @@ public class ComplexAuto extends SequentialCommandGroup {
                     swerveControllerCommandLeftSpeaker2nd.andThen(() -> driveTrain.drive(0, 0, 0, true, true))                        
                 );
                 break;
-            case BLUE_TWO_NOTE_LEFT_CENTERLINE:
+            case BLUE_ONE_NOTE_LEFT_CENTERLINE:
                 // Reset odometry to the starting pose of the trajectory.
                 driveTrain.resetOdometry(exampleTrajectoryLeftSpeakerCenterline.getInitialPose());
                 addCommands(
