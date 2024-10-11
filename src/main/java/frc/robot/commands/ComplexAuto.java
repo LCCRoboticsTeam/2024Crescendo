@@ -57,179 +57,194 @@ public class ComplexAuto extends SequentialCommandGroup {
         PathPlannerPath pathLeftSpeakerIn = PathPlannerPath.fromPathFile("LeftSpeakerIn");
         pathLeftSpeakerIn.preventFlipping=true;
         PathPlannerPath pathLeftSpeakerOut = PathPlannerPath.fromPathFile("LeftSpeakerOut");
-        pathLeftSpeakerOut.preventFlipping=true;
-        PathPlannerPath pathRightSpeakerIn = PathPlannerPath.fromPathFile("RightSpeakerIn");
-        pathRightSpeakerIn.preventFlipping=true;
-        PathPlannerPath pathRightSpeakerOut = PathPlannerPath.fromPathFile("RightSpeakerOut");
-        pathRightSpeakerOut.preventFlipping=true;
-        PathPlannerPath pathCenterLineIn = PathPlannerPath.fromPathFile("CenterlineIn");
-        PathPlannerPath pathCenterLineOut = PathPlannerPath.fromPathFile("CenterlineOut");
+        //pathLeftSpeakerOut.preventFlipping=true;
+        //PathPlannerPath pathRightSpeakerIn = PathPlannerPath.fromPathFile("RightSpeakerIn");
+        //pathRightSpeakerIn.preventFlipping=true;
+        //PathPlannerPath pathRightSpeakerOut = PathPlannerPath.fromPathFile("RightSpeakerOut");
+        //pathRightSpeakerOut.preventFlipping=true;
+        //PathPlannerPath pathCenterLineIn = PathPlannerPath.fromPathFile("CenterlineIn");
+        //PathPlannerPath pathCenterLineOut = PathPlannerPath.fromPathFile("CenterlineOut");
+
+        //driveTrain.zeroHeading();
 
         switch (autoType) {
             case ONE_NOTE_CENTER:
                 // Reset odometry to the starting pose of the trajectory.
-                driveTrain.resetOdometry(pathCenterSpeakerOut.getPreviewStartingHolonomicPose());
+                //driveTrain.resetOdometry(pathCenterSpeakerOut.getPreviewStartingHolonomicPose());
                 addCommands(
                     // Zero the ARM encoder to Reverse Limit position
                     new ArmToReverseLimitCommand(Arm),
                     // Move ARM to Speaker position
                     new ArmToPositionCommand(Arm, ArmPosition.SPEAKER_SHOOTER),
                     // Shoot
-                    new ParallelCommandGroup(new ShooterMoveOutCommand(Shooter, Arm::getArmPosition, ledController, xboxController, 0),
+                    new ParallelCommandGroup(new ShooterMoveOutCommand(Shooter, Arm::getArmPosition, ledController, xboxController, ShooterConstants.SHOOTER_MOVE_OUT_DELAY_IN_MS),
                                              new IntakeMoveInCommand(inTake, Arm::getArmPosition, ledController, xboxController, IntakeConstants.INTAKE_MOVE_IN_SHOOT_DELAY_IN_MS, true)),
                     // Move ARM to Intake position
                     new ArmToPositionCommand(Arm, ArmPosition.INTAKE),
                     // Move out of starting zone
                     // This is for trying auto instead of path which should reset the odometry automatically
                     //new PathPlannerAuto("CenterSpeakerOut")
-                    AutoBuilder.followPath(pathCenterSpeakerOut)
+                    new PathPlannerAuto("CenterSpeakerOut")
                 );
                 break;
             case TWO_NOTE_CENTER:
                 // Reset odometry to the starting pose of the trajectory.
-                driveTrain.resetOdometry(pathCenterSpeakerOut.getPreviewStartingHolonomicPose());
+                //driveTrain.resetOdometry(pathCenterSpeakerOut.getPreviewStartingHolonomicPose());
                 addCommands(
                     // Zero the ARM encoder to Reverse Limit position
                     new ArmToReverseLimitCommand(Arm),
                     // Move ARM to Speaker position
                     new ArmToPositionCommand(Arm, ArmPosition.SPEAKER_SHOOTER),
                     // Shoot
-                    new ParallelCommandGroup(new ShooterMoveOutCommand(Shooter, Arm::getArmPosition, ledController, xboxController, 0),
+                    new ParallelCommandGroup(new ShooterMoveOutCommand(Shooter, Arm::getArmPosition, ledController, xboxController, ShooterConstants.SHOOTER_MOVE_OUT_DELAY_IN_MS),
                                              new IntakeMoveInCommand(inTake, Arm::getArmPosition, ledController, xboxController, IntakeConstants.INTAKE_MOVE_IN_SHOOT_DELAY_IN_MS, true)),
                     // Move ARM to Intake position
                     new ArmToPositionCommand(Arm, ArmPosition.INTAKE),
                     // Start the intake and move out of the starting zone, intake will stop once note is detected
                     new ParallelCommandGroup(new IntakeMoveInCommand(inTake, Arm::getArmPosition, ledController, xboxController, 0, false),
-                                             AutoBuilder.followPath(pathCenterSpeakerOut)),
+                                             //AutoBuilder.followPath(pathCenterSpeakerOut)),
+                                             new PathPlannerAuto("CenterSpeakerOut")),
                     // Moving back in to Speaker position
-                    AutoBuilder.followPath(pathCenterSpeakerIn),
+                    //AutoBuilder.followPath(pathCenterSpeakerIn),
+                    new PathPlannerAuto("CenterSpeakerIn"),
                     // Move ARM to Speaker position
                     new ArmToPositionCommand(Arm, ArmPosition.SPEAKER_SHOOTER),
                     // Shoot
-                    new ParallelCommandGroup(new ShooterMoveOutCommand(Shooter, Arm::getArmPosition, ledController, xboxController, 0),
+                    new ParallelCommandGroup(new ShooterMoveOutCommand(Shooter, Arm::getArmPosition, ledController, xboxController, ShooterConstants.SHOOTER_MOVE_OUT_DELAY_IN_MS),
                                              new IntakeMoveInCommand(inTake, Arm::getArmPosition, ledController, xboxController, IntakeConstants.INTAKE_MOVE_IN_SHOOT_DELAY_IN_MS, true)),
-                    AutoBuilder.followPath(pathCenterSpeakerOut)
+                    //AutoBuilder.followPath(pathCenterSpeakerOut)
+                    new PathPlannerAuto("CenterSpeakerOut")
                 );
                 break;
             case ONE_NOTE_RIGHT:
                 // Reset odometry to the starting pose of the trajectory.
-                driveTrain.resetOdometry(pathRightSpeakerOut.getPreviewStartingHolonomicPose());
+                //driveTrain.resetOdometry(pathRightSpeakerOut.getPreviewStartingHolonomicPose());
                 addCommands(
                     // Zero the ARM encoder to Reverse Limit position
                     new ArmToReverseLimitCommand(Arm),
                     // Move ARM to Speaker position
                     new ArmToPositionCommand(Arm, ArmPosition.SPEAKER_SHOOTER),
                     // Shoot
-                    new ParallelCommandGroup(new ShooterMoveOutCommand(Shooter, Arm::getArmPosition, ledController, xboxController, 0),
+                    new ParallelCommandGroup(new ShooterMoveOutCommand(Shooter, Arm::getArmPosition, ledController, xboxController, ShooterConstants.SHOOTER_MOVE_OUT_DELAY_IN_MS),
                                              new IntakeMoveInCommand(inTake, Arm::getArmPosition, ledController, xboxController, IntakeConstants.INTAKE_MOVE_IN_SHOOT_DELAY_IN_MS, true)),
                     // Move ARM to Intake position
                     new ArmToPositionCommand(Arm, ArmPosition.INTAKE),
                     // Move out of starting zone
-                    AutoBuilder.followPath(pathRightSpeakerOut)
+                    new PathPlannerAuto("RightSpeakerOut")
                 );
                 break;
             case TWO_NOTE_RIGHT:
                 // Reset odometry to the starting pose of the trajectory.
-                driveTrain.resetOdometry(pathRightSpeakerOut.getPreviewStartingHolonomicPose());
+                //driveTrain.resetOdometry(pathRightSpeakerOut.getPreviewStartingHolonomicPose());
                 addCommands(
                     // Zero the ARM encoder to Reverse Limit position
                     new ArmToReverseLimitCommand(Arm),
                     // Move ARM to Speaker position
                     new ArmToPositionCommand(Arm, ArmPosition.SPEAKER_SHOOTER),
                     // Shoot
-                    new ParallelCommandGroup(new ShooterMoveOutCommand(Shooter, Arm::getArmPosition, ledController, xboxController, 0),
+                    new ParallelCommandGroup(new ShooterMoveOutCommand(Shooter, Arm::getArmPosition, ledController, xboxController, ShooterConstants.SHOOTER_MOVE_OUT_DELAY_IN_MS),
                                              new IntakeMoveInCommand(inTake, Arm::getArmPosition, ledController, xboxController, IntakeConstants.INTAKE_MOVE_IN_SHOOT_DELAY_IN_MS, true)),
                     // Move ARM to Intake position
                     new ArmToPositionCommand(Arm, ArmPosition.INTAKE),
                     // Start the intake and move out of the starting zone, intake will stop once note is detected
                     new ParallelCommandGroup(new IntakeMoveInCommand(inTake, Arm::getArmPosition, ledController, xboxController, 0, false),
-                                             AutoBuilder.followPath(pathRightSpeakerOut)),
+                                             //AutoBuilder.followPath(pathRightSpeakerOut)),
+                                             new PathPlannerAuto("RightSpeakerOut")),
                     // Moving back in to Speaker position
-                    AutoBuilder.followPath(pathRightSpeakerIn),
+                    //AutoBuilder.followPath(pathRightSpeakerIn),
+                    new PathPlannerAuto("RightSpeakerIn"),
                     // Move ARM to Speaker position
                     new ArmToPositionCommand(Arm, ArmPosition.SPEAKER_SHOOTER),
                     // Shoot
-                    new ParallelCommandGroup(new ShooterMoveOutCommand(Shooter, Arm::getArmPosition, ledController, xboxController, 0),
+                    new ParallelCommandGroup(new ShooterMoveOutCommand(Shooter, Arm::getArmPosition, ledController, xboxController, ShooterConstants.SHOOTER_MOVE_OUT_DELAY_IN_MS),
                                              new IntakeMoveInCommand(inTake, Arm::getArmPosition, ledController, xboxController, IntakeConstants.INTAKE_MOVE_IN_SHOOT_DELAY_IN_MS, true)),
-                    AutoBuilder.followPath(pathRightSpeakerOut)                         
+                    //AutoBuilder.followPath(pathRightSpeakerOut)
+                    new PathPlannerAuto("RightSpeakerOut")                         
                 );
                 break;
             case ONE_NOTE_LEFT:
                 // Reset odometry to the starting pose of the trajectory.
-                driveTrain.resetOdometry(pathLeftSpeakerOut.getPreviewStartingHolonomicPose());
+                //driveTrain.resetOdometry(pathLeftSpeakerOut.getPreviewStartingHolonomicPose());
                 addCommands(
                     // Zero the ARM encoder to Reverse Limit position
                     new ArmToReverseLimitCommand(Arm),
                     // Move ARM to Speaker position
                     new ArmToPositionCommand(Arm, ArmPosition.SPEAKER_SHOOTER),
                     // Shoot
-                    new ParallelCommandGroup(new ShooterMoveOutCommand(Shooter, Arm::getArmPosition, ledController, xboxController, 0),
+                    new ParallelCommandGroup(new ShooterMoveOutCommand(Shooter, Arm::getArmPosition, ledController, xboxController, ShooterConstants.SHOOTER_MOVE_OUT_DELAY_IN_MS),
                                              new IntakeMoveInCommand(inTake, Arm::getArmPosition, ledController, xboxController, IntakeConstants.INTAKE_MOVE_IN_SHOOT_DELAY_IN_MS, true)),
                     // Move ARM to Intake position
                     new ArmToPositionCommand(Arm, ArmPosition.INTAKE),
                     // Move out of starting zone
-                    AutoBuilder.followPath(pathLeftSpeakerOut)
+                    //AutoBuilder.followPath(pathLeftSpeakerOut)
+                    new PathPlannerAuto("LeftSpeakerOut")
                 );
                 break;
             case TWO_NOTE_LEFT:
                 // Reset odometry to the starting pose of the trajectory.
-                driveTrain.resetOdometry(pathLeftSpeakerOut.getPreviewStartingHolonomicPose());
+                //driveTrain.resetOdometry(pathLeftSpeakerOut.getPreviewStartingHolonomicPose());
                 addCommands(
                     // Zero the ARM encoder to Reverse Limit position
                     new ArmToReverseLimitCommand(Arm),
                     // Move ARM to Speaker position
                     new ArmToPositionCommand(Arm, ArmPosition.SPEAKER_SHOOTER),
                     // Shoot
-                    new ParallelCommandGroup(new ShooterMoveOutCommand(Shooter, Arm::getArmPosition, ledController, xboxController, 0),
+                    new ParallelCommandGroup(new ShooterMoveOutCommand(Shooter, Arm::getArmPosition, ledController, xboxController, ShooterConstants.SHOOTER_MOVE_OUT_DELAY_IN_MS),
                                              new IntakeMoveInCommand(inTake, Arm::getArmPosition, ledController, xboxController, IntakeConstants.INTAKE_MOVE_IN_SHOOT_DELAY_IN_MS, true)),
                     // Move ARM to Intake position
                     new ArmToPositionCommand(Arm, ArmPosition.INTAKE),
                     // Start the intake and move out of the starting zone, intake will stop once note is detected
                     new ParallelCommandGroup(new IntakeMoveInCommand(inTake, Arm::getArmPosition, ledController, xboxController, 0, false),
-                                             AutoBuilder.followPath(pathLeftSpeakerOut)),
+                                             //AutoBuilder.followPath(pathLeftSpeakerOut)),
+                                             new PathPlannerAuto("LeftSpeakerOut")),
                     // Moving back in to Speaker position
-                    AutoBuilder.followPath(pathLeftSpeakerIn),
+                    //AutoBuilder.followPath(pathLeftSpeakerIn),
+                    new PathPlannerAuto("LeftSpeakerIn"),
                     // Move ARM to Speaker position
                     new ArmToPositionCommand(Arm, ArmPosition.SPEAKER_SHOOTER),
                     // Shoot
-                    new ParallelCommandGroup(new ShooterMoveOutCommand(Shooter, Arm::getArmPosition, ledController, xboxController, 0),
+                    new ParallelCommandGroup(new ShooterMoveOutCommand(Shooter, Arm::getArmPosition, ledController, xboxController, ShooterConstants.SHOOTER_MOVE_OUT_DELAY_IN_MS),
                                              new IntakeMoveInCommand(inTake, Arm::getArmPosition, ledController, xboxController, IntakeConstants.INTAKE_MOVE_IN_SHOOT_DELAY_IN_MS, true)),
-                    AutoBuilder.followPath(pathLeftSpeakerOut)                         
+                    //AutoBuilder.followPath(pathLeftSpeakerOut)
+                    new PathPlannerAuto("LeftSpeakerOut")                         
                 );
                 break;
             case TWO_NOTE_CENTERLINE:
                 // Reset odometry to the starting pose of the trajectory.
-                driveTrain.resetOdometry(pathCenterLineOut.getPreviewStartingHolonomicPose());
+                //driveTrain.resetOdometry(pathCenterLineOut.getPreviewStartingHolonomicPose());
                 addCommands(
                     // Zero the ARM encoder to Reverse Limit position
                     new ArmToReverseLimitCommand(Arm),
                     // Move ARM to Speaker position
                     new ArmToPositionCommand(Arm, ArmPosition.SPEAKER_SHOOTER),
                     // Shoot
-                    new ParallelCommandGroup(new ShooterMoveOutCommand(Shooter, Arm::getArmPosition, ledController, xboxController, 0),
+                    new ParallelCommandGroup(new ShooterMoveOutCommand(Shooter, Arm::getArmPosition, ledController, xboxController, ShooterConstants.SHOOTER_MOVE_OUT_DELAY_IN_MS),
                                              new IntakeMoveInCommand(inTake, Arm::getArmPosition, ledController, xboxController, IntakeConstants.INTAKE_MOVE_IN_SHOOT_DELAY_IN_MS, true)),
                     // Move ARM to Intake position
                     new ArmToPositionCommand(Arm, ArmPosition.INTAKE),
                     // Start the intake and move out of the starting zone, intake will stop once note is detected
                     new ParallelCommandGroup(new IntakeMoveInCommand(inTake, Arm::getArmPosition, ledController, xboxController, 0, false),
-                                             AutoBuilder.followPath(pathCenterLineOut)),
+                                             //AutoBuilder.followPath(pathCenterLineOut)),
+                                             new PathPlannerAuto("CenterLineOut")),
                     // Moving back in to Speaker position
-                    AutoBuilder.followPath(pathCenterLineIn),
+                    //AutoBuilder.followPath(pathCenterLineIn),
+                    new PathPlannerAuto("CenterLineIn"),
                     // Move ARM to Speaker position
                     new ArmToPositionCommand(Arm, ArmPosition.SPEAKER_SHOOTER),
                     // Shoot
-                    new ParallelCommandGroup(new ShooterMoveOutCommand(Shooter, Arm::getArmPosition, ledController, xboxController, 0),
+                    new ParallelCommandGroup(new ShooterMoveOutCommand(Shooter, Arm::getArmPosition, ledController, xboxController, ShooterConstants.SHOOTER_MOVE_OUT_DELAY_IN_MS),
                                              new IntakeMoveInCommand(inTake, Arm::getArmPosition, ledController, xboxController, IntakeConstants.INTAKE_MOVE_IN_SHOOT_DELAY_IN_MS, true)),
-                    AutoBuilder.followPath(pathCenterLineOut)                         
+                    //AutoBuilder.followPath(pathCenterLineOut)   
+                    new PathPlannerAuto("CenterLineOut")                      
                 );
                 break;
             case MOVE_OUT: default:
                 // Reset odometry to the starting pose of the trajectory.
-                driveTrain.resetOdometry(pathCenterSpeakerOut.getPreviewStartingHolonomicPose());
+                //driveTrain.resetOdometry(pathCenterSpeakerOut.getPreviewStartingHolonomicPose());
                 addCommands(
                 // Move out of starting zone
                 new ArmToReverseLimitCommand(Arm),
-                AutoBuilder.followPath(pathCenterSpeakerOut)
+                new PathPlannerAuto("CenterSpeakerOut")
                 );
                 break;
         }
