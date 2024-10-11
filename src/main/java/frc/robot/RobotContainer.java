@@ -87,9 +87,6 @@ public class RobotContainer {
   private final Command m_complexAuto2NoteLeft = new ComplexAuto(driveTrain, Arm, inTake, Shooter, ledController, xboxController, AutoTypes.TWO_NOTE_LEFT);
   private final Command m_complexAuto2NoteCenterline = new ComplexAuto(driveTrain, Arm, inTake, Shooter, ledController, xboxController, AutoTypes.TWO_NOTE_CENTERLINE);
 
-
-
-
   private final SendableChooser<Boolean> fieldRelativeChooser = new SendableChooser<>();
   // A chooser for autonomous commands
   private final SendableChooser<Command> m_chooser = new SendableChooser<>();
@@ -199,10 +196,10 @@ public class RobotContainer {
     commandLaunchpad.safety().and(commandLaunchpad.climbUp())
       .whileTrue(new HookMoveCommand(hookSubsystem, Direction.UP));
     commandLaunchpad.safety().and(commandLaunchpad.climbDown())
-      //.whileTrue(new HookMoveCommand(hookSubsystem, Direction.DOWN))
-      //.whileTrue(new ArmMoveCommand(Arm, false, hookSubsystem));
-      .whileTrue(new ParallelCommandGroup(new HookMoveCommand(hookSubsystem, Direction.DOWN),
-                                          new ArmMoveCommand(Arm, false, hookSubsystem)));
+      .whileTrue(new HookMoveCommand(hookSubsystem, Direction.DOWN))
+      .whileTrue(new ArmMoveCommand(Arm, false, hookSubsystem));
+      //.whileTrue(new ParallelCommandGroup(new HookMoveCommand(hookSubsystem, Direction.DOWN),
+      //           new ArmMoveCommand(Arm, false, hookSubsystem)));
     ////////////////////////////////////////////////
 
   }

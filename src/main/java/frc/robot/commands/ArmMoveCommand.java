@@ -49,7 +49,8 @@ public class ArmMoveCommand extends Command {
       //armSubsystem.moveStop();
      // armSubsystem.setArmPosition(ArmPosition.FORWARD_LIMIT);
     //}else{
-     armSubsystem.moveStop();
+      hookSubsystem.setSolenoidState(false);
+      armSubsystem.moveStop();
    // }
     
   }

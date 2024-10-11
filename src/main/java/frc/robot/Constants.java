@@ -51,7 +51,7 @@ public final class Constants {
   public static final class HookConstants {
     public static final int HOOK_MOTOR_CAN_ID = 3;
     public static final int HOOK_SOLENOID_CAN_ID = 2;
-    public static final double SPEED = 0.8;
+    public static final double SPEED = 0.9;
   }
 
   public static final class IntakeConstants {
@@ -73,7 +73,7 @@ public final class Constants {
     public static final int SHOOTER_MOTOR_LEFT_CAN_ID = 5;
     public static final int SHOOTER_MOTOR_RIGHT_CAN_ID = 9;
     public static final int SHOOTER_EXECUTE_COUNT_INCREMENT_IN_MS = 20;
-    public static final int SHOOTER_MOVE_OUT_DELAY_IN_MS = 3200;
+    public static final int SHOOTER_MOVE_OUT_DELAY_IN_MS = 2000; //WAS 3200
     public static final int SHOOTER_MOVE_OUT_DELAY_ARM_POSITION_AMP_SHOOTER_DIVIDER = 2;
   }
 
