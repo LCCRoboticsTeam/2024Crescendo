@@ -216,6 +216,7 @@ public class RobotContainer {
   }
 
   public Command getTeleopInitCommand() {
+    //hookSubsystem.setSolenoidState(true);
     if (ArmToReverseLimitCommand_Done)
         return null;
     else
