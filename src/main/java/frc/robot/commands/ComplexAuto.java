@@ -225,17 +225,17 @@ public class ComplexAuto extends SequentialCommandGroup {
                     // Start the intake and move out of the starting zone, intake will stop once note is detected
                     new ParallelCommandGroup(new IntakeMoveInCommand(inTake, Arm::getArmPosition, ledController, xboxController, 0, false),
                                              //AutoBuilder.followPath(pathCenterLineOut)),
-                                             new PathPlannerAuto("CenterLineOut")),
+                                             new PathPlannerAuto("CenterlineOut")),
                     // Moving back in to Speaker position
                     //AutoBuilder.followPath(pathCenterLineIn),
-                    new PathPlannerAuto("CenterLineIn"),
+                    new PathPlannerAuto("CenterlineIn"),
                     // Move ARM to Speaker position
                     new ArmToPositionCommand(Arm, ArmPosition.SPEAKER_SHOOTER),
                     // Shoot
                     new ParallelCommandGroup(new ShooterMoveOutCommand(Shooter, Arm::getArmPosition, ledController, xboxController, ShooterConstants.SHOOTER_MOVE_OUT_DELAY_IN_MS),
                                              new IntakeMoveInCommand(inTake, Arm::getArmPosition, ledController, xboxController, IntakeConstants.INTAKE_MOVE_IN_SHOOT_DELAY_IN_MS, true)),
                     //AutoBuilder.followPath(pathCenterLineOut)   
-                    new PathPlannerAuto("CenterLineOut")                      
+                    new PathPlannerAuto("CenterlineOut")                      
                 );
                 break;
             case MOVE_OUT: default:
