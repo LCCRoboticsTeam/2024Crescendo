@@ -202,6 +202,63 @@ public class ComplexAuto extends SequentialCommandGroup {
                     new ArmToPositionCommand(Arm, ArmPosition.INTAKE)
                 );
                 break;
+            case FOUR_NOTE_CENTER:
+                addCommands(
+                    // Zero the ARM encoder to Reverse Limit position
+                    new ArmToReverseLimitCommand(Arm),
+                    // Move ARM to Speaker position
+                    new ArmToPositionCommand(Arm, ArmPosition.SPEAKER_SHOOTER),
+                    // Shoot
+                    new ParallelCommandGroup(new ShooterMoveOutCommand(Shooter, Arm::getArmPosition, ledController, xboxController, ShooterConstants.SHOOTER_MOVE_OUT_DELAY_IN_MS),
+                                             new IntakeMoveInCommand(inTake, Arm::getArmPosition, ledController, xboxController, IntakeConstants.INTAKE_MOVE_IN_SHOOT_DELAY_IN_MS, true)),
+                    // Move ARM to Intake position
+                    new ArmToPositionCommand(Arm, ArmPosition.INTAKE),
+                    // Start the intake and move out of the starting zone, intake will stop once note is detected
+                    new ParallelCommandGroup(new IntakeMoveInCommand(inTake, Arm::getArmPosition, ledController, xboxController, 0, false),
+                                             new PathPlannerAuto("CenterSpeakerOut")),
+                    // Moving back in to Speaker position
+                    new PathPlannerAuto("CenterSpeakerIn"),
+                    // Move ARM to Speaker position
+                    new ArmToPositionCommand(Arm, ArmPosition.SPEAKER_SHOOTER),
+                    // Shoot
+                    new ParallelCommandGroup(new ShooterMoveOutCommand(Shooter, Arm::getArmPosition, ledController, xboxController, ShooterConstants.SHOOTER_MOVE_OUT_DELAY_IN_MS),
+                                             new IntakeMoveInCommand(inTake, Arm::getArmPosition, ledController, xboxController, IntakeConstants.INTAKE_MOVE_IN_SHOOT_DELAY_IN_MS, true)),
+
+                    // Move ARM to Intake position
+                    new ArmToPositionCommand(Arm, ArmPosition.INTAKE),
+                    // Start the intake and move out of the starting zone, intake will stop once note is detected
+                    new ParallelCommandGroup(new IntakeMoveInCommand(inTake, Arm::getArmPosition, ledController, xboxController, 0, false),
+                                             new PathPlannerAuto("CenterOutSTP1")),
+                    // Moving back in to Speaker position
+                    new PathPlannerAuto("CenterInSTP1"),
+                    // Move ARM to Speaker position
+                    new ArmToPositionCommand(Arm, ArmPosition.SPEAKER_SHOOTER),
+                    // Shoot
+                    new ParallelCommandGroup(new ShooterMoveOutCommand(Shooter, Arm::getArmPosition, ledController, xboxController, ShooterConstants.SHOOTER_MOVE_OUT_DELAY_IN_MS),
+                                             new IntakeMoveInCommand(inTake, Arm::getArmPosition, ledController, xboxController, IntakeConstants.INTAKE_MOVE_IN_SHOOT_DELAY_IN_MS, true)),
+                    
+                    // Move ARM to Intake position
+                    new ArmToPositionCommand(Arm, ArmPosition.INTAKE),
+                    // Start the intake and move out of the starting zone, intake will stop once note is detected
+                    new ParallelCommandGroup(new IntakeMoveInCommand(inTake, Arm::getArmPosition, ledController, xboxController, 0, false),
+                                             new PathPlannerAuto("CenterOutSTP2")),
+                    // Moving back in to Speaker position
+                    new PathPlannerAuto("CenterInSTP2"),
+                    // Move ARM to Speaker position
+                    new ArmToPositionCommand(Arm, ArmPosition.SPEAKER_SHOOTER),
+                    // Shoot
+                    new ParallelCommandGroup(new ShooterMoveOutCommand(Shooter, Arm::getArmPosition, ledController, xboxController, ShooterConstants.SHOOTER_MOVE_OUT_DELAY_IN_MS),
+                                             new IntakeMoveInCommand(inTake, Arm::getArmPosition, ledController, xboxController, IntakeConstants.INTAKE_MOVE_IN_SHOOT_DELAY_IN_MS, true)),
+                    
+
+                    new PathPlannerAuto("CenterSpeakerOut"),
+
+
+                    new ArmToPositionCommand(Arm, ArmPosition.INTAKE))
+
+                ;
+                
+                break;
             case MOVE_OUT: default:
                 addCommands(
                 // Move out of starting zone

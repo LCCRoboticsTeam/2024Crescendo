@@ -86,6 +86,7 @@ public class RobotContainer {
   private final Command m_complexAuto2NoteRight = new ComplexAuto(driveTrain, Arm, inTake, Shooter, ledController, xboxController, AutoTypes.TWO_NOTE_RIGHT);
   private final Command m_complexAuto2NoteLeft = new ComplexAuto(driveTrain, Arm, inTake, Shooter, ledController, xboxController, AutoTypes.TWO_NOTE_LEFT);
   private final Command m_complexAuto2NoteCenterline = new ComplexAuto(driveTrain, Arm, inTake, Shooter, ledController, xboxController, AutoTypes.TWO_NOTE_CENTERLINE);
+  private final Command m_complexAuto4NoteCenter = new ComplexAuto(driveTrain, Arm, inTake, Shooter, ledController, xboxController, AutoTypes.FOUR_NOTE_CENTER);
 
   private final SendableChooser<Boolean> fieldRelativeChooser = new SendableChooser<>();
   // A chooser for autonomous commands
@@ -120,6 +121,7 @@ public class RobotContainer {
     m_chooser.addOption("Red 2 Note Left", m_complexAuto2NoteRight);
     m_chooser.addOption("2 Note Center", m_complexAuto2NoteCenter);
     m_chooser.addOption("Move Out", m_simpleAuto);
+    m_chooser.addOption("4 Note Center", m_complexAuto4NoteCenter);
     SmartDashboard.putData(m_chooser);
 
     driveTrain.setDefaultCommand(new SwerveGamepadDriveCommand(driveTrain, commandXboxController::getLeftX,
