@@ -57,7 +57,9 @@ public class ComplexAuto extends SequentialCommandGroup {
                     // Move ARM to Intake position
                     new ArmToPositionCommand(Arm, ArmPosition.INTAKE),
                     // Move out of starting zone
-                    new PathPlannerAuto("CenterSpeakerOut")
+                    new PathPlannerAuto("CenterSpeakerOut"),
+
+                    new ArmToPositionCommand(Arm, ArmPosition.INTAKE)
                 );
                 break;
             case TWO_NOTE_CENTER:
@@ -81,8 +83,12 @@ public class ComplexAuto extends SequentialCommandGroup {
                     // Shoot
                     new ParallelCommandGroup(new ShooterMoveOutCommand(Shooter, Arm::getArmPosition, ledController, xboxController, ShooterConstants.SHOOTER_MOVE_OUT_DELAY_IN_MS),
                                              new IntakeMoveInCommand(inTake, Arm::getArmPosition, ledController, xboxController, IntakeConstants.INTAKE_MOVE_IN_SHOOT_DELAY_IN_MS, true)),
-                    new PathPlannerAuto("CenterSpeakerOut")
-                );
+                    new PathPlannerAuto("CenterSpeakerOut"),
+
+                    new ArmToPositionCommand(Arm, ArmPosition.INTAKE))
+
+                ;
+                
                 break;
             case ONE_NOTE_RIGHT:
                 addCommands(
@@ -96,7 +102,9 @@ public class ComplexAuto extends SequentialCommandGroup {
                     // Move ARM to Intake position
                     new ArmToPositionCommand(Arm, ArmPosition.INTAKE),
                     // Move out of starting zone
-                    new PathPlannerAuto("RightSpeakerOut")
+                    new PathPlannerAuto("RightSpeakerOut"),
+
+                    new ArmToPositionCommand(Arm, ArmPosition.INTAKE)
                 );
                 break;
             case TWO_NOTE_RIGHT:
@@ -120,7 +128,9 @@ public class ComplexAuto extends SequentialCommandGroup {
                     // Shoot
                     new ParallelCommandGroup(new ShooterMoveOutCommand(Shooter, Arm::getArmPosition, ledController, xboxController, ShooterConstants.SHOOTER_MOVE_OUT_DELAY_IN_MS),
                                              new IntakeMoveInCommand(inTake, Arm::getArmPosition, ledController, xboxController, IntakeConstants.INTAKE_MOVE_IN_SHOOT_DELAY_IN_MS, true)),
-                    new PathPlannerAuto("RightSpeakerOut")                         
+                    new PathPlannerAuto("RightSpeakerOut"),
+                    
+                    new ArmToPositionCommand(Arm, ArmPosition.INTAKE)
                 );
                 break;
             case ONE_NOTE_LEFT:
@@ -135,7 +145,9 @@ public class ComplexAuto extends SequentialCommandGroup {
                     // Move ARM to Intake position
                     new ArmToPositionCommand(Arm, ArmPosition.INTAKE),
                     // Move out of starting zone
-                    new PathPlannerAuto("LeftSpeakerOut")
+                    new PathPlannerAuto("LeftSpeakerOut"),
+
+                    new ArmToPositionCommand(Arm, ArmPosition.INTAKE)
                 );
                 break;
             case TWO_NOTE_LEFT:
@@ -159,7 +171,9 @@ public class ComplexAuto extends SequentialCommandGroup {
                     // Shoot
                     new ParallelCommandGroup(new ShooterMoveOutCommand(Shooter, Arm::getArmPosition, ledController, xboxController, ShooterConstants.SHOOTER_MOVE_OUT_DELAY_IN_MS),
                                              new IntakeMoveInCommand(inTake, Arm::getArmPosition, ledController, xboxController, IntakeConstants.INTAKE_MOVE_IN_SHOOT_DELAY_IN_MS, true)),
-                    new PathPlannerAuto("LeftSpeakerOut")                         
+                    new PathPlannerAuto("LeftSpeakerOut"),
+                    
+                    new ArmToPositionCommand(Arm, ArmPosition.INTAKE)
                 );
                 break;
             case TWO_NOTE_CENTERLINE:
@@ -183,7 +197,9 @@ public class ComplexAuto extends SequentialCommandGroup {
                     // Shoot
                     new ParallelCommandGroup(new ShooterMoveOutCommand(Shooter, Arm::getArmPosition, ledController, xboxController, ShooterConstants.SHOOTER_MOVE_OUT_DELAY_IN_MS),
                                              new IntakeMoveInCommand(inTake, Arm::getArmPosition, ledController, xboxController, IntakeConstants.INTAKE_MOVE_IN_SHOOT_DELAY_IN_MS, true)),
-                    new PathPlannerAuto("CenterlineOut")                      
+                    new PathPlannerAuto("CenterlineOut"), 
+                    
+                    new ArmToPositionCommand(Arm, ArmPosition.INTAKE)
                 );
                 break;
             case MOVE_OUT: default:

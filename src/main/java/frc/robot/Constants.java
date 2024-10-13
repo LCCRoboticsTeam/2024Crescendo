@@ -103,12 +103,12 @@ public final class Constants {
     UNKNOWN, 
     MOVING, 
     REVERSE_LIMIT, 
-    FORWARD_LIMIT, 
+    FORWARD_LIMIT,  
     AMP_SHOOTER(100), //was 120 before
     UPRIGHT(250), 
     HANG(50),
     INTAKE(1150),
-    SPEAKER_SHOOTER(1000); //was 1010
+    SPEAKER_SHOOTER(1010); //was 1010
 
     private int position;
 

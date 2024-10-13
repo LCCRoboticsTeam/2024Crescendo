@@ -110,10 +110,14 @@ public class RobotContainer {
     // Add commands to the autonomous command chooser
     m_chooser.setDefaultOption("2 Note Centerline", m_complexAuto2NoteCenterline);
     m_chooser.addOption("1 Note Center", m_complexAuto1NoteCenter);
-    m_chooser.addOption("1 Note Left", m_complexAuto1NoteLeft);
-    m_chooser.addOption("1 Note Right", m_complexAuto1NoteRight);
-    m_chooser.addOption("2 Note Right", m_complexAuto2NoteRight);
-    m_chooser.addOption("2 Note Left", m_complexAuto2NoteLeft);
+    m_chooser.addOption("Blue 1 Note Left", m_complexAuto1NoteLeft);
+    m_chooser.addOption("Blue 1 Note Right", m_complexAuto1NoteRight);
+    m_chooser.addOption("Blue 2 Note Right", m_complexAuto2NoteRight);
+    m_chooser.addOption("Blue 2 Note Left", m_complexAuto2NoteLeft);
+    m_chooser.addOption("Red 1 Note Left", m_complexAuto1NoteRight);
+    m_chooser.addOption("Red 1 Note Right", m_complexAuto1NoteLeft);
+    m_chooser.addOption("Red 2 Note Right", m_complexAuto2NoteLeft);
+    m_chooser.addOption("Red 2 Note Left", m_complexAuto2NoteRight);
     m_chooser.addOption("2 Note Center", m_complexAuto2NoteCenter);
     m_chooser.addOption("Move Out", m_simpleAuto);
     SmartDashboard.putData(m_chooser);
@@ -142,7 +146,7 @@ public class RobotContainer {
     //commandXboxController.rightBumper().whileTrue(driveTrain.run(driveTrain::setX));
     //SmartDashboard.putBoolean("Reverse Limit Switch Closed", ArmSubsystem.revLimSwitchClosed);
 
-    //  ARM
+    //  AR
     ////////////////////////////////////////////////
     //    ACTIVE default (Safety=OFF, Alternate=OFF)
     //     ^ ARM AMP Position
@@ -196,8 +200,9 @@ public class RobotContainer {
     commandLaunchpad.safety().and(commandLaunchpad.climbUp())
       .whileTrue(new HookMoveCommand(hookSubsystem, Direction.UP));
     commandLaunchpad.safety().and(commandLaunchpad.climbDown())
-      .whileTrue(new HookMoveCommand(hookSubsystem, Direction.DOWN))
-      .whileTrue(new ArmMoveCommand(Arm, false, hookSubsystem));
+      .whileTrue(new ArmMoveCommand(Arm, false, hookSubsystem)
+      .andThen(new HookMoveCommand(hookSubsystem, Direction.DOWN)));
+      
       //.whileTrue(new ParallelCommandGroup(new HookMoveCommand(hookSubsystem, Direction.DOWN),
       //           new ArmMoveCommand(Arm, false, hookSubsystem)));
     ////////////////////////////////////////////////
