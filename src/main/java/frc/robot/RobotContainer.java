@@ -12,7 +12,7 @@ import frc.robot.commands.ArmMoveCommand;
 import frc.robot.commands.ArmToForwardLimitCommand;
 import frc.robot.commands.ArmToPositionCommand;
 import frc.robot.commands.ArmToReverseLimitCommand;
-import frc.robot.commands.Autos;
+//import frc.robot.commands.Autos;
 import frc.robot.commands.ComplexAuto;
 import frc.robot.commands.HookMoveCommand;
 import frc.robot.commands.IntakeMoveInCommand;
@@ -30,6 +30,8 @@ import frc.robot.subsystems.LEDController;
 
 import static frc.robot.Constants.HookConstants.HOOK_MOTOR_CAN_ID;
 import static frc.robot.Constants.HookConstants.HOOK_SOLENOID_CAN_ID;
+
+import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -82,8 +84,9 @@ public class RobotContainer {
   private final Command m_complexAuto1NoteRight = new ComplexAuto(driveTrain, Arm, inTake, Shooter, ledController, xboxController, AutoTypes.ONE_NOTE_RIGHT);
   private final Command m_complexAuto2NoteCenter = new ComplexAuto(driveTrain, Arm, inTake, Shooter, ledController, xboxController, AutoTypes.TWO_NOTE_CENTER);
   private final Command m_complexAuto2NoteRight = new ComplexAuto(driveTrain, Arm, inTake, Shooter, ledController, xboxController, AutoTypes.TWO_NOTE_RIGHT);
-
-
+  private final Command m_complexAuto2NoteLeft = new ComplexAuto(driveTrain, Arm, inTake, Shooter, ledController, xboxController, AutoTypes.TWO_NOTE_LEFT);
+  private final Command m_complexAuto2NoteCenterline = new ComplexAuto(driveTrain, Arm, inTake, Shooter, ledController, xboxController, AutoTypes.TWO_NOTE_CENTERLINE);
+  private final Command m_complexAuto4NoteCenter = new ComplexAuto(driveTrain, Arm, inTake, Shooter, ledController, xboxController, AutoTypes.FOUR_NOTE_CENTER);
 
   private final SendableChooser<Boolean> fieldRelativeChooser = new SendableChooser<>();
   // A chooser for autonomous commands
@@ -95,6 +98,9 @@ public class RobotContainer {
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
+
+    NamedCommands.registerCommand("ArmToIntake", new ArmToPositionCommand(Arm, ArmPosition.INTAKE));
+
     // Configure the trigger bindings
     configureBindings();
 
@@ -103,12 +109,19 @@ public class RobotContainer {
     SmartDashboard.putData(fieldRelativeChooser);
 
     // Add commands to the autonomous command chooser
-    m_chooser.setDefaultOption("Complex Auto 2 Note Center", m_complexAuto2NoteCenter);
-    m_chooser.addOption("Complex Auto 1 Note Center", m_complexAuto1NoteCenter);
-    m_chooser.addOption("Complex Auto 1 Note Left", m_complexAuto1NoteLeft);
-    m_chooser.addOption("Complex Auto 1 Note Right", m_complexAuto1NoteRight);
-    m_chooser.addOption("Complex Auto 2 Note Right", m_complexAuto2NoteRight);
-    m_chooser.addOption("Simple Auto", m_simpleAuto);
+    m_chooser.setDefaultOption("2 Note Centerline", m_complexAuto2NoteCenterline);
+    m_chooser.addOption("1 Note Center", m_complexAuto1NoteCenter);
+    m_chooser.addOption("Blue 1 Note Left", m_complexAuto1NoteLeft);
+    m_chooser.addOption("Blue 1 Note Right", m_complexAuto1NoteRight);
+    m_chooser.addOption("Blue 2 Note Right", m_complexAuto2NoteRight);
+    m_chooser.addOption("Blue 2 Note Left", m_complexAuto2NoteLeft);
+    m_chooser.addOption("Red 1 Note Left", m_complexAuto1NoteRight);
+    m_chooser.addOption("Red 1 Note Right", m_complexAuto1NoteLeft);
+    m_chooser.addOption("Red 2 Note Right", m_complexAuto2NoteLeft);
+    m_chooser.addOption("Red 2 Note Left", m_complexAuto2NoteRight);
+    m_chooser.addOption("2 Note Center", m_complexAuto2NoteCenter);
+    m_chooser.addOption("Move Out", m_simpleAuto);
+    m_chooser.addOption("4 Note Center", m_complexAuto4NoteCenter);
     SmartDashboard.putData(m_chooser);
 
     driveTrain.setDefaultCommand(new SwerveGamepadDriveCommand(driveTrain, commandXboxController::getLeftX,
@@ -135,7 +148,7 @@ public class RobotContainer {
     //commandXboxController.rightBumper().whileTrue(driveTrain.run(driveTrain::setX));
     //SmartDashboard.putBoolean("Reverse Limit Switch Closed", ArmSubsystem.revLimSwitchClosed);
 
-    //  ARM
+    //  AR
     ////////////////////////////////////////////////
     //    ACTIVE default (Safety=OFF, Alternate=OFF)
     //     ^ ARM AMP Position
@@ -167,21 +180,14 @@ public class RobotContainer {
     //    ACTIVE default (Safety=N/A, Alternate=OFF)
     //      ^ INTAKE IN
     //      v SHOOTER OUT
-    //commandLaunchpad.intakeIn().and(commandLaunchpad.miscBlue().negate()).whileTrue(new IntakeMoveInCommand(inTake));
     commandLaunchpad.intakeIn().and(commandLaunchpad.miscBlue().negate())
-                               //.onTrue(new IntakeMoveInCommand(inTake, Arm::getArmPosition, ledController, 0, false));
                                .onTrue(new SequentialCommandGroup(new ArmToPositionCommand(Arm, ArmPosition.INTAKE),
                                                                   new IntakeMoveInCommand(inTake, Arm::getArmPosition, ledController, xboxController, 0, false), 
                                                                   new ArmToPositionCommand(Arm, ArmPosition.SPEAKER_SHOOTER)));
     commandLaunchpad.shooterOut().and(commandLaunchpad.miscBlue().negate())
-                                 //.whileTrue(new ShooterMoveOutCommand(Shooter, Arm::getArmPosition, ledController, 0))
-                                 //.onTrue(new IntakeMoveInCommand(inTake, Arm::getArmPosition, ledController, IntakeConstants.INTAKE_MOVE_IN_SHOOT_DELAY_IN_MS, true));
                                  .whileTrue(new ParallelCommandGroup(new ShooterMoveOutCommand(Shooter, Arm::getArmPosition, ledController, xboxController, 0), 
-                                                                     new IntakeMoveInCommand(inTake, Arm::getArmPosition, ledController, xboxController, IntakeConstants.INTAKE_MOVE_IN_SHOOT_DELAY_IN_MS, true)).andThen(new ArmToPositionCommand(Arm, ArmPosition.INTAKE)));
-                                 //.whileTrue(new SequentialCommandGroup(new ShooterMoveOutCommand(Shooter, Arm::getArmPosition, ledController, xboxController, 0), 
-                                 //                                      new IntakeMoveInCommand(inTake, Arm::getArmPosition, ledController, xboxController, IntakeConstants.INTAKE_MOVE_IN_SHOOT_DELAY_IN_MS, true),
-                                 //                                      new ArmToPositionCommand(Arm, ArmPosition.INTAKE)));
-
+                                                                     new IntakeMoveInCommand(inTake, Arm::getArmPosition, ledController, xboxController, IntakeConstants.INTAKE_MOVE_IN_SHOOT_DELAY_IN_MS, true))
+                                            .andThen(new ArmToPositionCommand(Arm, ArmPosition.INTAKE)));
     ////////////////////////////////////////////////
     //    ACTIVE default (Safety=N/A, Alternate=ON)
     //      ^ INTAKE OUT (Normally never needed)
@@ -189,13 +195,19 @@ public class RobotContainer {
     commandLaunchpad.intakeIn().and(commandLaunchpad.miscBlue()).whileTrue(new IntakeMoveOutCommand(inTake));
     commandLaunchpad.shooterOut().and(commandLaunchpad.miscBlue()).whileTrue(new ShooterMoveInCommand(Shooter));
 
+    // CLIMBER
+    ////////////////////////////////////////////////
     commandLaunchpad.safety().onTrue(new ArmToPositionCommand(Arm, ArmPosition.HANG));
 
     commandLaunchpad.safety().and(commandLaunchpad.climbUp())
       .whileTrue(new HookMoveCommand(hookSubsystem, Direction.UP));
     commandLaunchpad.safety().and(commandLaunchpad.climbDown())
-      .whileTrue(new HookMoveCommand(hookSubsystem, Direction.DOWN))
-      .whileTrue(new ArmMoveCommand(Arm, false, hookSubsystem));
+      .whileTrue(new ArmMoveCommand(Arm, false, hookSubsystem)
+      .andThen(new HookMoveCommand(hookSubsystem, Direction.DOWN)));
+      
+      //.whileTrue(new ParallelCommandGroup(new HookMoveCommand(hookSubsystem, Direction.DOWN),
+      //           new ArmMoveCommand(Arm, false, hookSubsystem)));
+    ////////////////////////////////////////////////
 
   }
 
@@ -205,13 +217,13 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    //return Autos.templateAuto(driveTrain);
     ArmToReverseLimitCommand_Done=true;
     return m_chooser.getSelected();
     //return null;  
   }
 
   public Command getTeleopInitCommand() {
+    //hookSubsystem.setSolenoidState(true);
     if (ArmToReverseLimitCommand_Done)
         return null;
     else

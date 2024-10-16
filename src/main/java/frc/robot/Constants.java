@@ -34,8 +34,8 @@ public final class Constants {
   }
 
   public static final class AutoConstants {
-    public static final double MAX_SPEED_METERS_PER_SECOND = 1.0; // (was 3)
-    public static final double MAX_ACCELERATION_METERS_PER_SECOND_SQUARED = 1; // (was 3)
+    public static final double MAX_SPEED_METERS_PER_SECOND = 4.0; // (was 3)
+    public static final double MAX_ACCELERATION_METERS_PER_SECOND_SQUARED = 3; // (was 3)
     public static final double MAX_ANGULAR_SPEED_RADIANS_PER_SECOND = Math.PI;
     public static final double MAX_ANGULAR_SPEED_RADIANS_PER_SECOND_SQUARED = Math.PI;
 
@@ -51,7 +51,7 @@ public final class Constants {
   public static final class HookConstants {
     public static final int HOOK_MOTOR_CAN_ID = 3;
     public static final int HOOK_SOLENOID_CAN_ID = 2;
-    public static final double SPEED = 0.8;
+    public static final double SPEED = 0.9;
   }
 
   public static final class IntakeConstants {
@@ -73,15 +73,15 @@ public final class Constants {
     public static final int SHOOTER_MOTOR_LEFT_CAN_ID = 5;
     public static final int SHOOTER_MOTOR_RIGHT_CAN_ID = 9;
     public static final int SHOOTER_EXECUTE_COUNT_INCREMENT_IN_MS = 20;
-    public static final int SHOOTER_MOVE_OUT_DELAY_IN_MS = 3200;
+    public static final int SHOOTER_MOVE_OUT_DELAY_IN_MS = 2000; //WAS 3200
     public static final int SHOOTER_MOVE_OUT_DELAY_ARM_POSITION_AMP_SHOOTER_DIVIDER = 2;
   }
 
   public static final class ArmConstants {
     public static final int ARM_MOVE_DEADZONE = 100;
-    public static final double ARM_MOTOR_SPEED_UP = 0.5;
-    public static final double ARM_MOTOR_SPEED_DOWN = 0.5;
-    public static final double ARM_MOTORP_SPEED_HOLD = 0.1;
+    public static final double ARM_MOTOR_SPEED_UP = 0.8; //was .5
+    public static final double ARM_MOTOR_SPEED_DOWN = 0.6; //was .5
+    public static final double ARM_MOTORP_SPEED_HOLD = 0.14; // was .1
     public static final int ARM_MOTOR_LEFT_CAN_ID = 7;
     public static final int ARM_MOTOR_RIGHT_CAN_ID = 6;
     public static final int ARM_BORE_ENCODER_CHANNEL_A_DIO = 0;
@@ -95,19 +95,21 @@ public final class Constants {
     ONE_NOTE_RIGHT,
     TWO_NOTE_CENTER,
     TWO_NOTE_LEFT,
-    TWO_NOTE_RIGHT;
+    TWO_NOTE_CENTERLINE,
+    TWO_NOTE_RIGHT,
+    FOUR_NOTE_CENTER;
   }
 
   public enum ArmPosition {
     UNKNOWN, 
     MOVING, 
     REVERSE_LIMIT, 
-    FORWARD_LIMIT, 
-    AMP_SHOOTER(140), //was 120 before
+    FORWARD_LIMIT,  
+    AMP_SHOOTER(100), //was 120 before
     UPRIGHT(250), 
     HANG(50),
     INTAKE(1150),
-    SPEAKER_SHOOTER(1005); //was 1010
+    SPEAKER_SHOOTER(1010); //was 1010
 
     private int position;
 
@@ -147,12 +149,12 @@ public final class Constants {
   public static final class DriveConstants {
     // Driving Parameters - Note that these are not the maximum capable speeds of
     // the robot, rather the allowed maximum speeds
-    public static final double MAX_SPEED_METERS_PER_SECOND = 3;
+    public static final double MAX_SPEED_METERS_PER_SECOND = 4; //was 3
     public static final double MAX_ANGULAR_SPEED = Math.PI; // radians per second
 
-    public static final double DIRECTION_SLEW_RATE = 2; // radians per second; was .6
-    public static final double MAGNITUDE_SLEW_RATE = 2; // percent per second (1 = 100%); was .9
-    public static final double ROTATIONAL_SLEW_RATE = 2; // percent per second (1 = 100%); was .9
+    public static final double DIRECTION_SLEW_RATE = 4; // radians per second; was .6
+    public static final double MAGNITUDE_SLEW_RATE = 3; // percent per second (1 = 100%); was .9
+    public static final double ROTATIONAL_SLEW_RATE = 3; // percent per second (1 = 100%); was .9
 
     // Chassis configuration
     public static final double TRACK_WIDTH = Units.inchesToMeters(27.5);

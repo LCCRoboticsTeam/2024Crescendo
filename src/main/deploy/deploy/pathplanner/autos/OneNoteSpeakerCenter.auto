@@ -1,0 +1,37 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 1.3658779393478129,
+      "y": 5.5410316277334815
+    },
+    "rotation": 0.0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "CenterSpeakerOut"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "IntakeIn"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "CenterSpeakerIn"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}

@@ -1,0 +1,37 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 0.7059430218266165,
+      "y": 4.386131819265259
+    },
+    "rotation": -60.0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "BlueLeftSpeakerOutLong"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "IntakeIn"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "BlueLeftSpeakerInLong"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}
